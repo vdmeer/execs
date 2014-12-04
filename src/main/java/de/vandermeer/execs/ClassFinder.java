@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package de.vandermeer.skb.execs;
+package de.vandermeer.execs;
 
 import java.io.File;
 import java.io.FileFilter;

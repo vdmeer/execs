@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package de.vandermeer.skb.execs;
+package de.vandermeer.execs;
 
 /**
  * Interface for a service that can be executed.
