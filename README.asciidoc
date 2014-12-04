@@ -1,0 +1,24 @@
+SKB Execute Service
+-------------------
+
+A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.
+
+This package addresses the following problem: a package (or a set of packages) contain
+a number of tools that should be run from outside java, e.g. using a +static main()+ method.
+Over time, it might (will) be hard to know (or find) all main methods.
+
+This package provides a standard way to find and execute all those tools, or as they are called here services.
+A simple interface should be used by any component that wants to be executed. Implementing +Skb_Executable+
+provides the main method +executeService()+ and a method for printing a help screen. The only requirement is that the default
+constructor must be provided, to allow for a generic instantiation at runtime.
+
+The +ClassFinder+ can be used to search all or filtered jar files (or URIs) for any class that
+implement the interface. Once all implementations are found, one can use the +Skb_Exec+ object with
+its +static main()+ to execute any service from the command line.
+
+The +Skb_Exec+ class allows to list all executable services, execute one service triggering a help screen and
+to register short names for services. These short names can be used as aliases to execute a service, otherwise a fully qualified class
+name will be required.
+
+One can also extend the +Skb_Exec+ class to build more sophisticated versions of the execution object, to
+register specific short names or to search for other interfaces and classes in jar files at runtime.
