@@ -1,7 +1,7 @@
 v0.0.3 - feature add - 2014-##-##
 ---------------------------------
 * moved to maven
-* moced into own repo at Github
+* moved into own repo at Github
 
 v0.0.2 - feature add - 2014-06-25
 ---------------------------------
