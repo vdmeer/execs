@@ -1,0 +1,18 @@
+v0.0.3 - feature add - 2014-##-##
+---------------------------------
+* moved to maven
+* moved into own repo at Github
+
+v0.0.2 - feature add - 2014-06-25
+---------------------------------
+* added CLI interface using Apache Common CLI
+* externalised use of jar and package filters (via CLI)
+* changed internal behviour for new CLI
+* sub-classes can now overwrite the jar/package filters
+* changed help/list screen print outs
+* added test to not show named executables
+
+
+v0.0.1 - initial release - 2014-06-10
+-------------------------------------
+* initial release
