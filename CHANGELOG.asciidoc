@@ -1,7 +1,11 @@
-v0.0.3 - feature add - 2014-##-##
+v0.0.3 - feature add - 2015-06-18
 ---------------------------------
 * moved to maven
 * moved into own repo at Github
+* added simple CLI parser
+* added standard options
+* added getCLI() and getName() with default implementations to executale
+
 
 v0.0.2 - feature add - 2014-06-25
 ---------------------------------
