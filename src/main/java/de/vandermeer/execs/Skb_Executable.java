@@ -19,7 +19,7 @@ package de.vandermeer.execs;
  * Interface for a service that can be executed.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.3-SNAPSHOT build 141210 (10-Dec-14) for Java 1.7
+ * @version    v0.0.3 build 150618 (18-Jun-15) for Java 1.8
  */
 public interface Skb_Executable {
 
@@ -33,5 +33,23 @@ public interface Skb_Executable {
 	/**
 	 * Prints a help screen for the service, to be used by an executing component.
 	 */
-	void serviceHelpScreen();
+	default void serviceHelpScreen(){
+		if(this.getCli()!=null){
+			this.getCli().usage(this.getName());
+		}
+	}
+
+	/**
+	 * Returns the service's CLI parser.
+	 * @return CLI parser
+	 */
+	default Skb_Cli getCli(){
+		return null;
+	}
+
+	/**
+	 * Returns the name of the service.
+	 * @return service name
+	 */
+	String getName();
 }

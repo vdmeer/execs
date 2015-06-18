@@ -41,7 +41,7 @@ import java.util.jar.JarFile;
  * Searches all known jars and folders from the class path for a given class.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.3-SNAPSHOT build 141210 (10-Dec-14) for Java 1.7
+ * @version    v0.0.3 build 150618 (18-Jun-15) for Java 1.8
  */
 public class ClassFinder {
 

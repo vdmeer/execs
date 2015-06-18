@@ -28,7 +28,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * An SKB service executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.3-SNAPSHOT build 141210 (10-Dec-14) for Java 1.7
+ * @version    v0.0.3 build 150618 (18-Jun-15) for Java 1.8
  */
 public class Skb_Exec {
 	/** Cli parser */
@@ -41,7 +41,7 @@ public class Skb_Exec {
 	protected String linePrefix;
 
 	/**
-	 * An array of SKB jars, used to optimise for speed when searching in all known jars.
+	 * An array of SKB jars, used to optimize for speed when searching in all known jars.
 	 * Overwrite this member to use a different filter.
 	 */
 	protected String[] jarFilters = new String[]{
@@ -58,7 +58,7 @@ public class Skb_Exec {
 	};
 
 	/**
-	 * The main package for all SKB definitions, used to optimise for speed when searching in all known jars.
+	 * The main package for all SKB definitions, used to optimism for speed when searching in all known jars.
 	 * Overwrite this member to use a different package filter.
 	 */
 	protected String pkgFilter = "de.vandermeer.skb.";
@@ -216,7 +216,7 @@ public class Skb_Exec {
 			System.out.println("                -> "+key);
 		}
 		System.out.println();
-		System.out.println(" -> start any other SKB Service using <package> and <class> name");
+		System.out.println(" -> start any other found service using <package> and <class> name");
 		System.out.println(" -> list all servers in classpath using '-l' or '-list'");
 	}
 
