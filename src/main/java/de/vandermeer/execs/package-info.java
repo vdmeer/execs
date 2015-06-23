@@ -24,29 +24,29 @@
  * 
  * <p>
  * This package provides a standard way to find and execute all those tools, or as they are called here services.
- * A simple interface should be used by any component that wants to be executed. Implementing {@link de.vandermeer.execs.Skb_Executable}
+ * A simple interface should be used by any component that wants to be executed. Implementing {@link de.vandermeer.execs.ExecutableService}
  * provides the main method <code>executeService()</code> and a method for printing a help screen. The only requirement is that the default
  * constructor must be provided, to allow for a generic instantiation at runtime.
  * </p>
  * 
  * <p>
  * The {@link de.vandermeer.execs.ClassFinder} can be used to search all or filtered jar files (or URIs) for any class that
- * implement the interface. Once all implementations are found, one can use the {@link de.vandermeer.execs.Skb_Exec} object with
+ * implement the interface. Once all implementations are found, one can use the {@link de.vandermeer.execs.ExecS} object with
  * its <code>static main()</code> to execute any service from the command line.
  * </p>
  * 
  * <p>
- * The {@link de.vandermeer.execs.Skb_Exec} class allows to list all executable services, execute one service triggering a help screen and
+ * The {@link de.vandermeer.execs.ExecS} class allows to list all executable services, execute one service triggering a help screen and
  * to register short names for services. These short names can be used as aliases to execute a service, otherwise a fully qualified class
  * name will be required.
  * </p>
  * 
  * <p>
- * One can also extend the {@link de.vandermeer.execs.Skb_Exec} class to build more sophisticated versions of the execution object, to
+ * One can also extend the {@link de.vandermeer.execs.ExecS} class to build more sophisticated versions of the execution object, to
  * register specific short names or to search for other interfaces and classes in jar files at runtime.
  * </p>
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.4 build 150619 (19-Jun-15) for Java 1.8
+ * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
  */
 package de.vandermeer.execs;

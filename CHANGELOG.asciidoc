@@ -1,3 +1,14 @@
+v0.0.5 - feature add - 2015-06-23
+---------------------------------
+* renamed classes
+* rewrite of service executor, removed CLI and wrote internal CLI
+* changed CLI to use Apache Common CLI 1.3.1
+* added CLI option interface and moved options into Standard Enum implementation of the interface
+* added tests
+* experimental: added logging for CLI, might remove that and use strin return instead
+* added FigletShutdown :)
+
+
 v0.0.4 - maintenance - 2015-06-19
 ---------------------------------
 * clean up, test file rename

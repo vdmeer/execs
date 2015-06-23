@@ -17,18 +17,18 @@ package de.vandermeer.execs;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 /**
  * CLI implementation for servers.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.4 build 150619 (19-Jun-15) for Java 1.8
+ * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
  */
-public class Skb_Cli {
+public class ExecS_Cli {
 
 	/** Parsing options. */
 	protected Options options;
@@ -39,7 +39,7 @@ public class Skb_Cli {
 	/**
 	 * Returns a new CLI parser.
 	 */
-	public Skb_Cli(){
+	public ExecS_Cli(){
 		this.options = new Options();
 	}
 
@@ -48,7 +48,7 @@ public class Skb_Cli {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @return self to allow for chaining
 	 */
-	public Skb_Cli addOption(Skb_CliOptions option){
+	public ExecS_Cli addOption(StandardOptions option){
 		if(option!=null && option.getOption()!=null){
 			this.options.addOption(option.getOption());
 		}
@@ -62,7 +62,7 @@ public class Skb_Cli {
 	 */
 	public ParseException parse(String[] args){
 		ParseException ret = null;
-		CommandLineParser parser = new PosixParser();
+		CommandLineParser parser = new DefaultParser();
 		try{
 			this.cmdLine = parser.parse(this.options, args);
 		}
@@ -77,7 +77,7 @@ public class Skb_Cli {
 	 * @param option option to look for
 	 * @return string value if set, null otherwise
 	 */
-	public String getOption(Skb_CliOptions option){
+	public String getOption(StandardOptions option){
 		String ret = null;
 		String o = (option!=null)?option.getOptionString():null;
 		if(o!=null && this.cmdLine.hasOption(o)){
@@ -91,7 +91,7 @@ public class Skb_Cli {
 	 * @param option option to test for
 	 * @return true if option was used, false otherwise
 	 */
-	public boolean hasOption(Skb_CliOptions option){
+	public boolean hasOption(StandardOptions option){
 		String o = (option!=null)?option.getOptionString():null;
 		if(o!=null){
 			return this.cmdLine.hasOption(o);
@@ -115,11 +115,12 @@ public class Skb_Cli {
 	 * @param appName application name for error messages
 	 * @return 0 on success, -1 on error with error being logged
 	 */
-	public static int doParse(String[] args, Skb_Cli cli, String appName){
+	public static int doParse(String[] args, ExecS_Cli cli, String appName){
 		int ret = 0;
 		Exception err = cli.parse(args);
 		if(err!=null){
-			System.err.println(appName + ": : error parsing command line -> " + err.getMessage());
+//TODO
+//			logger.error("{}: error parsing command line -> {}", new Object[]{appName, err.getMessage()});
 			return -1; 
 		}
 		return ret;

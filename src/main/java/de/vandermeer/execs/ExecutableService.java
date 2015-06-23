@@ -19,9 +19,9 @@ package de.vandermeer.execs;
  * Interface for a service that can be executed.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.4 build 150619 (19-Jun-15) for Java 1.8
+ * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
  */
-public interface Skb_Executable {
+public interface ExecutableService {
 
 	/**
 	 * Executes the service.
@@ -43,7 +43,7 @@ public interface Skb_Executable {
 	 * Returns the service's CLI parser.
 	 * @return CLI parser
 	 */
-	default Skb_Cli getCli(){
+	default ExecS_Cli getCli(){
 		return null;
 	}
 
