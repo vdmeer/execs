@@ -29,10 +29,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 /**
- * Executable service to generate sun scripts for other executable services, supporting windows, CygWin and bash.
+ * Executable service to generate run scripts for other executable services, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunScripts implements ExecutableService {
@@ -49,8 +49,8 @@ public class Gen_RunScripts implements ExecutableService {
 	/** A CLI option to specify a property file with configurations for the generator. */
 	public final static ExecS_CliOption CLIOPT_PROP_FILE = ExecS_Factory.newCliOption("property-file", "FILE", "a property file with configurations for the generator");
 
-	/** A CLI option to specify the deployment home directory specific to a given target format. */
-	public final static ExecS_CliOption CLIOPT_DEPLOYMENY_HOME_DIR = ExecS_Factory.newCliOption("deployment-dir", "DIR", "deployment home directory specific to a given target format");
+	/** A CLI option to specify the application home directory specific to a given target format. */
+	public final static ExecS_CliOption CLIOPT_APPLICATION_HOME_DIR = ExecS_Factory.newCliOption("application-dir", "DIR", "application home directory specific to a given target format");
 
 	/** A property key for the script name of the generic run script, without file extension. */
 	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
@@ -79,8 +79,8 @@ public class Gen_RunScripts implements ExecutableService {
 	/** The target set for generation. */
 	protected String target;
 
-	/** The home directory, ideally something like "abc/xyz" as root for generating scripts. */
-	protected String deploymentDir;
+	/** The application home directory, ideally something like "abc/xyz" as root for generating scripts. */
+	protected String applicationDir;
 
 	/** The name of the output directory, null means cannot output or not tested yet. */
 	protected String outputDir;
@@ -93,7 +93,7 @@ public class Gen_RunScripts implements ExecutableService {
 		this.cli.addOption(StandardOptions.TARGET);
 		this.cli.addOption(CLIOPT_STGFILE);
 		this.cli.addOption(CLIOPT_CLASSMAP_FILE);
-		this.cli.addOption(CLIOPT_DEPLOYMENY_HOME_DIR);
+		this.cli.addOption(CLIOPT_APPLICATION_HOME_DIR);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class Gen_RunScripts implements ExecutableService {
 		if(ret!=0){
 			return ret;
 		}
-		ret = this.initDeploymentDir();
+		ret = this.initApplicationDir();
 		if(ret!=0){
 			return ret;
 		}
@@ -136,14 +136,14 @@ public class Gen_RunScripts implements ExecutableService {
 		ST targetRunST = this.stg.getInstanceOf("generateRun");
 		targetRunST.add("target", targetMap);
 		targetRunST.add("class", this.configuration.get(PROP_RUN_CLASS));
-		targetRunST.add("deploymentHome", this.deploymentDir);
+		targetRunST.add("applicationHome", this.applicationDir);
 		for(Object key : this.configuration.keySet()){
 			if(StringUtils.startsWith(key.toString(), PROP_JAVAPROP_START)){
 				String[] kv = StringUtils.split(this.configuration.getProperty(key.toString()), ":");
 				HashMap<String, String> javaProperties = new HashMap<>();
 				javaProperties.put("key", kv[0]);
 				ST execHomeVar = this.stg.getInstanceOf("execHomeVar");
-				javaProperties.put("val", StringUtils.replace(kv[1], "{DEPLOYMENT_HOME}", execHomeVar.add("target", targetMap).render()));
+				javaProperties.put("val", StringUtils.replace(kv[1], "{APPLICATION_HOME}", execHomeVar.add("target", targetMap).render()));
 				targetRunST.add("javaProperties", javaProperties);
 			}
 			if(PROP_JAVA_CP.equals(key.toString())){
@@ -162,7 +162,7 @@ public class Gen_RunScripts implements ExecutableService {
 		for(Object key : this.classMap.keySet()){
 			ST targetExecST = this.stg.getInstanceOf("generateExec");
 			targetExecST.add("target", targetMap);
-			targetExecST.add("deploymentHome", this.deploymentDir);
+			targetExecST.add("applicationHome", this.applicationDir);
 			targetExecST.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
 			targetExecST.add("class", key);
 			this.writeFile(this.outputDir + File.separator + this.classMap.get(key) + fnExtension, targetExecST);
@@ -273,18 +273,18 @@ public class Gen_RunScripts implements ExecutableService {
 	}
 
 	/**
-	 * Initializes the deployment directory for the generator.
+	 * Initializes the application directory for the generator.
 	 * There is no default set and no configuration property can be used.
-	 * The deployment directory has to be set using the CLI option "--deployment-directory".
+	 * The application directory has to be set using the CLI option "--application-directory".
 	 * Otherwise this method will fail.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
-	protected final int initDeploymentDir(){
-		if(this.cli.hasOption(CLIOPT_DEPLOYMENY_HOME_DIR) && this.cli.getOption(CLIOPT_DEPLOYMENY_HOME_DIR)!=null){
-			this.deploymentDir = this.cli.getOption(CLIOPT_DEPLOYMENY_HOME_DIR);
+	protected final int initApplicationDir(){
+		if(this.cli.hasOption(CLIOPT_APPLICATION_HOME_DIR) && this.cli.getOption(CLIOPT_APPLICATION_HOME_DIR)!=null){
+			this.applicationDir = this.cli.getOption(CLIOPT_APPLICATION_HOME_DIR);
 		}
 		else{
-			System.err.println(this.getName() + ": no deployment directory set");
+			System.err.println(this.getName() + ": no application directory set");
 			return -1;
 		}
 
@@ -387,7 +387,7 @@ public class Gen_RunScripts implements ExecutableService {
 		}
 		else{
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			url=loader.getResource(filename);
+			url = loader.getResource(filename);
 			if(url==null){
 				loader = Gen_RunScripts.class.getClassLoader();
 				url = loader.getResource(filename);
@@ -433,7 +433,7 @@ public class Gen_RunScripts implements ExecutableService {
 
 	@Override
 	public void serviceHelpScreen() {
-		System.out.println("generates run scripts for executable services.");
+		System.out.println("Generates run scripts for executable services.");
 		System.out.println();
 		this.cli.usage(this.getName());
 	}

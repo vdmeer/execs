@@ -1,0 +1,76 @@
+/* Copyright 2015 Sven van der Meer <vdmeer.sven@mykolab.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Template ExecS printouts.
+ *
+ * @package    de.vandermeer.execs
+ * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
+ * @copyright  2015 Sven van der Meer
+ * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15)
+ */
+
+
+
+//
+// Print a list of registered and found services.
+//
+list(appName, classMap, className) ::= <<
+<appName>: list of all services (registered and found) implementing the service interface
+
+  registered services (name -> class name)
+<if(classMap)><classMap:{e |     - <e.key> -> <e.val>}; separator="\n"><else>    - [none]<endif>
+
+  services found in class path
+<if(className)>    - <className; separator="\n"><else>    - [none]<endif>
+
+
+>>
+
+
+
+//
+// Print usage information with appName and filters.
+//
+usage(appName, packageFilter, jarFilter) ::= <<
+
+<appName> requires class, service name, or arguments
+
+    usage <appName> \<class> [class-options]
+        Executes a service by classname, class must implement the EXECS service interface.
+        \<class> must be a fully qualified class name, i.e. with package and class name
+        [class-options] are command line options forwarded to the executed service
+
+    usage: <appName> \<service> [service-options]
+        Executes a service by registered name, EXECS service interface must be implemented.
+        \<service> must be name registered with the application
+        [service-options] are command line options forwarded to the executed service
+
+    usage: <appName> [-l | --list] [-j] [-p]
+        Lists all available services, i.e. classes implementing the service interface
+        Services are found by searching through all jars in the classpath (can be SLOW!).
+        -j - activate a jar filter if set for the executor
+        -p - activate a package filter if set for the executor
+
+    usage: <appName> [-h | --help]
+        Prints this help screen.
+
+    set values: <appName>
+        package filter: <if(packageFilter)><packageFilter><else>not set<endif>
+        jar filter: <if(jarFilter)><jarFilter; separator=", "><else>not set<endif>
+
+
+>>

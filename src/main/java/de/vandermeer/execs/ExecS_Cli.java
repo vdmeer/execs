@@ -26,7 +26,7 @@ import org.apache.commons.cli.ParseException;
  * CLI implementation for servers.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
  */
 public class ExecS_Cli {
 

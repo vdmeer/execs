@@ -2,7 +2,7 @@ v0.0.6 - feature add - 2015-07-##
 ---------------------------------
 * added factory for CLI option generation
   ** changed StandardOptions to use factory rather than instantiate locally
-* added GenRunScripts to generate run scripts for Executable services
+* added Gen_RunScripts to generate run scripts for Executable services
 * added "stg-file" option to standard options
 * fixed bug in ExecS_Cli not accepting ExecS_CliOption but only StandardOptions
 * marked some StandardOptions as deprecated since they are rather specific
@@ -14,6 +14,15 @@ v0.0.6 - feature add - 2015-07-##
 * added shell scripts for script generation
   ** gen-run-script.sh to generate run scripts
   ** rebase.sh to rebase existing scripts
+* refactored and changed the ClassFinder
+  ** now in package cf with separated classes for different functionality
+  ** deprecated the old ClassFinder class, to be removed in next release
+* changed printouts for ExecS
+  ** added an STG for all major printouts (usage, lists)
+  ** moved all printouts to STG
+* added services to generate shell scripts
+  ** Gen_RunSh - to generate a shell script that uses Gen_RunScripts to generate run scripts
+  ** Gen_RebaseSh - to generate a shell script that can rebase run scripts
 
 
 v0.0.5 - feature add - 2015-06-23

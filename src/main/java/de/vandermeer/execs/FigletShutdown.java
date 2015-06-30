@@ -23,7 +23,7 @@ import java.util.Random;
  * FigLets are special fonts.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
  */
 public enum FigletShutdown {
 	Banner3_D	(new String[]{":'######::'##::::'##:'##::::'##:'########:'########:::'#######::'##:::::'##:'##::: ##:","'##... ##: ##:::: ##: ##:::: ##:... ##..:: ##.... ##:'##.... ##: ##:'##: ##: ###:: ##:"," ##:::..:: ##:::: ##: ##:::: ##:::: ##:::: ##:::: ##: ##:::: ##: ##: ##: ##: ####: ##:",". ######:: #########: ##:::: ##:::: ##:::: ##:::: ##: ##:::: ##: ##: ##: ##: ## ## ##:",":..... ##: ##.... ##: ##:::: ##:::: ##:::: ##:::: ##: ##:::: ##: ##: ##: ##: ##. ####:","'##::: ##: ##:::: ##: ##:::: ##:::: ##:::: ##:::: ##: ##:::: ##: ##: ##: ##: ##:. ###:",". ######:: ##:::: ##:. #######::::: ##:::: ########::. #######::. ###. ###:: ##::. ##:",":......:::..:::::..:::.......::::::..:::::........::::.......::::...::...:::..::::..::"}),
@@ -48,8 +48,10 @@ public enum FigletShutdown {
 	Varsity		(new String[]{"       __               _         __","      [  |             / |_      |  ]"," .--.  | |--.  __   _ `| |-' .--.| |  .--.  _   _   __ _ .--.","( (`\\] | .-. |[  | | | | | / /'`\\' |/ .'`\\ [ \\ [ \\ [  | `.-. |"," `'.'. | | | | | \\_/ |,| |,| \\__/  || \\__. |\\ \\/\\ \\/ / | | | |","[\\__) )___]|__]'.__.'_/\\__/ '.__.;__]'.__.'  \\__/\\__/ [___||__]"}),
 	;
 
+	/** Lines for the figlet. */
 	private String[] lines;
 
+	/** Returns a new Figlet for shutdown messages. */
 	private FigletShutdown(String[] lines){
 		this.lines = lines;
 	}
@@ -62,6 +64,9 @@ public enum FigletShutdown {
 		return this.lines;
 	}
 
+	/**
+	 * Generates a new random to randomly select a figlet.
+	 */
 	public final static Random random = new Random();
 
 	/**

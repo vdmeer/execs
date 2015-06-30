@@ -16,9 +16,12 @@
 package de.vandermeer.execs;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -26,12 +29,17 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrTokenizer;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroupFile;
+
+import de.vandermeer.execs.cf.CF;
+
 
 /**
  * A service executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.5 build 150623 (23-Jun-15) for Java 1.8
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
  */
 public class ExecS {
 	/** Name of the application for help/usage and printouts. */
@@ -47,10 +55,13 @@ public class ExecS {
 	 * Map of pre-registered services.
 	 * Use {@link #addService(String, Class)} to add your own services.
 	 */
-	final TreeMap<String, Class<? extends ExecutableService>> byClass;
+	final TreeMap<String, Class<? extends ExecutableService>> classmap;
 
 	/** Set of all classes filled during runtime search */
-	final TreeSet<String> byName;
+	final TreeSet<String> classNames;
+
+	/** Local ST Group for printouts. */
+	final STGroupFile stg;
 
 	/**
 	 * Standard constructor as used via direct command line execution.
@@ -66,10 +77,14 @@ public class ExecS {
 	public ExecS(String appName){
 		this.appName = (appName==null)?this.appName:appName;
 
-		this.byClass = new TreeMap<String, Class<? extends ExecutableService>>();
-		this.byName = new TreeSet<String>();
+		this.classmap = new TreeMap<String, Class<? extends ExecutableService>>();
+		this.classNames = new TreeSet<String>();
 
 		this.addService(Gen_RunScripts.SERVICE_NAME, Gen_RunScripts.class);
+		this.addService(Gen_RunSh.SERVICE_NAME, Gen_RunSh.class);
+		this.addService(Gen_RebaseSh.SERVICE_NAME, Gen_RebaseSh.class);
+
+		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 	}
 
 	/**
@@ -102,7 +117,7 @@ public class ExecS {
 	 * @param clazz the class of the service for instantiation
 	 */
 	protected final void addService(String name, Class<? extends ExecutableService> clazz){
-		this.byClass.put(name, clazz);
+		this.classmap.put(name, clazz);
 	}
 
 	/**
@@ -112,8 +127,8 @@ public class ExecS {
 	protected final void addAllServices(Set<Class<?>> set){
 		for(Class<?> cls:set){
 			if(!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())){
-				if(!this.byClass.containsValue(cls)){
-					this.byName.add(cls.getName());
+				if(!this.classmap.containsValue(cls)){
+					this.classNames.add(cls.getName());
 				}
 			}
 		}
@@ -134,61 +149,22 @@ public class ExecS {
 		if(arg==null || "-h".equals(arg) || "--help".equals(arg)){
 			//First help: no arguments or -h or --help -> print usage and exit(0)
 			this.printUsage();
-//			return 0;
+			return 0;
 		}
 		else if("-l".equals(arg) || "--list".equals(arg)){
 			//Second list: if -l or --list -> trigger search and exit(0)
-			this.addAllServices(new ClassFinder().findSubclasses(
-					ExecutableService.class.getName(),
-					(ArrayUtils.contains(args, "-j"))?this.jarFilter:null,
-					(ArrayUtils.contains(args, "-p"))?this.packageFilter:null
-			));
-			this.helpScreen();
-//			return 0;
+			CF cf = new CF()
+				.setJarFilter((ArrayUtils.contains(args, "-j"))?this.jarFilter:null)
+				.setPkgFilter((ArrayUtils.contains(args, "-p"))?this.packageFilter:null);
+			this.addAllServices(cf.getSubclasses(ExecutableService.class));
+			this.printList();
+			return 0;
 		}
-		else if(this.byClass.containsKey(arg)){
-			try{
-				Object svc = this.byClass.get(arg).newInstance();
-				if(svc instanceof ExecutableService){
-					arg = tokens.nextToken();
-					if("-h".equals(arg)){
-						((ExecutableService)svc).serviceHelpScreen();
-					}
-					else{
-						ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
-					}
-				}
-			}
-			catch(IllegalAccessException | InstantiationException iex){
-				System.err.println(this.appName + ": tried to execute <" + args[0] + "> by registered name -> exception");
-//				System.err.println(iex);
-//				iex.printStackTrace();
-				ret = -1;
-			}
+		else if(this.classmap.containsKey(arg)){
+			ret = this.executeByClassmap(args, tokens, arg);
 		}
 		else{
-			try{
-				Class<?> c = Class.forName(arg);
-				Object svc = c.newInstance();
-				if(svc instanceof ExecutableService){
-					arg = tokens.nextToken();
-					if("-h".equals(arg)){
-						((ExecutableService)svc).serviceHelpScreen();
-					}
-					else{
-						ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
-					}
-				}
-				else{
-					System.err.println("given class is not instance of " + ExecutableService.class.getName());
-					ret = -1;
-				}
-			}
-			catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
-				System.err.println(this.appName + ": tried to execute <" + args[0] + "> as class name -> exception");
-//				ex.printStackTrace();
-				ret = -1;
-			}
+			ret = this.executeByClassName(args, tokens, arg);
 		}
 
 		if(ret==-1){
@@ -200,91 +176,100 @@ public class ExecS {
 	}
 
 	/**
-	 * Prints a help screen with options and found executable services
+	 * Executes a service by class mapping.
+	 * @param args command line arguments
+	 * @param tokens tokenized CLI arguments
+	 * @param arg current argument
+	 * @return 0 on success, -1 on error
 	 */
-	protected void helpScreen(){
-		System.out.println(" -> defined servers:");
-		for(String key : this.byClass.keySet()){
-			System.out.println("                -> "+key);
+	protected int executeByClassmap(String[] args, StrTokenizer tokens, String arg){
+		int ret = 0;
+		try{
+			Object svc = this.classmap.get(arg).newInstance();
+			if(svc instanceof ExecutableService){
+				arg = tokens.nextToken();
+				if("-h".equals(arg)){
+					((ExecutableService)svc).serviceHelpScreen();
+				}
+				else{
+					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
+				}
+			}
 		}
-		System.out.println();
-		System.out.println(" -> servers in CP:");
-		for(String key : this.byName){
-			System.out.println("                -> "+key);
+		catch(IllegalAccessException | InstantiationException iex){
+			System.err.println(this.appName + ": tried to execute <" + args[0] + "> by registered name -> exception");
+//			System.err.println(iex);
+//			iex.printStackTrace();
+			ret = -1;
 		}
-		System.out.println();
-		System.out.println(" -> start any other ES_Service using <package> and <class> name");
-		System.out.println(" -> list all servers in classpath using '-l' or '-list'");
+
+		return ret;
+	}
+
+	/**
+	 * Executes a service by class name, that is using a fully qualified class name.
+	 * @param args command line arguments
+	 * @param tokens tokenized CLI arguments
+	 * @param arg current argument
+	 * @return 0 on success, -1 on error
+	 */
+	protected int executeByClassName(String[] args, StrTokenizer tokens, String arg){
+		int ret = 0;
+		try{
+			Class<?> c = Class.forName(arg);
+			Object svc = c.newInstance();
+			if(svc instanceof ExecutableService){
+				arg = tokens.nextToken();
+				if("-h".equals(arg)){
+					((ExecutableService)svc).serviceHelpScreen();
+				}
+				else{
+					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
+				}
+			}
+			else{
+				System.err.println("given class is not instance of " + ExecutableService.class.getName());
+				ret = -1;
+			}
+		}
+		catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
+			System.err.println(this.appName + ": tried to execute <" + args[0] + "> as class name -> exception");
+//			ex.printStackTrace();
+			ret = -1;
+		}
+
+		return ret;
 	}
 
 	/**
 	 * Prints a list of pre-registered and found services.
 	 */
 	protected final void printList(){
-		System.out.println(this.appName + ": list of available services");
-		System.out.println();
-
-		System.out.print("  --> defined services: ");
-		if(this.byClass.keySet().size()==0){
-			System.out.println("none\n");
-		}
-		else{
-			System.out.println();
-			for(String key : this.byClass.keySet()){
-				System.out.println("      - " + key);
+		ST list = this.stg.getInstanceOf("list");
+		list.add("appName", this.appName);
+		if(this.classmap.size()>0){
+			List<Map<String, String>> l = new ArrayList<>();
+			for(String key : this.classmap.keySet()){
+				Map<String, String> m = new HashMap<>();
+				m.put("key", key);
+				m.put("val", this.classmap.get(key).getName());
+				l.add(m);
 			}
+			list.add("classMap", l);
 		}
-		System.out.println();
-
-		System.out.print("  --> servers in class path: ");
-		if(this.byName.size()==0){
-			System.out.println("none\n");
-		}
-		else{
-			System.out.println();
-			for(String key : this.byName){
-				System.out.println("      - " + key);
-			}
-		}
-
-		System.out.println();
+		list.add("className", this.classNames);
+		System.out.println(list.render());
 	}
 
 	/**
 	 * Prints usage information to standard out.
 	 */
 	protected final void printUsage(){
-		System.out.println(this.appName + ": requires class, service name, or arguments");
-		System.out.println();
-
-		System.out.println("usage: " + this.appName + " <class> [class-options]");
-		System.out.println("  Executes a service by classname, class must implement the EXECS service interface.");
-		System.out.println("  <class> must be a fully qualified class name, i.e. with package and class name");
-		System.out.println("  [class-options] are command line options forwarded to the executed service");
-		System.out.println();
-
-		System.out.println("usage: " + this.appName + " <service> [service-options]");
-		System.out.println("  Executes a service by registered name, EXECS service interface must be implemented.");
-		System.out.println("  <service> must be name registered with the application");
-		System.out.println("  [service-options] are command line options forwarded to the executed service");
-		System.out.println();
-
-		System.out.println("usage: " + this.appName + " [-l | --list] [-j] [-p]");
-		System.out.println("  Lists all available services, i.e. classes implementing the service interface");
-		System.out.println("  Services are found by searching through all jars in the classpath (can be SLOW!).");
-		System.out.println("  -j - activate a jar filter if set for the executor");
-		System.out.println("  -p - activate a package filter if set for the executor");
-
-		System.out.println("usage: " + this.appName + " [-h | --help]");
-		System.out.println("  Prints this help screen.");
-		System.out.println();
-
-		System.out.println("set values: " + this.appName);
-		System.out.println("  package filter: " + this.packageFilter);
-		System.out.println("  jar filter: " + this.jarFilter);
-
-		System.out.println();
-		System.out.println();
+		ST usage = this.stg.getInstanceOf("usage");
+		usage.add("appName", this.appName);
+		usage.add("packageFilter", this.packageFilter);
+		usage.add("jarFilter", this.jarFilter);
+		System.out.println(usage.render());
 	}
 
 	/**

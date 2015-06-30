@@ -429,7 +429,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </li>
 <li>
-<p>added GenRunScripts to generate run scripts for Executable services</p>
+<p>added Gen_RunScripts to generate run scripts for Executable services</p>
 </li>
 <li>
 <p>added "stg-file" option to standard options</p>
@@ -455,6 +455,58 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li>
 <p>ASCII_DOCTOR</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>added shell scripts for script generation</p>
+<div class="ulist">
+<ul>
+<li>
+<p>gen-run-script.sh to generate run scripts</p>
+</li>
+<li>
+<p>rebase.sh to rebase existing scripts</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>refactored and changed the ClassFinder</p>
+<div class="ulist">
+<ul>
+<li>
+<p>now in package cf with separated classes for different functionality</p>
+</li>
+<li>
+<p>deprecated the old ClassFinder class, to be removed in next release</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>changed printouts for ExecS</p>
+<div class="ulist">
+<ul>
+<li>
+<p>added an STG for all major printouts (usage, lists)</p>
+</li>
+<li>
+<p>moved all printouts to STG</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>added services to generate shell scripts</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Gen_RunSh - to generate a shell script that uses Gen_RunScripts to generate run scripts</p>
+</li>
+<li>
+<p>Gen_RebaseSh - to generate a shell script that can rebase run scripts</p>
 </li>
 </ul>
 </div>
@@ -571,7 +623,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-06-29 17:58:02 IST
+Last updated 2015-06-30 21:31:38 IST
 </div>
 </div>
 </body>

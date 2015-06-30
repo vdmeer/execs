@@ -13,32 +13,11 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs;
-
-import org.apache.commons.cli.Option;
-
 /**
- * Option for the ExecS CLI parser.
+ * A class finder with jar and package filters.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
+ * @since      v0.0.6
  */
-public interface ExecS_CliOption {
-	/**
-	 * Returns the created option.
-	 * @return the created option
-	 */
-	public Option getOption();
-
-	/**
-	 * Returns the options a string.
-	 * @return option as string using the short option if not null, long option otherwise
-	 */
-	public String getOptionString();
-
-	/**
-	 * Returns a description for the option.
-	 * @return description for the option, should not be null
-	 */
-	public String getDescription();
-}
+package de.vandermeer.execs.cf;

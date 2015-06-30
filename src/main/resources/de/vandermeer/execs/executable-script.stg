@@ -20,7 +20,7 @@
  * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
  * @copyright  2015 Sven van der Meer
  * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
- * @version    v0.0.4 build 150619 (19-Jun-15)
+ * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15)
  */
 
 
@@ -36,8 +36,8 @@ bat cyg sh
 //
 // PUBLIC: generate a target
 //
-generateRun(target, deploymentHome, javaProperties, classPath, class) ::= <<
-<header(target, deploymentHome)>
+generateRun(target, applicationHome, javaProperties, classPath, class) ::= <<
+<header(target, applicationHome)>
 java <javaProperties:{p|-D<p.key>=<p.val>};separator=" "> -classpath "<classPath>" <class> <arguments(target)>
 
 >>
@@ -46,8 +46,8 @@ java <javaProperties:{p|-D<p.key>=<p.val>};separator=" "> -classpath "<classPath
 //
 // PUBLIC: generate a specific exec script
 //
-generateExec(target, deploymentHome, runName, class) ::= <<
-<header(target, deploymentHome)>
+generateExec(target, applicationHome, runName, class) ::= <<
+<header(target, applicationHome)>
 <execHomeVar(target)><pathSeparator(target)><runScript(target, runName)> <class> <arguments(target)>
 
 >>
@@ -56,22 +56,22 @@ generateExec(target, deploymentHome, runName, class) ::= <<
 //
 // PRIVATE: generating header for target
 //
-header(target, deploymentHome) ::= <<
+header(target, applicationHome) ::= <<
 <if(target.bat)>
 @echo off
 
-REM --> change DEPLOYMENT_HOME to the root path of the deployment
-set DEPLOYMENT_HOME=<deploymentHome>
+REM --> change APPLICATION_HOME to the root path of the application
+set APPLICATION_HOME=<applicationHome>
 <elseif(target.cyg)>
 #!/bin/bash
 
-# --> change DEPLOYMENT_HOME to the root path of the deployment
-DEPLOYMENT_HOME=<deploymentHome>
+# --> change APPLICATION_HOME to the root path of the application
+APPLICATION_HOME=<applicationHome>
 <elseif(target.sh)>
 #!/bin/bash
 
-# --> change DEPLOYMENT_HOME to the root path of the deployment
-DEPLOYMENT_HOME=<deploymentHome>
+# --> change APPLICATION_HOME to the root path of the application
+APPLICATION_HOME=<applicationHome>
 <else>
 header NULL
 <endif>
@@ -98,7 +98,7 @@ runScript(target, name) ::= <<
 // PRIVATE: generating execution home var strings for targets
 //
 execHomeVar(target) ::= <<
-<if(target.bat)>%DEPLOYMENT_HOME%<elseif(target.cyg)>${DEPLOYMENT_HOME}<elseif(target.sh)>${DEPLOYMENT_HOME}<else>execHomeVar NULL<endif>
+<if(target.bat)>%APPLICATION_HOME%<elseif(target.cyg)>${APPLICATION_HOME}<elseif(target.sh)>${APPLICATION_HOME}<else>execHomeVar NULL<endif>
 >>
 
 //

@@ -116,10 +116,10 @@
 				<version>1.5.0</version>
 				<executions>
 					<execution>
-						<id>package-asciidoc</id>
+						<id>bundle-asciidoc</id>
 						<phase>process-resources</phase>
 						<configuration>
-							<sourceDirectory>src/package/doc</sourceDirectory>
+							<sourceDirectory>src/main/bundle/doc</sourceDirectory>
 							<outputDirectory>./</outputDirectory>
 							<backend>html</backend>
 						</configuration>
@@ -132,14 +132,14 @@
 				<version>2.4.3</version>
 				<executions>
 					<execution>
-						<id>copy-docs</id>
+						<id>copy-bundle-docs</id>
 						<phase>generate-resources</phase>
 						<goals><goal>copy-resources</goal></goals>
 						<configuration>
 							<outputDirectory>./</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/package/doc</directory>
+									<directory>src/main/bundle/doc</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
