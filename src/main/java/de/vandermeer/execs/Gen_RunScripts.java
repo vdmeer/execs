@@ -94,6 +94,7 @@ public class Gen_RunScripts implements ExecutableService {
 		this.cli.addOption(CLIOPT_STGFILE);
 		this.cli.addOption(CLIOPT_CLASSMAP_FILE);
 		this.cli.addOption(CLIOPT_APPLICATION_HOME_DIR);
+		this.cli.addOption(CLIOPT_PROP_FILE);
 	}
 
 	@Override
@@ -180,7 +181,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 */
 	protected final int initConfiguration(){
 		String propFile = "de/vandermeer/execs/configuration.properties";
-		if(this.cli.hasOption(CLIOPT_PROP_FILE) && this.cli.getOption(CLIOPT_PROP_FILE)!=null){
+		if(ExecS_Cli.testOption(this.cli, CLIOPT_PROP_FILE)){
 			propFile = this.cli.getOption(CLIOPT_PROP_FILE);
 		}
 
@@ -227,7 +228,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initTargetAndStg(){
-		if(this.cli.hasOption(StandardOptions.TARGET)){
+		if(ExecS_Cli.testOption(this.cli, StandardOptions.TARGET)){
 			this.target = this.cli.getOption(StandardOptions.TARGET);
 		}
 		if(this.target==null){
@@ -239,7 +240,7 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
 			fileName = this.configuration.get("stg.file").toString();
 		}
-		if(this.cli.hasOption(CLIOPT_STGFILE) && this.cli.getOption(CLIOPT_STGFILE)!=null){
+		if(ExecS_Cli.testOption(this.cli, CLIOPT_STGFILE)){
 			fileName = this.cli.getOption(CLIOPT_STGFILE);
 		}
 
@@ -280,7 +281,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initApplicationDir(){
-		if(this.cli.hasOption(CLIOPT_APPLICATION_HOME_DIR) && this.cli.getOption(CLIOPT_APPLICATION_HOME_DIR)!=null){
+		if(ExecS_Cli.testOption(this.cli, CLIOPT_APPLICATION_HOME_DIR)){
 			this.applicationDir = this.cli.getOption(CLIOPT_APPLICATION_HOME_DIR);
 		}
 		else{
@@ -305,7 +306,7 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
 			fileName = this.configuration.get("execs.classmap").toString();
 		}
-		if(this.cli.hasOption(CLIOPT_CLASSMAP_FILE) && this.cli.getOption(CLIOPT_CLASSMAP_FILE)!=null){
+		if(ExecS_Cli.testOption(this.cli, CLIOPT_CLASSMAP_FILE)){
 			fileName = this.cli.getOption(CLIOPT_CLASSMAP_FILE);
 		}
 

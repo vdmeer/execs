@@ -9,10 +9,8 @@ public class MeTest {
 //		Gen_RunScripts generator = new Gen_RunScripts();
 //
 //		generator.executeService(new String[]{
-//				"--target",
-//				"bat",
-//				"--application-dir",
-//				"bla"
+//				"--target", "bat",
+//				"--application-dir", "bla",
 //		});
 //
 //		generator.serviceHelpScreen();
@@ -21,6 +19,9 @@ public class MeTest {
 	@Test
 	public void testRebase(){
 		Gen_RunSh rebase = new Gen_RunSh();
-		rebase.executeService(new String[]{"--lib-dir", "../../../TEST"});
+		rebase.executeService(new String[]{
+				"--lib-dir", "../../../TEST",
+//				"--property-file", "ME"
+		});
 	}
 }

@@ -21,6 +21,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * CLI implementation for servers.
@@ -123,6 +124,20 @@ public class ExecS_Cli {
 //			logger.error("{}: error parsing command line -> {}", new Object[]{appName, err.getMessage()});
 			System.err.println(appName + ": error parsing command line -> " + err.getMessage());
 			return -1; 
+		}
+		return ret;
+	}
+
+	/**
+	 * Tests if a CLI object has an option and if that option is not null and not empty
+	 * @param cli CLI object for testing, must have parsed command line already
+	 * @param option option to test for
+	 * @return true if option is set and not null and not empty, false otherwise
+	 */
+	public static boolean testOption(ExecS_Cli cli, ExecS_CliOption option){
+		boolean ret = false;
+		if(cli.hasOption(option)){
+			ret = StringUtils.isNotBlank(cli.getOption(option));
 		}
 		return ret;
 	}
