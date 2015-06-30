@@ -1,3 +1,21 @@
+v0.0.6 - feature add - 2015-07-##
+---------------------------------
+* added factory for CLI option generation
+  ** changed StandardOptions to use factory rather than instantiate locally
+* added GenRunScripts to generate run scripts for Executable services
+* added "stg-file" option to standard options
+* fixed bug in ExecS_Cli not accepting ExecS_CliOption but only StandardOptions
+* marked some StandardOptions as deprecated since they are rather specific
+  ** all ZK_ options
+  ** all WS_ options
+  ** DO_RECONNECT
+  ** all EVENT_ options
+  ** ASCII_DOCTOR
+* added shell scripts for script generation
+  ** gen-run-script.sh to generate run scripts
+  ** rebase.sh to rebase existing scripts
+
+
 v0.0.5 - feature add - 2015-06-23
 ---------------------------------
 * renamed classes

@@ -35,4 +35,10 @@ public interface ExecS_CliOption {
 	 * @return option as string using the short option if not null, long option otherwise
 	 */
 	public String getOptionString();
+
+	/**
+	 * Returns a description for the option.
+	 * @return description for the option, should not be null
+	 */
+	public String getDescription();
 }

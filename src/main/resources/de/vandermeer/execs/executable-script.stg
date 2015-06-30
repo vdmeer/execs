@@ -1,0 +1,133 @@
+/* Copyright 2015 Sven van der Meer <vdmeer.sven@mykolab.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Template for generating run scripts used by Gen_RunScripts.
+ *
+ * @package    de.vandermeer.execs
+ * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
+ * @copyright  2015 Sven van der Meer
+ * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
+ * @version    v0.0.4 build 150619 (19-Jun-15)
+ */
+
+
+//
+// PUBLIC: supported targets, must all be supported by the STG
+//         target list can be separated by comma or blank or both
+//
+supportedTargets() ::= <<
+bat cyg sh
+>>
+
+
+//
+// PUBLIC: generate a target
+//
+generateRun(target, deploymentHome, javaProperties, classPath, class) ::= <<
+<header(target, deploymentHome)>
+java <javaProperties:{p|-D<p.key>=<p.val>};separator=" "> -classpath "<classPath>" <class> <arguments(target)>
+
+>>
+
+
+//
+// PUBLIC: generate a specific exec script
+//
+generateExec(target, deploymentHome, runName, class) ::= <<
+<header(target, deploymentHome)>
+<execHomeVar(target)><pathSeparator(target)><runScript(target, runName)> <class> <arguments(target)>
+
+>>
+
+
+//
+// PRIVATE: generating header for target
+//
+header(target, deploymentHome) ::= <<
+<if(target.bat)>
+@echo off
+
+REM --> change DEPLOYMENT_HOME to the root path of the deployment
+set DEPLOYMENT_HOME=<deploymentHome>
+<elseif(target.cyg)>
+#!/bin/bash
+
+# --> change DEPLOYMENT_HOME to the root path of the deployment
+DEPLOYMENT_HOME=<deploymentHome>
+<elseif(target.sh)>
+#!/bin/bash
+
+# --> change DEPLOYMENT_HOME to the root path of the deployment
+DEPLOYMENT_HOME=<deploymentHome>
+<else>
+header NULL
+<endif>
+>>
+
+
+//
+// PRIVATE: generating arguments for target
+//
+arguments(target) ::= <<
+<if(target.bat)>%1 %2 %3 %4 %5 %6 %7 %8 %9<elseif(target.cyg)>$*<elseif(target.sh)>$*<else>arguments NULL<endif>
+>>
+
+
+//
+// PRIVATE: generating main run script file name for target
+//
+runScript(target, name) ::= <<
+<if(target.bat)>bat\\<name>.bat<elseif(target.cyg)>cyg/<name>.sh<elseif(target.sh)>sh/<name>.sh<else>runScript NULL<endif>
+>>
+
+
+//
+// PRIVATE: generating execution home var strings for targets
+//
+execHomeVar(target) ::= <<
+<if(target.bat)>%DEPLOYMENT_HOME%<elseif(target.cyg)>${DEPLOYMENT_HOME}<elseif(target.sh)>${DEPLOYMENT_HOME}<else>execHomeVar NULL<endif>
+>>
+
+//
+// PRIVATE: generating execution file name for targets
+//
+execFile(target, destDir, destFile) ::= <<
+<if(target.bat)><destDir>\\bin\\bat\\<destFile>.bat<elseif(target.cyg)><destDir>/bin/cyg/<destFile>.sh<elseif(target.sh)><destDir>/bin/sh/<destFile>.sh<else>execFile NULL<endif>
+>>
+
+//
+// PUBLIC: return java class with target specific separator
+//
+classpath(target, classpath) ::= <<
+<if(target.bat)><classpath:{c|<execHomeVar(target)>\\<c>};separator=";"><elseif(target.cyg)><classpath:{c|<execHomeVar(target)>/<c>};separator=";"><elseif(target.sh)><classpath:{c|<execHomeVar(target)>/<c>};separator=":"><else>classpath NULL<endif>
+>>
+
+
+//
+// PUBLIC: return script name (file name) extension
+//
+fnExtension(target) ::= <<
+<if(target.bat)>.bat<elseif(target.cyg)>.sh<elseif(target.sh)>.sh<else>fnExtension NULL<endif>
+>>
+
+
+
+//
+// PUBLIC: generates a path separator for target
+//
+pathSeparator(target) ::= <<
+<if(target.bat)>\\<elseif(target.cyg)>/<elseif(target.sh)>/<else>pathSeparator NULL<endif>
+>>

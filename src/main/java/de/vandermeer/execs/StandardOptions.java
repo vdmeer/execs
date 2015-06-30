@@ -28,15 +28,19 @@ public enum StandardOptions implements ExecS_CliOption {
 	HELP				('h',	"help",					null,		"prints help and usage screen"),
 
 	/** Option to name an Apache Zookeeper host (IP address or host name). */
+	@Deprecated
 	ZK_HOST				('z',	"zk-host",				"HOST",		"Apache Zookeeper host"),
 
 	/** Option to name an Apache Zookeeper port (integer). */
+	@Deprecated
 	ZK_PORT				('p',	"zk-port",				"PORT",		"Apache Zookeeper port"),
 
 	/** Option to name a timeout for trying to connect to Apache Zookeeper. */
+	@Deprecated
 	ZK_TIME_OUT			('t',	"zk-timeout",			"MS",		"Zookeeper connection timeout in milliseconds"),
 
 	/** Option to name a specific path to search for in Apache Zookeeper. */
+	@Deprecated
 	ZK_PATH				('k',	"zk-path",				"PATH",		"Zookeeper path to write configuration to or read it from, translates to standard enum"),
 
 	/** Option to name a component ID. */
@@ -55,82 +59,46 @@ public enum StandardOptions implements ExecS_CliOption {
 	DIRECTORY_INPUT		(null,	"input-directory",		"DIR",		"input directory"),
 
 	/** Option to name a W3C Websocket self port. */
+	@Deprecated
 	WS_SELF_PORT		('s',	"self-port",			"PORT",		"port number for self server"),
 
 	/** Option to name a W3C Websocket URI for a connection. */
+	@Deprecated
 	WS_URI				(null,	"ws-uri",				"URI",		"URI for a wesocket connection"),
 
 	/** Option to name a W3C Websocket URI for a connection. */
+	@Deprecated
 	WS_HOST				(null,	"ws-host",				"HOST",		"hostname (IP address or DNS name) for a wesocket connection"),
 
 	/** Option to name a W3C Websocket URI for a connection. */
+	@Deprecated
 	WS_PORT				(null,	"ws-port",				"PORT",		"port number for a wesocket connection"),
 
 	/** Option for a server to run in background mode. */
 	SERVER_MODE			(null,	"srv-mode",				null,		"tells a server to run in background mode"),
 
 	/** Option to activate automatic re-connections for messaging service clients. */
+	@Deprecated
 	DO_RECONNECT		('r',	"do-reconnect",			null,		"activates automatic reconnection for messaging service clients"),
 
 	/** Option to name an Event DSL set to process. */
+	@Deprecated
 	EVENT_DSL_SET		(null,	"event-dsl-set",		"SET",		"names an Event DSL set to process (full class name)"),
 
 	/** Option to name an Event DSL to process. */
+	@Deprecated
 	EVENT_DSL			(null,	"event-dsl",			"DSL",		"names an Event DSL to process (full class name)"),
 
 	/** Option to name a target, for instance for a compilation. */
 	TARGET				(null,	"target",				"TARGET",	"specifies a target, for instance for a compilation"),
 
 	/** Option to advice a compiler to generate for ASCII-DOCTOR, not for classic ASCIIDOC. */
+	@Deprecated
 	ASCII_DOCTOR		(null,	"ascii-doctor",			null,		"specifies output for ASCII Doctor"),
 	;
 
-	/** Private option. */
-	private Option option;
-
-	/** Private short option if defined, null if not. */
-	private Character shortOption;
-
-	/** Private long option. */
-	private String longOption;
-
-	/**
-	 * Creates a new short option with description.
-	 * @param shortOption short option, i.e. a character
-	 * @param description option description
-	 */
-	StandardOptions(Character shortOption, String description){
-		this(shortOption, null, null, description);
-	}
-
-	/**
-	 * Creates a new short option with an argument and description.
-	 * @param shortOption short option, i.e. a character
-	 * @param withArg an argument for the option
-	 * @param description option description
-	 */
-	StandardOptions(Character shortOption, String withArg, String description){
-		this(shortOption, null, withArg, description);
-	}
-
-	/**
-	 * Creates a new long option with description.
-	 * @param longOption long option, i.e. a full string
-	 * @param description option description
-	 */
-	StandardOptions(String longOption, String description){
-		this(null, longOption, null, description);
-	}
-
-	/**
-	 * Creates a new long option with an argument and description.
-	 * @param longOption long option, i.e. a full string
-	 * @param withArg an argument for the option
-	 * @param description option description
-	 */
-	StandardOptions(String longOption, String withArg, String description){
-		this(null, longOption, withArg, description);
-	}
+	/** A generated CLI option for the enumerate. */
+	private ExecS_CliOption option;
 
 	/**
 	 * Creates a new option with short and long access along with argument and description
@@ -140,42 +108,21 @@ public enum StandardOptions implements ExecS_CliOption {
 	 * @param description option description
 	 */
 	StandardOptions(Character shortOption, String longOption, String withArg, String description){
-		Option.Builder builder;
-		if(shortOption!=null){
-			builder = Option.builder(shortOption.toString());
-		}
-		else{
-			builder = Option.builder();
-		}
-
-		builder.desc(description);
-		if(longOption!=null){
-			builder.longOpt(longOption);
-		}
-		if(withArg!=null){
-			builder.hasArg().argName(withArg);
-		}
-
-		this.option = builder.build();
-
-		this.shortOption = shortOption;
-		this.longOption = longOption;
+		this.option = ExecS_Factory.newCliOption(shortOption, longOption, withArg, description);
 	}
 
 	@Override
 	public Option getOption(){
-		return this.option;
+		return this.option.getOption();
+	}
+
+	@Override
+	public String getDescription(){
+		return this.option.getDescription();
 	}
 
 	@Override
 	public String getOptionString(){
-		String ret = null;
-		if(this.shortOption!=null){
-			ret = this.shortOption.toString();
-		}
-		else if(this.longOption!=null){
-			ret = this.longOption;
-		}
-		return ret;
+		return this.option.getOptionString();
 	}
 }

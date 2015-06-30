@@ -68,6 +68,8 @@ public class ExecS {
 
 		this.byClass = new TreeMap<String, Class<? extends ExecutableService>>();
 		this.byName = new TreeSet<String>();
+
+		this.addService(Gen_RunScripts.SERVICE_NAME, Gen_RunScripts.class);
 	}
 
 	/**
@@ -132,7 +134,7 @@ public class ExecS {
 		if(arg==null || "-h".equals(arg) || "--help".equals(arg)){
 			//First help: no arguments or -h or --help -> print usage and exit(0)
 			this.printUsage();
-			return 0;
+//			return 0;
 		}
 		else if("-l".equals(arg) || "--list".equals(arg)){
 			//Second list: if -l or --list -> trigger search and exit(0)
@@ -142,11 +144,11 @@ public class ExecS {
 					(ArrayUtils.contains(args, "-p"))?this.packageFilter:null
 			));
 			this.helpScreen();
-			return 0;
+//			return 0;
 		}
 		else if(this.byClass.containsKey(arg)){
 			try{
-				Object svc=this.byClass.get(arg).newInstance();
+				Object svc = this.byClass.get(arg).newInstance();
 				if(svc instanceof ExecutableService){
 					arg = tokens.nextToken();
 					if("-h".equals(arg)){

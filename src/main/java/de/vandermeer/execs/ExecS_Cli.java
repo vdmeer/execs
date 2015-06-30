@@ -48,7 +48,7 @@ public class ExecS_Cli {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @return self to allow for chaining
 	 */
-	public ExecS_Cli addOption(StandardOptions option){
+	public ExecS_Cli addOption(ExecS_CliOption option){
 		if(option!=null && option.getOption()!=null){
 			this.options.addOption(option.getOption());
 		}
@@ -77,7 +77,7 @@ public class ExecS_Cli {
 	 * @param option option to look for
 	 * @return string value if set, null otherwise
 	 */
-	public String getOption(StandardOptions option){
+	public String getOption(ExecS_CliOption option){
 		String ret = null;
 		String o = (option!=null)?option.getOptionString():null;
 		if(o!=null && this.cmdLine.hasOption(o)){
@@ -91,7 +91,7 @@ public class ExecS_Cli {
 	 * @param option option to test for
 	 * @return true if option was used, false otherwise
 	 */
-	public boolean hasOption(StandardOptions option){
+	public boolean hasOption(ExecS_CliOption option){
 		String o = (option!=null)?option.getOptionString():null;
 		if(o!=null){
 			return this.cmdLine.hasOption(o);
@@ -121,6 +121,7 @@ public class ExecS_Cli {
 		if(err!=null){
 //TODO
 //			logger.error("{}: error parsing command line -> {}", new Object[]{appName, err.getMessage()});
+			System.err.println(appName + ": error parsing command line -> " + err.getMessage());
 			return -1; 
 		}
 		return ret;
