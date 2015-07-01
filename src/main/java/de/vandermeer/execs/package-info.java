@@ -47,6 +47,6 @@
  * </p>
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
+ * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
  */
 package de.vandermeer.execs;

@@ -32,7 +32,7 @@ import org.stringtemplate.v4.STGroupFile;
  * Executable service to generate run scripts for other executable services, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
+ * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunScripts implements ExecutableService {
@@ -168,6 +168,13 @@ public class Gen_RunScripts implements ExecutableService {
 			targetExecST.add("class", key);
 			this.writeFile(this.outputDir + File.separator + this.classMap.get(key) + fnExtension, targetExecST);
 		}
+
+		ST headerST = this.stg.getInstanceOf("header");
+		headerST.add("target", targetMap);
+		headerST.add("applicationHome", this.applicationDir);
+		this.writeFile(this.outputDir + File.separator + "_header", headerST);
+
+//TODO execs.autogenerate.registered
 
 		return 0;
 	}

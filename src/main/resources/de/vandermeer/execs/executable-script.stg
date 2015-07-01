@@ -20,7 +20,7 @@
  * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
  * @copyright  2015 Sven van der Meer
  * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
- * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15)
+ * @version    v0.0.6 build 150701 (01-Jul-15)
  */
 
 
@@ -48,13 +48,13 @@ java <javaProperties:{p|-D<p.key>=<p.val>};separator=" "> -classpath "<classPath
 //
 generateExec(target, applicationHome, runName, class) ::= <<
 <header(target, applicationHome)>
-<execHomeVar(target)><pathSeparator(target)><runScript(target, runName)> <class> <arguments(target)>
+<execHomeVar(target)><pathSeparator(target)>bin<pathSeparator(target)><runScript(target, runName)> <class> <arguments(target)>
 
 >>
 
 
 //
-// PRIVATE: generating header for target
+// PUBLIC: generating header for target
 //
 header(target, applicationHome) ::= <<
 <if(target.bat)>

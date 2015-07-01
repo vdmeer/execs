@@ -39,7 +39,7 @@ import de.vandermeer.execs.cf.CF;
  * A service executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6-SNAPSHOT build 150630 (30-Jun-15) for Java 1.8
+ * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
  */
 public class ExecS {
 	/** Name of the application for help/usage and printouts. */
@@ -85,6 +85,14 @@ public class ExecS {
 		this.addService(Gen_RebaseSh.SERVICE_NAME, Gen_RebaseSh.class);
 
 		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
+	}
+
+	/**
+	 * Returns a set of names that have been registered as services with associated execution services.
+	 * @return list of names for registered execution services, empty list if none registered
+	 */
+	public Set<String> getRegisteredServices(){
+		return this.classmap.keySet();
 	}
 
 	/**
