@@ -39,7 +39,8 @@ import de.vandermeer.execs.cf.CF;
  * A service executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @since      v0.0.1
  */
 public class ExecS {
 	/** Name of the application for help/usage and printouts. */
@@ -55,7 +56,7 @@ public class ExecS {
 	 * Map of pre-registered services.
 	 * Use {@link #addService(String, Class)} to add your own services.
 	 */
-	final TreeMap<String, Class<? extends ExecutableService>> classmap;
+	protected final TreeMap<String, Class<? extends ExecutableService>> classmap;
 
 	/** Set of all classes filled during runtime search */
 	final TreeSet<String> classNames;
@@ -93,6 +94,14 @@ public class ExecS {
 	 */
 	public Set<String> getRegisteredServices(){
 		return this.classmap.keySet();
+	}
+
+	/**
+	 * Returns the full class map of the executor.
+	 * @return full class map, empty if no classes set
+	 */
+	Map<String, Class<? extends ExecutableService>> getClassMap(){
+		return this.classmap;
 	}
 
 	/**

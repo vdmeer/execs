@@ -19,7 +19,8 @@ package de.vandermeer.execs;
  * Interface for a service that can be executed.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @since      v0.0.1
  */
 public interface ExecutableService {
 
@@ -52,4 +53,13 @@ public interface ExecutableService {
 	 * @return service name
 	 */
 	String getName();
+
+	/**
+	 * Returns the script name for generating a run script for the service.
+	 * For instance, a tool such as {@link Gen_RunScripts} can use this script name to generate an executable script with all runtime configurations using that name.
+	 * @return the script name, default is the service name returned by {@link #getName()}
+	 */
+	default String getScriptName(){
+		return this.getName();
+	}
 }

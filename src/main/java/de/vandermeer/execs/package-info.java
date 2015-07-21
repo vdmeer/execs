@@ -14,7 +14,7 @@
  */
 
 /**
- * A simple set of classes to execute programmes from the command line, without littering the code with <code>static void main(String[] args)</code>.
+ * A simple set of classes to execute programs from the command line, without littering the code with <code>static void main(String[] args)</code>.
  * 
  * <p>
  * This package addresses the following problem: a package (or a set of packages) contain
@@ -30,7 +30,7 @@
  * </p>
  * 
  * <p>
- * The {@link de.vandermeer.execs.ClassFinder} can be used to search all or filtered jar files (or URIs) for any class that
+ * The {@link de.vandermeer.execs.cf.CF} can be used to search all or filtered jar files (or URIs) for any class that
  * implement the interface. Once all implementations are found, one can use the {@link de.vandermeer.execs.ExecS} object with
  * its <code>static main()</code> to execute any service from the command line.
  * </p>
@@ -47,6 +47,7 @@
  * </p>
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @since      v0.0.1
  */
 package de.vandermeer.execs;

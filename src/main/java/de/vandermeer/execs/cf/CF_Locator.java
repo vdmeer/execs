@@ -36,7 +36,7 @@ import java.util.jar.JarFile;
  * A locator for jar files with jar and package filter.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
  * @since      v0.0.6
  */
 public class CF_Locator {
@@ -152,7 +152,7 @@ public class CF_Locator {
 			name += ".";
 		}
 
-		File [] dirs = file.listFiles(CF_Utils.DIRECTORIES_ONLY);
+		File[] dirs = file.listFiles(CF_Utils.DIRECTORIES_ONLY);
 		for(int i=0; i<dirs.length; i++){
 			try{
 				this.locationMap.put(new URI("file://" + dirs[i].getCanonicalPath()), name + dirs[i].getName());

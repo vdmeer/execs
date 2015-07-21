@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * A class finder searching for all subclasses of a given class with jar and package filters.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
  * @since      v0.0.6
  */
 public class CF {
@@ -51,7 +51,7 @@ public class CF {
 	/** A boolean indicating if the locator need to run again, should be true when filters are changed. */
 	protected boolean needsReRun;
 
-	/** List of processed aritfacts. */
+	/** List of processed artifacts. */
 	protected final Set<String> processed;
 
 	/**

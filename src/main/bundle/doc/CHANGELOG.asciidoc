@@ -1,3 +1,17 @@
+v0.0.8 - minor changes - 2015-07-21
+-----------------------------------
+* changed classMap in ExecS to protected
+	** allows sub-classes to clear the map when using auto-gen run script features
+* removed deprecated classes and options
+
+
+v0.0.7 - feature add - 2015-07-12
+---------------------------------
+* added execs.autogenerate.registered to Gen_RunScripts
+* removed default class map in Gen_RunScripts
+* added getScriptName() to ExecutableService for customization of run script generation
+
+
 v0.0.6 - feature add - 2015-07-01
 ---------------------------------
 * added factory for CLI option generation

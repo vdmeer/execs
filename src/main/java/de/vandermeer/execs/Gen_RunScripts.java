@@ -21,9 +21,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
@@ -32,7 +34,7 @@ import org.stringtemplate.v4.STGroupFile;
  * Executable service to generate run scripts for other executable services, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunScripts implements ExecutableService {
@@ -64,6 +66,9 @@ public class Gen_RunScripts implements ExecutableService {
 	/** The string all java properties for running the JVM must start with. */
 	public final static String PROP_JAVAPROP_START = "java.property.";
 
+	/** A property key to set auto-script generation for registered executable services. */
+	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
+
 	/** Local CLI options for CLI parsing. */
 	protected ExecS_Cli cli;
 
@@ -73,7 +78,7 @@ public class Gen_RunScripts implements ExecutableService {
 	/** Properties with a class map. */
 	protected Properties classMap;
 
-	/** String template group loaded from stg file. */
+	/** String template group loaded from STG file. */
 	protected STGroupFile stg;
 
 	/** The target set for generation. */
@@ -120,7 +125,7 @@ public class Gen_RunScripts implements ExecutableService {
 			return ret;
 		}
 		ret = this.initClassmap();
-		if(ret!=0){
+		if(ret==-1){
 			return ret;
 		}
 		ret = this.initOutputDir();
@@ -134,6 +139,8 @@ public class Gen_RunScripts implements ExecutableService {
 		String targetFileSep = this.stg.getInstanceOf("pathSeparator").add("target", targetMap).render();
 
 		//build main run script
+		String outFN = this.outputDir + File.separator + this.configuration.get(PROP_RUN_SCRIPT_NAME) + fnExtension;
+		System.out.println(" --> generating main run script - " + outFN);
 		ST targetRunST = this.stg.getInstanceOf("generateRun");
 		targetRunST.add("target", targetMap);
 		targetRunST.add("class", this.configuration.get(PROP_RUN_CLASS));
@@ -157,26 +164,59 @@ public class Gen_RunScripts implements ExecutableService {
 				targetRunST.add("classPath", classpath.render());
 			}
 		}
-		this.writeFile(this.outputDir + File.separator + this.configuration.get(PROP_RUN_SCRIPT_NAME) + fnExtension, targetRunST);
+		this.writeFile(outFN, targetRunST);
 
-		//build all scripts for classmap
-		for(Object key : this.classMap.keySet()){
-			ST targetExecST = this.stg.getInstanceOf("generateExec");
-			targetExecST.add("target", targetMap);
-			targetExecST.add("applicationHome", this.applicationDir);
-			targetExecST.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
-			targetExecST.add("class", key);
-			this.writeFile(this.outputDir + File.separator + this.classMap.get(key) + fnExtension, targetExecST);
+		//build all scripts for classmap, if set
+		if(this.classMap!=null){
+			for(Object key : this.classMap.keySet()){
+				outFN = this.outputDir + File.separator + this.classMap.get(key) + fnExtension;
+				System.out.println(" --> generating script from class map - " + outFN);
+
+				ST targetExecST = this.generateScript(key.toString(), targetMap);
+//						;this.stg.getInstanceOf("generateExec");
+//				targetExecST.add("target", targetMap);
+//				targetExecST.add("applicationHome", this.applicationDir);
+//				targetExecST.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
+//				targetExecST.add("class", key);
+				this.writeFile(outFN, targetExecST);
+			}
 		}
 
+		//build scripts for all registered services using the specified run class
+		if(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED)!=null && BooleanUtils.toBoolean(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED).toString())){
+			try{
+				Class<?> c = Class.forName(this.configuration.get(PROP_RUN_CLASS).toString());
+				Object svc = c.newInstance();
+				Map<String, Class<? extends ExecutableService>> map = ((ExecS)svc).getClassMap();
+				for(String s : map.keySet()){
+					outFN = this.outputDir + File.separator + s + fnExtension;
+					System.out.println(" --> generating script from auto-gen-reg - " + outFN);
+
+					ST targetExecST = this.generateScript(map.get(s).getName(), targetMap);
+					this.writeFile(outFN, targetExecST);
+				}
+			}
+			catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
+				e.printStackTrace();
+			}
+		}
+
+		//build a generic header that can be used outside this class for generating other scripts
 		ST headerST = this.stg.getInstanceOf("header");
 		headerST.add("target", targetMap);
 		headerST.add("applicationHome", this.applicationDir);
 		this.writeFile(this.outputDir + File.separator + "_header", headerST);
 
-//TODO execs.autogenerate.registered
-
 		return 0;
+	}
+
+	protected final ST generateScript(String clazz, HashMap<String, Boolean> targetMap){
+		ST ret = this.stg.getInstanceOf("generateExec");
+		ret.add("target", targetMap);
+		ret.add("applicationHome", this.applicationDir);
+		ret.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
+		ret.add("class", clazz);
+		return ret;
 	}
 
 	/**
@@ -213,12 +253,13 @@ public class Gen_RunScripts implements ExecutableService {
 
 		System.out.println(this.getName() + ": using configuration: ");
 		System.out.println("  - run script name: " + this.configuration.get(PROP_RUN_SCRIPT_NAME));
-		System.out.println("  - run class: " + this.configuration.get(PROP_RUN_CLASS));
-		System.out.println("  - java cp: " + this.configuration.get(PROP_JAVA_CP));
+		System.out.println("  - run class      : " + this.configuration.get(PROP_RUN_CLASS));
+		System.out.println("  - java cp        : " + this.configuration.get(PROP_JAVA_CP));
+		System.out.println("  - auto-gen reg   : " + this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED));
 
 		for(Object key : this.configuration.keySet()){
 			if(StringUtils.startsWith(key.toString(), PROP_JAVAPROP_START)){
-				System.out.println("  - java property: " + key + " = " + this.configuration.getProperty(key.toString()));
+				System.out.println("  - java property  : " + key + " = " + this.configuration.getProperty(key.toString()));
 			}
 		}
 		System.out.println();
@@ -303,18 +344,22 @@ public class Gen_RunScripts implements ExecutableService {
 	 * Loads a classmap from a property file.
 	 * A classmap maps class names to script names.
 	 * A class name must be an implementation of the executable service interface {@link ExecutableService}.
-	 * The default classmap file name is "de/vandermeer/execs/class-mappings.properties".
+	 * No default map is used.
 	 * This default can be overwritten using the property "execs.classmap" in the configuration properties file.
 	 * The default and the property file name can be overwritten using the "--classmap-file" CLI option.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initClassmap(){
-		String fileName = "de/vandermeer/execs/class-mappings.properties";
+		String fileName = null;
 		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
 			fileName = this.configuration.get("execs.classmap").toString();
 		}
 		if(ExecS_Cli.testOption(this.cli, CLIOPT_CLASSMAP_FILE)){
 			fileName = this.cli.getOption(CLIOPT_CLASSMAP_FILE);
+		}
+		if(fileName==null){
+			System.err.println(this.getName() + ": no classmap file name given");
+			return -2;
 		}
 
 		this.classMap = this.loadProperties(fileName);

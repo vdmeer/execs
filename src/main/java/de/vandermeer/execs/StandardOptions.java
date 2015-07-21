@@ -21,27 +21,12 @@ import org.apache.commons.cli.Option;
  * Standard CLI options.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.6 build 150701 (01-Jul-15) for Java 1.8
+ * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @since      v0.0.2
  */
 public enum StandardOptions implements ExecS_CliOption {
 	/** Option to print help information. */
 	HELP				('h',	"help",					null,		"prints help and usage screen"),
-
-	/** Option to name an Apache Zookeeper host (IP address or host name). */
-	@Deprecated
-	ZK_HOST				('z',	"zk-host",				"HOST",		"Apache Zookeeper host"),
-
-	/** Option to name an Apache Zookeeper port (integer). */
-	@Deprecated
-	ZK_PORT				('p',	"zk-port",				"PORT",		"Apache Zookeeper port"),
-
-	/** Option to name a timeout for trying to connect to Apache Zookeeper. */
-	@Deprecated
-	ZK_TIME_OUT			('t',	"zk-timeout",			"MS",		"Zookeeper connection timeout in milliseconds"),
-
-	/** Option to name a specific path to search for in Apache Zookeeper. */
-	@Deprecated
-	ZK_PATH				('k',	"zk-path",				"PATH",		"Zookeeper path to write configuration to or read it from, translates to standard enum"),
 
 	/** Option to name a component ID. */
 	COMPONENT_ID		('i',	"id",					"ID",		"component identifier"),
@@ -58,43 +43,12 @@ public enum StandardOptions implements ExecS_CliOption {
 	/** Option to name an input file. */
 	DIRECTORY_INPUT		(null,	"input-directory",		"DIR",		"input directory"),
 
-	/** Option to name a W3C Websocket self port. */
-	@Deprecated
-	WS_SELF_PORT		('s',	"self-port",			"PORT",		"port number for self server"),
-
-	/** Option to name a W3C Websocket URI for a connection. */
-	@Deprecated
-	WS_URI				(null,	"ws-uri",				"URI",		"URI for a wesocket connection"),
-
-	/** Option to name a W3C Websocket URI for a connection. */
-	@Deprecated
-	WS_HOST				(null,	"ws-host",				"HOST",		"hostname (IP address or DNS name) for a wesocket connection"),
-
-	/** Option to name a W3C Websocket URI for a connection. */
-	@Deprecated
-	WS_PORT				(null,	"ws-port",				"PORT",		"port number for a wesocket connection"),
-
 	/** Option for a server to run in background mode. */
 	SERVER_MODE			(null,	"srv-mode",				null,		"tells a server to run in background mode"),
-
-	/** Option to activate automatic re-connections for messaging service clients. */
-	@Deprecated
-	DO_RECONNECT		('r',	"do-reconnect",			null,		"activates automatic reconnection for messaging service clients"),
-
-	/** Option to name an Event DSL set to process. */
-	@Deprecated
-	EVENT_DSL_SET		(null,	"event-dsl-set",		"SET",		"names an Event DSL set to process (full class name)"),
-
-	/** Option to name an Event DSL to process. */
-	@Deprecated
-	EVENT_DSL			(null,	"event-dsl",			"DSL",		"names an Event DSL to process (full class name)"),
 
 	/** Option to name a target, for instance for a compilation. */
 	TARGET				(null,	"target",				"TARGET",	"specifies a target, for instance for a compilation"),
 
-	/** Option to advice a compiler to generate for ASCII-DOCTOR, not for classic ASCIIDOC. */
-	@Deprecated
-	ASCII_DOCTOR		(null,	"ascii-doctor",			null,		"specifies output for ASCII Doctor"),
 	;
 
 	/** A generated CLI option for the enumerate. */
