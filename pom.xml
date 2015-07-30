@@ -3,6 +3,7 @@
 	<groupId>de.vandermeer</groupId>
 	<artifactId>execs</artifactId>
 	<version>0.0.8</version>
+	<packaging>jar</packaging>
 
 	<name>Execution Service</name>
 	<url>https://github.com/vdmeer/execs</url>
@@ -16,7 +17,6 @@
 		<project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
 		<encoding>UTF-8</encoding>
 		<file.encoding>UTF-8</file.encoding>
-
 	</properties>
 
 	<licenses>
@@ -48,7 +48,7 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:vdmeer/execs.git</developerConnection>
 		<connection>scm:git:git://github.com/vdmeer/execs.git</connection>
-		<tag>execs-0.0.3</tag>
+		<tag>execs-0.0.8</tag>
 		<url>https://github.com/vdmeer/execs</url>
 	</scm>
 
@@ -226,6 +226,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<packaging>jar</packaging>
+
 
 </project>
