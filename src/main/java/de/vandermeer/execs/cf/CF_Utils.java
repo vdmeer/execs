@@ -23,7 +23,7 @@ import java.util.jar.JarEntry;
  * Class finder utilities.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
 public abstract class CF_Utils {
@@ -65,4 +65,5 @@ public abstract class CF_Utils {
 		}
 		return s.replace('/', '.');
 	}
+
 }

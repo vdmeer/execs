@@ -19,7 +19,7 @@ package de.vandermeer.execs;
  * Interface for a service that can be executed.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
 public interface ExecutableService {
@@ -62,4 +62,5 @@ public interface ExecutableService {
 	default String getScriptName(){
 		return this.getName();
 	}
+
 }

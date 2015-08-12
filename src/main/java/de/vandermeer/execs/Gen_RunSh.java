@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
  * Executable service to generate a shell script running {@link Gen_RunScripts}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunSh implements ExecutableService {
@@ -103,4 +103,5 @@ public class Gen_RunSh implements ExecutableService {
 		System.out.println();
 		this.cli.usage(this.getName());
 	}
+
 }

@@ -34,12 +34,11 @@ import org.stringtemplate.v4.STGroupFile;
 
 import de.vandermeer.execs.cf.CF;
 
-
 /**
  * A service executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.0.8 build 150721 (21-Jul-15) for Java 1.8
+ * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -311,4 +310,5 @@ public class ExecS {
 		int ret = run.execute(args);
 		System.exit(ret);
 	}
+
 }

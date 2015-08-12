@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.vandermeer</groupId>
 	<artifactId>execs</artifactId>
-	<version>0.0.8</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>Execution Service</name>
@@ -48,7 +48,7 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:vdmeer/execs.git</developerConnection>
 		<connection>scm:git:git://github.com/vdmeer/execs.git</connection>
-		<tag>execs-0.0.8</tag>
+		<tag>execs-0.1.0</tag>
 		<url>https://github.com/vdmeer/execs</url>
 	</scm>
 
@@ -190,7 +190,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
+				<version>2.10.3</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -207,6 +207,9 @@
 							<header>${project.name}: ${project.version}</header>
 							<footer>${project.name}: ${project.version}</footer>
 							<doctitle>${project.name}: ${project.version}</doctitle>
+							<noqualifier>all</noqualifier>
+							<detectLinks>true</detectLinks>
+							<detectJavaApiLink>true</detectJavaApiLink>
 						</configuration>
 					</execution>
 				</executions>
