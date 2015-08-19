@@ -1,6 +1,5 @@
 SKB Execute Service
--------------------
-
+===================
 A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.
 :toc:
 

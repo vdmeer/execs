@@ -5,6 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.0">
+<meta name="author" content="A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.">
 <title>SKB Execute Service</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
@@ -411,50 +412,49 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
+<h1>SKB Execute Service</h1>
+<div class="details">
+<span id="author" class="author">A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.</span><br>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+
+</div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_skb_execute_service">SKB Execute Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A simple set of classes to execute programmes from the command line, without littering the code with static void main(String[] args).
-:toc:</p>
-</div>
 <div class="paragraph">
 <p>Current release is <a href="https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.1.0|jar">0.1.0</a>.
 All releases are on <a href="https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22">Maven Central</a>.</p>
 </div>
 <div class="paragraph">
 <p>This package addresses the following problem: a package (or a set of packages) contain
-a number of tools that should be run from outside java, e.g. using a static main() method.
+a number of tools that should be run from outside java, e.g. using a <code>static main()</code> method.
 Over time, it might (will) be hard to know (or find) all main methods.</p>
 </div>
 <div class="paragraph">
 <p>This package provides a standard way to find and execute all those tools, or as they are called here services.
-A simple interface should be used by any component that wants to be executed. Implementing Skb_Executable
-provides the main method executeService() and a method for printing a help screen. The only requirement is that the default
+A simple interface should be used by any component that wants to be executed. Implementing <code>Skb_Executable</code>
+provides the main method <code>executeService()</code> and a method for printing a help screen. The only requirement is that the default
 constructor must be provided, to allow for a generic instantiation at runtime.</p>
 </div>
 <div class="paragraph">
-<p>The ClassFinder can be used to search all or filtered jar files (or URIs) for any class that
-implement the interface. Once all implementations are found, one can use the Skb_Exec object with
-its static main() to execute any service from the command line.</p>
+<p>The <code>ClassFinder</code> can be used to search all or filtered jar files (or URIs) for any class that
+implement the interface. Once all implementations are found, one can use the <code>Skb_Exec</code> object with
+its <code>static main()</code> to execute any service from the command line.</p>
 </div>
 <div class="paragraph">
-<p>The Skb_Exec class allows to list all executable services, execute one service triggering a help screen and
+<p>The <code>Skb_Exec</code> class allows to list all executable services, execute one service triggering a help screen and
 to register short names for services. These short names can be used as aliases to execute a service, otherwise a fully qualified class
 name will be required.</p>
 </div>
 <div class="paragraph">
-<p>One can also extend the Skb_Exec class to build more sophisticated versions of the execution object, to
+<p>One can also extend the <code>Skb_Exec</code> class to build more sophisticated versions of the execution object, to
 register specific short names or to search for other interfaces and classes in jar files at runtime.</p>
-</div>
-</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-19 21:36:25 IST
+Last updated 2015-08-19 21:44:09 IST
 </div>
 </div>
 </body>
