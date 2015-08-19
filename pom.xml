@@ -190,7 +190,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>2.10.1</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -207,9 +207,6 @@
 							<header>${project.name}: ${project.version}</header>
 							<footer>${project.name}: ${project.version}</footer>
 							<doctitle>${project.name}: ${project.version}</doctitle>
-							<noqualifier>all</noqualifier>
-							<detectLinks>true</detectLinks>
-							<detectJavaApiLink>true</detectJavaApiLink>
 						</configuration>
 					</execution>
 				</executions>

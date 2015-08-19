@@ -2,6 +2,10 @@ SKB Execute Service
 -------------------
 
 A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.
+:toc:
+
+Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.1.0|jar[0.1.0].
+All releases are on https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22[Maven Central].
 
 This package addresses the following problem: a package (or a set of packages) contain
 a number of tools that should be run from outside java, e.g. using a +static main()+ method.
