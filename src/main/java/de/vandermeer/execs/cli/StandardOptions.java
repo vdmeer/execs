@@ -52,15 +52,15 @@ public abstract class StandardOptions {
 	public final static ExecS_CliOption LIB_DIR = new CliOption_LibDir(true);
 
 	/** A CLI option to specify a property file with configurations. */
-	public final static ExecS_CliOption PROP_FILE = new CliOption_PropertyFile(true);
+	public final static ExecS_CliOption PROP_FILE = new CliOption_PropertyFile(false);
 
 	/** A CLI option to specify the application home directory specific to a given target format. */
 	public final static ExecS_CliOption APPLICATION_HOME_DIR = new CliOption_AppHomeDirectory(true);
 
 	/** A CLI option to specify a a property file with class names (executable services) mapped to script names. */
-	public final static ExecS_CliOption CLASSMAP_FILE = new CliOption_ClassmapFile(true);
+	public final static ExecS_CliOption CLASSMAP_FILE = new CliOption_ClassmapFile(false);
 
 	/** A CLI option to specify a StringTemplate (stg) file with templates for generating run scripts. */
-	public final static ExecS_CliOption STG_FILE = new CliOption_StgFile(true);
+	public final static ExecS_CliOption STG_FILE = new CliOption_StgFile(false);
 
 }

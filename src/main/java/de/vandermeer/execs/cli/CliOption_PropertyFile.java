@@ -22,14 +22,14 @@ import org.apache.commons.cli.Option;
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before))
+ * @since      v0.1.1 (was in StandardOptions before)
  */
 public class CliOption_PropertyFile extends AbstractClioption {
 
 	public CliOption_PropertyFile(boolean required){
 		Option.Builder builder = Option.builder();
 		builder.longOpt("property-file");
-		builder.argName("FILE");
+		builder.hasArg().argName("FILE");
 		builder.desc("a property file with configuration");
 		builder.required(required);
 

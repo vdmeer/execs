@@ -22,14 +22,14 @@ import org.apache.commons.cli.Option;
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before))
+ * @since      v0.1.1 (was in StandardOptions before)
  */
 public class CliOption_Target extends AbstractClioption {
 
 	public CliOption_Target(boolean required){
 		Option.Builder builder = Option.builder();
 		builder.longOpt("target");
-		builder.argName("TARGET");
+		builder.hasArg().argName("TARGET");
 		builder.desc("specifies a target, for instance for a compilation");
 		builder.required(required);
 

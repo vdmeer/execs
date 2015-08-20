@@ -22,14 +22,14 @@ import org.apache.commons.cli.Option;
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before))
+ * @since      v0.1.1 (was in StandardOptions before)
  */
 public class CliOption_Id extends AbstractClioption {
 
 	public CliOption_Id(boolean required){
 		Option.Builder builder = Option.builder("i");
 		builder.longOpt("id");
-		builder.argName("ID");
+		builder.hasArg().argName("ID");
 		builder.desc("component identifier");
 		builder.required(required);
 

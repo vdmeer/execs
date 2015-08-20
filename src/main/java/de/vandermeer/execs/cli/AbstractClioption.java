@@ -30,17 +30,17 @@ public class AbstractClioption implements ExecS_CliOption {
 	protected Option option;
 
 	/**
-	 * Creates a new option, for the factory.
+	 * Creates a new option with no option set.
 	 */
-	AbstractClioption(){
+	public AbstractClioption(){
 		this(null);
 	}
 
 	/**
-	 * Creates a new option, for the factory.
+	 * Creates a new option.
 	 * @param option the CLI option
 	 */
-	AbstractClioption(Option option){
+	public AbstractClioption(Option option){
 		this.option = option;
 	}
 

@@ -22,14 +22,14 @@ import org.apache.commons.cli.Option;
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before))
+ * @since      v0.1.1 (was in StandardOptions before)
  */
 public class CliOption_StgFile extends AbstractClioption {
 
 	public CliOption_StgFile(boolean required){
 		Option.Builder builder = Option.builder();
 		builder.longOpt("stg-file");
-		builder.argName("FILE");
+		builder.hasArg().argName("FILE");
 		builder.desc("specifies a string template (stg) file");
 		builder.required(required);
 
