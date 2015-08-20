@@ -13,46 +13,27 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs;
+package de.vandermeer.execs.cli;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.apache.commons.cli.Option;
 
 /**
- * ExecS tests.
+ * CLI option "id".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.0.2
+ * @since      v0.1.1 (was in StandardOptions before))
  */
-public class Test_ExecS {
+public class CliOption_Id extends AbstractClioption {
 
-	@Test
-	public void testCliAppName(){
-		ExecS execs = new ExecS();
-		assertEquals("execs", execs.getAppName());
+	public CliOption_Id(boolean required){
+		Option.Builder builder = Option.builder("i");
+		builder.longOpt("id");
+		builder.argName("ID");
+		builder.desc("component identifier");
+		builder.required(required);
 
-		execs = new ExecS("blafoo");
-		assertEquals("blafoo", execs.getAppName());
-	}
-
-	@Test
-	public void testCliHelp(){
-		ExecS execs = new ExecS();
-		int run = execs.execute(new String[]{"-h"});
-		assertEquals(0, run);
-		run = execs.execute(new String[]{"--help"});
-		assertEquals(0, run);
-	}
-
-	@Test
-	public void testCliList(){
-		ExecS execs = new ExecS();
-		int run = execs.execute(new String[]{"-l"});
-		assertEquals(0, run);
-		run = execs.execute(new String[]{"--list"});
-		assertEquals(0, run);
+		this.option = builder.build();
 	}
 
 }

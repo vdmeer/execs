@@ -437,6 +437,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li>
 <p>removed FigletShutdown, this class is now in skb-base</p>
 </li>
+<li>
+<p>changed README and added JavaDoc</p>
+</li>
+<li>
+<p>changed cli implementation</p>
+<div class="ulist">
+<ul>
+<li>
+<p>created AbstractClioption object</p>
+</li>
+<li>
+<p>implemented all standard options in stand-alone classes, with additional optional/required feature for all but help (automatically optional)</p>
+</li>
+<li>
+<p>changed StandardOptions from enum to abstract class and added the new option implementation as statics</p>
+</li>
+<li>
+<p>moved all cli related classes in package cli</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -703,7 +725,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-20 14:38:54 IST
+Last updated 2015-08-20 17:02:30 IST
 </div>
 </div>
 </body>

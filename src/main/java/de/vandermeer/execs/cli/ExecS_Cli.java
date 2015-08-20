@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs;
+package de.vandermeer.execs.cli;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -81,7 +81,7 @@ public class ExecS_Cli {
 	 */
 	public String getOption(ExecS_CliOption option){
 		String ret = null;
-		String o = (option!=null)?option.getOptionString():null;
+		String o = (option!=null)?option.getOptionAsString():null;
 		if(o!=null && this.cmdLine.hasOption(o)){
 			ret = this.cmdLine.getOptionValue(o);
 		}
@@ -94,7 +94,7 @@ public class ExecS_Cli {
 	 * @return true if option was used, false otherwise
 	 */
 	public boolean hasOption(ExecS_CliOption option){
-		String o = (option!=null)?option.getOptionString():null;
+		String o = (option!=null)?option.getOptionAsString():null;
 		if(o!=null){
 			return this.cmdLine.hasOption(o);
 		}

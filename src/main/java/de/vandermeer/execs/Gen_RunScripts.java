@@ -30,6 +30,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
+import de.vandermeer.execs.cli.ExecS_Cli;
+import de.vandermeer.execs.cli.StandardOptions;
+
 /**
  * Executable service to generate run scripts for other executable services, supporting windows, CygWin and bash.
  *
@@ -41,18 +44,6 @@ public class Gen_RunScripts implements ExecutableService {
 
 	/** Service name. */
 	public final static String SERVICE_NAME = "gen-run-scripts";
-
-	/** A CLI option to specify a StringTemplate (stg) file with templates for generating run scripts. */
-	public final static ExecS_CliOption CLIOPT_STGFILE = ExecS_Factory.newCliOption(null, "stg-file", null, "specifies a string template (stg) file");
-
-	/** A CLI option to specify a a property file with class names (executable services) mapped to script names. */
-	public final static ExecS_CliOption CLIOPT_CLASSMAP_FILE = ExecS_Factory.newCliOption("classmap-file", "FILE", "a property file with class names (executable services) mapped to script names");
-
-	/** A CLI option to specify a property file with configurations for the generator. */
-	public final static ExecS_CliOption CLIOPT_PROP_FILE = ExecS_Factory.newCliOption("property-file", "FILE", "a property file with configurations for the generator");
-
-	/** A CLI option to specify the application home directory specific to a given target format. */
-	public final static ExecS_CliOption CLIOPT_APPLICATION_HOME_DIR = ExecS_Factory.newCliOption("application-dir", "DIR", "application home directory specific to a given target format");
 
 	/** A property key for the script name of the generic run script, without file extension. */
 	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
@@ -99,17 +90,17 @@ public class Gen_RunScripts implements ExecutableService {
 	public Gen_RunScripts() {
 		this.cli = new ExecS_Cli();
 		this.cli.addOption(StandardOptions.TARGET);
-		this.cli.addOption(CLIOPT_STGFILE);
-		this.cli.addOption(CLIOPT_CLASSMAP_FILE);
-		this.cli.addOption(CLIOPT_APPLICATION_HOME_DIR);
-		this.cli.addOption(CLIOPT_PROP_FILE);
+		this.cli.addOption(StandardOptions.STG_FILE);
+		this.cli.addOption(StandardOptions.CLASSMAP_FILE);
+		this.cli.addOption(StandardOptions.APPLICATION_HOME_DIR);
+		this.cli.addOption(StandardOptions.PROP_FILE);
 	}
 
 	/**
-	 * Hook for a calling {@ ExecS} instance to set its class map for the script generator
-	 * @param execClassMap calling executor class map to create runscripts from
+	 * Hook for a calling ExecS instance to set its class map for the script generator
+	 * @param execClassMap calling executor class map to create run scripts from
 	 */
-	void setClassMap(Map<String, Class<? extends ExecutableService>> execClassMap){
+	public void setClassMap(Map<String, Class<? extends ExecutableService>> execClassMap){
 		this.execClassMap = execClassMap;
 	}
 
@@ -241,8 +232,8 @@ public class Gen_RunScripts implements ExecutableService {
 	 */
 	protected final int initConfiguration(){
 		String propFile = "de/vandermeer/execs/configuration.properties";
-		if(ExecS_Cli.testOption(this.cli, CLIOPT_PROP_FILE)){
-			propFile = this.cli.getOption(CLIOPT_PROP_FILE);
+		if(ExecS_Cli.testOption(this.cli, StandardOptions.PROP_FILE)){
+			propFile = this.cli.getOption(StandardOptions.PROP_FILE);
 		}
 
 		this.configuration = this.loadProperties(propFile);
@@ -301,8 +292,8 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
 			fileName = this.configuration.get("stg.file").toString();
 		}
-		if(ExecS_Cli.testOption(this.cli, CLIOPT_STGFILE)){
-			fileName = this.cli.getOption(CLIOPT_STGFILE);
+		if(ExecS_Cli.testOption(this.cli, StandardOptions.STG_FILE)){
+			fileName = this.cli.getOption(StandardOptions.STG_FILE);
 		}
 
 		try{
@@ -342,8 +333,8 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initApplicationDir(){
-		if(ExecS_Cli.testOption(this.cli, CLIOPT_APPLICATION_HOME_DIR)){
-			this.applicationDir = this.cli.getOption(CLIOPT_APPLICATION_HOME_DIR);
+		if(ExecS_Cli.testOption(this.cli, StandardOptions.APPLICATION_HOME_DIR)){
+			this.applicationDir = this.cli.getOption(StandardOptions.APPLICATION_HOME_DIR);
 		}
 		else{
 			System.err.println(this.getName() + ": no application directory set");
@@ -367,8 +358,8 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
 			fileName = this.configuration.get("execs.classmap").toString();
 		}
-		if(ExecS_Cli.testOption(this.cli, CLIOPT_CLASSMAP_FILE)){
-			fileName = this.cli.getOption(CLIOPT_CLASSMAP_FILE);
+		if(ExecS_Cli.testOption(this.cli, StandardOptions.CLASSMAP_FILE)){
+			fileName = this.cli.getOption(StandardOptions.CLASSMAP_FILE);
 		}
 		if(fileName==null){
 			System.err.println(this.getName() + ": no classmap file name given");

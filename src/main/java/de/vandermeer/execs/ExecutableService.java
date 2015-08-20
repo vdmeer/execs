@@ -15,6 +15,8 @@
 
 package de.vandermeer.execs;
 
+import de.vandermeer.execs.cli.ExecS_Cli;
+
 /**
  * Interface for a service that can be executed.
  *

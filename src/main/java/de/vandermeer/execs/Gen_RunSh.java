@@ -22,6 +22,9 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.vandermeer.execs.cli.ExecS_Cli;
+import de.vandermeer.execs.cli.StandardOptions;
+
 /**
  * Executable service to generate a shell script running {@link Gen_RunScripts}.
  *
@@ -34,12 +37,6 @@ public class Gen_RunSh implements ExecutableService {
 	/** Service name. */
 	public final static String SERVICE_NAME = "gen-run";
 
-	/** A CLI option to specify a directory with all required jars. */
-	public final static ExecS_CliOption CLIOPT_LIBDIR = ExecS_Factory.newCliOption(null, "lib-dir", "DIR", "specifies a directory with requried jar files");
-
-	/** A CLI option to specify a property file with configurations for the generator. */
-	public final static ExecS_CliOption CLIOPT_PROP_FILE = ExecS_Factory.newCliOption("property-file", "FILE", "a property file with configurations for the generator");
-
 	/** Local CLI options for CLI parsing. */
 	protected ExecS_Cli cli;
 
@@ -48,8 +45,8 @@ public class Gen_RunSh implements ExecutableService {
 	 */
 	public Gen_RunSh(){
 		this.cli = new ExecS_Cli();
-		this.cli.addOption(CLIOPT_LIBDIR);
-		this.cli.addOption(CLIOPT_PROP_FILE);
+		this.cli.addOption(StandardOptions.LIB_DIR);
+		this.cli.addOption(StandardOptions.PROP_FILE);
 	}
 
 	@Override
@@ -67,11 +64,11 @@ public class Gen_RunSh implements ExecutableService {
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while((line=input.readLine())!=null){
-				if(StringUtils.startsWith(line, "LIB_HOME=") && ExecS_Cli.testOption(this.cli, CLIOPT_LIBDIR)){
-					System.out.println("LIB_HOME=" + this.cli.getOption(CLIOPT_LIBDIR));
+				if(StringUtils.startsWith(line, "LIB_HOME=") && ExecS_Cli.testOption(this.cli, StandardOptions.LIB_DIR)){
+					System.out.println("LIB_HOME=" + this.cli.getOption(StandardOptions.LIB_DIR));
 				}
-				else if(StringUtils.startsWith(line, "PROP_FILE=") && ExecS_Cli.testOption(this.cli, CLIOPT_PROP_FILE)){
-					System.out.println("PROP_FILE=" + this.cli.getOption(CLIOPT_PROP_FILE));
+				else if(StringUtils.startsWith(line, "PROP_FILE=") && ExecS_Cli.testOption(this.cli, StandardOptions.PROP_FILE)){
+					System.out.println("PROP_FILE=" + this.cli.getOption(StandardOptions.PROP_FILE));
 				}
 				else{
 					System.out.println(line);
