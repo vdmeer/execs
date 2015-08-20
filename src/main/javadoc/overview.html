@@ -1,0 +1,42 @@
+<html>
+	<body>
+
+		<p>
+			A simple set of classes to execute programs from the command line, without littering the code with <code>static void main(String[] args)</code>.
+		</p>
+
+		<p>
+			This package addresses the following problem: a package (or a set of packages) contain
+			a number of tools that should be run from outside java, e.g. using a <code>static main()</code> method.
+			Over time, it might (will) be hard to know (or find) all main methods.
+		</p>
+ 
+		<p>
+			This package provides a standard way to find and execute all those tools, or as they are called here services.
+			A simple interface should be used by any component that wants to be executed.
+			Implementing <code>ExecutableService</code> provides the main method <code>executeService()</code> and a method for printing a help screen.
+			The only requirement is that the default constructor must be provided, to allow for a generic instantiation at runtime.
+		</p>
+
+		<p>
+			The <code>CF</code> can be used to search all or filtered jar files (or URIs) for any class that implement the interface.
+			Once all implementations are found, one can use the <code>ExecS</code> object with its <code>static main()</code> to execute any service from the command line.
+		</p>
+
+		<p>
+			The <code>ExecS</code> class allows to list all executable services, execute one service triggering a help screen and to register short names for services.
+			These short names can be used as aliases to execute a service, otherwise a fully qualified class name will be required.
+		</p>
+
+		<p>
+			One can also extend the <code>ExecS</code> class to build more sophisticated versions of the execution object, to
+			register specific short names or to search for other interfaces and classes in jar files at runtime.
+		</p>
+
+		<p>
+			The package can also be used to automatically generate run scripts (batch files for windows or shell scripts for UNIX and Cygwin) to execute services from command line.
+			The generators <code>Gen_RunScripts</code>, <code>Gen_RunSh</code>, and <code>Gen_RebaseSh</code> provide functionality for configuring the generation and will generate scripts with all required information (e.g. Java class path).
+		</p>
+
+	</body>
+</html>

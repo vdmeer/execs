@@ -105,6 +105,10 @@ public class Gen_RunScripts implements ExecutableService {
 		this.cli.addOption(CLIOPT_PROP_FILE);
 	}
 
+	/**
+	 * Hook for a calling {@ ExecS} instance to set its class map for the script generator
+	 * @param execClassMap calling executor class map to create runscripts from
+	 */
 	void setClassMap(Map<String, Class<? extends ExecutableService>> execClassMap){
 		this.execClassMap = execClassMap;
 	}
