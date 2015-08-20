@@ -90,6 +90,9 @@ public class Gen_RunScripts implements ExecutableService {
 	/** The name of the output directory, null means cannot output or not tested yet. */
 	protected String outputDir;
 
+	/** Local class map, must be set by calling ExecS instance. */
+	Map<String, Class<? extends ExecutableService>> execClassMap;
+
 	/**
 	 * Returns a new generator with parameterized CLI object.
 	 */
@@ -100,6 +103,10 @@ public class Gen_RunScripts implements ExecutableService {
 		this.cli.addOption(CLIOPT_CLASSMAP_FILE);
 		this.cli.addOption(CLIOPT_APPLICATION_HOME_DIR);
 		this.cli.addOption(CLIOPT_PROP_FILE);
+	}
+
+	void setClassMap(Map<String, Class<? extends ExecutableService>> execClassMap){
+		this.execClassMap = execClassMap;
 	}
 
 	@Override
@@ -173,7 +180,7 @@ public class Gen_RunScripts implements ExecutableService {
 				System.out.println(" --> generating script from class map - " + outFN);
 
 				ST targetExecST = this.generateScript(key.toString(), targetMap);
-//						;this.stg.getInstanceOf("generateExec");
+//				this.stg.getInstanceOf("generateExec");
 //				targetExecST.add("target", targetMap);
 //				targetExecST.add("applicationHome", this.applicationDir);
 //				targetExecST.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
@@ -184,21 +191,23 @@ public class Gen_RunScripts implements ExecutableService {
 
 		//build scripts for all registered services using the specified run class
 		if(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED)!=null && BooleanUtils.toBoolean(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED).toString())){
-			try{
-				Class<?> c = Class.forName(this.configuration.get(PROP_RUN_CLASS).toString());
-				Object svc = c.newInstance();
-				Map<String, Class<? extends ExecutableService>> map = ((ExecS)svc).getClassMap();
-				for(String s : map.keySet()){
-					outFN = this.outputDir + File.separator + s + fnExtension;
-					System.out.println(" --> generating script from auto-gen-reg - " + outFN);
+//			try{
+//				Class<?> c = Class.forName(this.configuration.get(PROP_RUN_CLASS).toString());
+//				Object svc = c.newInstance();
+//				Map<String, Class<? extends ExecutableService>> map = ((ExecS)svc).getClassMap();//TODO
+				if(this.execClassMap!=null){
+					for(String s : execClassMap.keySet()){
+						outFN = this.outputDir + File.separator + s + fnExtension;
+						System.out.println(" --> generating script from auto-gen-reg - " + outFN);
 
-					ST targetExecST = this.generateScript(map.get(s).getName(), targetMap);
-					this.writeFile(outFN, targetExecST);
+						ST targetExecST = this.generateScript(execClassMap.get(s).getName(), targetMap);
+						this.writeFile(outFN, targetExecST);
+					}
 				}
-			}
-			catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
-				e.printStackTrace();
-			}
+//			}
+//			catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
+//				e.printStackTrace();
+//			}
 		}
 
 		//build a generic header that can be used outside this class for generating other scripts

@@ -1,5 +1,9 @@
 v0.1.1 - maintenance - 2015-##-##
 ---------------------------------
+* changed mechanism for Gen_RunScript to get class map
+	** removed getClassMap() from ExecS
+	** added setClassMap() to Gen_RunScript
+	** added call to ExecS just before SVC execution if service is instance of Gen_RunScript
 
 
 v0.1.0 - minor version change - 2015-08-13

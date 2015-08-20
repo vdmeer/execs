@@ -95,13 +95,13 @@ public class ExecS {
 		return this.classmap.keySet();
 	}
 
-	/**
-	 * Returns the full class map of the executor.
-	 * @return full class map, empty if no classes set
-	 */
-	Map<String, Class<? extends ExecutableService>> getClassMap(){
-		return this.classmap;
-	}
+//	/**
+//	 * Returns the full class map of the executor.
+//	 * @return full class map, empty if no classes set
+//	 */
+//	Map<String, Class<? extends ExecutableService>> getClassMap(){
+//		return this.classmap;
+//	}
 
 	/**
 	 * Sets the jar filter for the executor.
@@ -208,6 +208,10 @@ public class ExecS {
 					((ExecutableService)svc).serviceHelpScreen();
 				}
 				else{
+					if(svc instanceof Gen_RunScripts){
+						//hook for GenRunScripts to get currrent class map - registered services
+						((Gen_RunScripts)svc).setClassMap(this.classmap);
+					}
 					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
 				}
 			}
@@ -240,6 +244,10 @@ public class ExecS {
 					((ExecutableService)svc).serviceHelpScreen();
 				}
 				else{
+					if(svc instanceof Gen_RunScripts){
+						//hook for GenRunScripts to get currrent class map - registered services
+						((Gen_RunScripts)svc).setClassMap(this.classmap);
+					}
 					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
 				}
 			}
