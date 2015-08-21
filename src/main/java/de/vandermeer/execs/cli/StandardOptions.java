@@ -16,7 +16,7 @@
 package de.vandermeer.execs.cli;
 
 /**
- * Standard CLI options.
+ * Standard CLI options with fixed settings.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
@@ -48,19 +48,19 @@ public abstract class StandardOptions {
 	/** Option to name a target, for instance for a compilation as a mandatory option. */
 	public final static ExecS_CliOption TARGET = new CliOption_Target(true);
 
-	/** A CLI option to specify a directory with all required jars. */
+	/** A CLI option to specify a directory with all required jars as a mandatory option. */
 	public final static ExecS_CliOption LIB_DIR = new CliOption_LibDir(true);
 
-	/** A CLI option to specify a property file with configurations. */
+	/** A CLI option to specify a property file with configurations as an optional option. */
 	public final static ExecS_CliOption PROP_FILE = new CliOption_PropertyFile(false);
 
-	/** A CLI option to specify the application home directory specific to a given target format. */
+	/** A CLI option to specify the application home directory specific to a given target format as a mandatory option. */
 	public final static ExecS_CliOption APPLICATION_HOME_DIR = new CliOption_AppHomeDirectory(true);
 
-	/** A CLI option to specify a a property file with class names (executable services) mapped to script names. */
+	/** A CLI option to specify a a property file with class names (executable services) mapped to script names as an optional option. */
 	public final static ExecS_CliOption CLASSMAP_FILE = new CliOption_ClassmapFile(false);
 
-	/** A CLI option to specify a StringTemplate (stg) file with templates for generating run scripts. */
+	/** A CLI option to specify a StringTemplate (stg) file with templates for generating run scripts as an optional option. */
 	public final static ExecS_CliOption STG_FILE = new CliOption_StgFile(false);
 
 }

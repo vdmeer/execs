@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
-public class ExecS_Cli {
+public class ExecS_CliParser {
 
 	/** Parsing options. */
 	protected Options options;
@@ -41,7 +41,7 @@ public class ExecS_Cli {
 	/**
 	 * Returns a new CLI parser.
 	 */
-	public ExecS_Cli(){
+	public ExecS_CliParser(){
 		this.options = new Options();
 	}
 
@@ -50,7 +50,7 @@ public class ExecS_Cli {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @return self to allow for chaining
 	 */
-	public ExecS_Cli addOption(ExecS_CliOption option){
+	public ExecS_CliParser addOption(ExecS_CliOption option){
 		if(option!=null && option.getOption()!=null){
 			this.options.addOption(option.getOption());
 		}
@@ -117,7 +117,7 @@ public class ExecS_Cli {
 	 * @param appName application name for error messages
 	 * @return 0 on success, -1 on error with error being logged
 	 */
-	public static int doParse(String[] args, ExecS_Cli cli, String appName){
+	public static int doParse(String[] args, ExecS_CliParser cli, String appName){
 		int ret = 0;
 		Exception err = cli.parse(args);
 		if(err!=null){
@@ -135,7 +135,7 @@ public class ExecS_Cli {
 	 * @param option option to test for
 	 * @return true if option is set and not null and not empty, false otherwise
 	 */
-	public static boolean testOption(ExecS_Cli cli, ExecS_CliOption option){
+	public static boolean testOption(ExecS_CliParser cli, ExecS_CliOption option){
 		boolean ret = false;
 		if(cli.hasOption(option)){
 			ret = StringUtils.isNotBlank(cli.getOption(option));

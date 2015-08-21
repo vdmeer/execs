@@ -11,6 +11,7 @@ v0.1.1 - maintenance - 2015-##-##
 	** implemented all standard options in stand-alone classes, with additional optional/required feature for all but help (automatically optional)
 	** changed StandardOptions from enum to abstract class and added the new option implementation as statics
 	** moved all cli related classes in package cli
+* renamed ExecS_Cli to ExecS_CliParser
 
 
 v0.1.0 - minor version change - 2015-08-13

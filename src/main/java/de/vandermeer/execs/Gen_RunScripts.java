@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import de.vandermeer.execs.cli.ExecS_Cli;
+import de.vandermeer.execs.cli.ExecS_CliParser;
 import de.vandermeer.execs.cli.StandardOptions;
 
 /**
@@ -61,7 +61,7 @@ public class Gen_RunScripts implements ExecutableService {
 	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
 
 	/** Local CLI options for CLI parsing. */
-	protected ExecS_Cli cli;
+	protected ExecS_CliParser cli;
 
 	/** Properties for configuration options. */
 	protected Properties configuration;
@@ -88,7 +88,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 * Returns a new generator with parameterized CLI object.
 	 */
 	public Gen_RunScripts() {
-		this.cli = new ExecS_Cli();
+		this.cli = new ExecS_CliParser();
 		this.cli.addOption(StandardOptions.TARGET);
 		this.cli.addOption(StandardOptions.STG_FILE);
 		this.cli.addOption(StandardOptions.CLASSMAP_FILE);
@@ -107,7 +107,7 @@ public class Gen_RunScripts implements ExecutableService {
 	@Override
 	public int executeService(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_Cli.doParse(args, this.cli, this.getName());
+		int ret = ExecS_CliParser.doParse(args, this.cli, this.getName());
 		if(ret!=0){
 			this.serviceHelpScreen();
 			return ret;
@@ -232,7 +232,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 */
 	protected final int initConfiguration(){
 		String propFile = "de/vandermeer/execs/configuration.properties";
-		if(ExecS_Cli.testOption(this.cli, StandardOptions.PROP_FILE)){
+		if(ExecS_CliParser.testOption(this.cli, StandardOptions.PROP_FILE)){
 			propFile = this.cli.getOption(StandardOptions.PROP_FILE);
 		}
 
@@ -280,7 +280,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initTargetAndStg(){
-		if(ExecS_Cli.testOption(this.cli, StandardOptions.TARGET)){
+		if(ExecS_CliParser.testOption(this.cli, StandardOptions.TARGET)){
 			this.target = this.cli.getOption(StandardOptions.TARGET);
 		}
 		if(this.target==null){
@@ -292,7 +292,7 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
 			fileName = this.configuration.get("stg.file").toString();
 		}
-		if(ExecS_Cli.testOption(this.cli, StandardOptions.STG_FILE)){
+		if(ExecS_CliParser.testOption(this.cli, StandardOptions.STG_FILE)){
 			fileName = this.cli.getOption(StandardOptions.STG_FILE);
 		}
 
@@ -333,7 +333,7 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initApplicationDir(){
-		if(ExecS_Cli.testOption(this.cli, StandardOptions.APPLICATION_HOME_DIR)){
+		if(ExecS_CliParser.testOption(this.cli, StandardOptions.APPLICATION_HOME_DIR)){
 			this.applicationDir = this.cli.getOption(StandardOptions.APPLICATION_HOME_DIR);
 		}
 		else{
@@ -358,7 +358,7 @@ public class Gen_RunScripts implements ExecutableService {
 		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
 			fileName = this.configuration.get("execs.classmap").toString();
 		}
-		if(ExecS_Cli.testOption(this.cli, StandardOptions.CLASSMAP_FILE)){
+		if(ExecS_CliParser.testOption(this.cli, StandardOptions.CLASSMAP_FILE)){
 			fileName = this.cli.getOption(StandardOptions.CLASSMAP_FILE);
 		}
 		if(fileName==null){
@@ -484,7 +484,7 @@ public class Gen_RunScripts implements ExecutableService {
 	}
 
 	@Override
-	public ExecS_Cli getCli() {
+	public ExecS_CliParser getCli() {
 		return this.cli;
 	}
 

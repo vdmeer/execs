@@ -14,7 +14,7 @@
  */
 
 /**
- * CLI parser, CLI Option interface with abstract implementation, a factory, and a lot of CL options.
+ * CLI parser, CLI Option interface with abstract implementation, a factory, and a lot of CLI options.
  * 
  * 
  * <p style="text-align:center;">

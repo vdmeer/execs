@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs;
 
-import de.vandermeer.execs.cli.ExecS_Cli;
+import de.vandermeer.execs.cli.ExecS_CliParser;
 
 /**
  * Interface for a service that can be executed.
@@ -46,7 +46,7 @@ public interface ExecutableService {
 	 * Returns the service's CLI parser.
 	 * @return CLI parser
 	 */
-	default ExecS_Cli getCli(){
+	default ExecS_CliParser getCli(){
 		return null;
 	}
 

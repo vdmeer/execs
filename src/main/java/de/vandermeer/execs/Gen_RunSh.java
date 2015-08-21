@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.execs.cli.ExecS_Cli;
+import de.vandermeer.execs.cli.ExecS_CliParser;
 import de.vandermeer.execs.cli.StandardOptions;
 
 /**
@@ -38,13 +38,13 @@ public class Gen_RunSh implements ExecutableService {
 	public final static String SERVICE_NAME = "gen-run";
 
 	/** Local CLI options for CLI parsing. */
-	protected ExecS_Cli cli;
+	protected ExecS_CliParser cli;
 
 	/**
 	 * Returns a new run shell script generator.
 	 */
 	public Gen_RunSh(){
-		this.cli = new ExecS_Cli();
+		this.cli = new ExecS_CliParser();
 		this.cli.addOption(StandardOptions.LIB_DIR);
 		this.cli.addOption(StandardOptions.PROP_FILE);
 	}
@@ -52,7 +52,7 @@ public class Gen_RunSh implements ExecutableService {
 	@Override
 	public int executeService(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_Cli.doParse(args, this.cli, this.getName());
+		int ret = ExecS_CliParser.doParse(args, this.cli, this.getName());
 		if(ret!=0){
 			this.serviceHelpScreen();
 			return ret;
@@ -64,10 +64,10 @@ public class Gen_RunSh implements ExecutableService {
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while((line=input.readLine())!=null){
-				if(StringUtils.startsWith(line, "LIB_HOME=") && ExecS_Cli.testOption(this.cli, StandardOptions.LIB_DIR)){
+				if(StringUtils.startsWith(line, "LIB_HOME=") && ExecS_CliParser.testOption(this.cli, StandardOptions.LIB_DIR)){
 					System.out.println("LIB_HOME=" + this.cli.getOption(StandardOptions.LIB_DIR));
 				}
-				else if(StringUtils.startsWith(line, "PROP_FILE=") && ExecS_Cli.testOption(this.cli, StandardOptions.PROP_FILE)){
+				else if(StringUtils.startsWith(line, "PROP_FILE=") && ExecS_CliParser.testOption(this.cli, StandardOptions.PROP_FILE)){
 					System.out.println("PROP_FILE=" + this.cli.getOption(StandardOptions.PROP_FILE));
 				}
 				else{
@@ -90,7 +90,7 @@ public class Gen_RunSh implements ExecutableService {
 	}
 
 	@Override
-	public ExecS_Cli getCli() {
+	public ExecS_CliParser getCli() {
 		return this.cli;
 	}
 

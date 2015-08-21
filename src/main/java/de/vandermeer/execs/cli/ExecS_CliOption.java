@@ -18,7 +18,7 @@ package de.vandermeer.execs.cli;
 import org.apache.commons.cli.Option;
 
 /**
- * Option for the ExecS CLI parser.
+ * A facade for {@link Option} used by the {@link ExecS_CliParser} parser.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
