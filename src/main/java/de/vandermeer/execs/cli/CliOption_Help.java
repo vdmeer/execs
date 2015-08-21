@@ -26,6 +26,10 @@ import org.apache.commons.cli.Option;
  */
 public class CliOption_Help extends AbstractClioption {
 
+	/**
+	 * Returns the new CLI option.
+	 * @param required true if option is required, false of it is optional
+	 */
 	public CliOption_Help(){
 		Option.Builder builder = Option.builder("h");
 		builder.longOpt("help");

@@ -26,6 +26,10 @@ import org.apache.commons.cli.Option;
  */
 public class CliOption_Id extends AbstractClioption {
 
+	/**
+	 * Returns the new CLI option.
+	 * @param required true if option is required, false of it is optional
+	 */
 	public CliOption_Id(boolean required){
 		Option.Builder builder = Option.builder("i");
 		builder.longOpt("id");

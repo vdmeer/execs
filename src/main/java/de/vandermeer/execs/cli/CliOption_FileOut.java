@@ -26,6 +26,10 @@ import org.apache.commons.cli.Option;
  */
 public class CliOption_FileOut extends AbstractClioption {
 
+	/**
+	 * Returns the new CLI option.
+	 * @param required true if option is required, false of it is optional
+	 */
 	public CliOption_FileOut(boolean required){
 		Option.Builder builder = Option.builder();
 		builder.longOpt("output-file");
