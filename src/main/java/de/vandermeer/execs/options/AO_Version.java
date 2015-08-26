@@ -13,30 +13,34 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.cli;
+package de.vandermeer.execs.options;
 
 import org.apache.commons.cli.Option;
 
 /**
- * CLI option "help".
+ * Application option "version", automatically added to an executable application.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before)
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
+ * @since      v0.2.0
  */
-public class CliOption_Help extends AbstractClioption {
+public class AO_Version extends AbstractApplicationOption<String> {
 
 	/**
-	 * Returns the new CLI option.
-	 * @param required true if option is required, false of it is optional
+	 * Returns the new option.
 	 */
-	public CliOption_Help(){
-		Option.Builder builder = Option.builder("h");
-		builder.longOpt("help");
-		builder.desc("prints help and usage screen");
-		builder.required(false);
+	public AO_Version(){
+		super("application version", "Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored).");
 
-		this.option = builder.build();
+		Option.Builder builder = Option.builder();
+		builder.longOpt("version");
+		builder.required(false);
+		this.setCliOption(builder.build());
+	}
+
+	@Override
+	public String convertValue(Object value) {
+		return null;
 	}
 
 }

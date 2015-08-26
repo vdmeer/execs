@@ -1,4 +1,4 @@
-skb.module.version=0.1.1
+skb.module.version=0.2.0
 skb.module.alias=
 skb.module.name=Execution Service
 skb.module.url=https://github.com/vdmeer/execs

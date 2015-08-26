@@ -20,10 +20,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * ExecS tests.
+ * Tests for {@link ExecS}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.2
  */
 public class Test_ExecS {
@@ -40,7 +40,7 @@ public class Test_ExecS {
 	@Test
 	public void testCliHelp(){
 		ExecS execs = new ExecS();
-		int run = execs.execute(new String[]{"-h"});
+		int run = execs.execute(new String[]{"-?"});
 		assertEquals(0, run);
 		run = execs.execute(new String[]{"--help"});
 		assertEquals(0, run);

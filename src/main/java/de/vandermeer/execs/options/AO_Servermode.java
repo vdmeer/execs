@@ -13,30 +13,49 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.cli;
+package de.vandermeer.execs.options;
 
 import org.apache.commons.cli.Option;
 
 /**
- * CLI option "srv-mode".
+ * Application option "srv-mode".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before)
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
+ * @since      v0.2.0
  */
-public class CliOption_Servermode extends AbstractClioption {
+public class AO_Servermode extends AbstractApplicationOption<String> {
 
 	/**
-	 * Returns the new CLI option.
+	 * Returns the new option.
 	 * @param required true if option is required, false of it is optional
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
-	public CliOption_Servermode(boolean required){
+	public AO_Servermode(boolean required, String longDescription){
+		super("tells a server to run in background mode", longDescription);
+
 		Option.Builder builder = Option.builder();
 		builder.longOpt("srv-mode");
-		builder.desc("tells a server to run in background mode");
 		builder.required(required);
+		this.setCliOption(builder.build());
+	}
 
-		this.option = builder.build();
+	/**
+	 * Returns the server mode settings.
+	 * @return true of server mode is set, false otherwise
+	 */
+	public boolean inServerMode(){
+		return this.inCli;
+	}
+
+	@Override
+	public String convertValue(Object value) {
+		if(value==null){
+			return null;
+		}
+		return value.toString();
 	}
 
 }

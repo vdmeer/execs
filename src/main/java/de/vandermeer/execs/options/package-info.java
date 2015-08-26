@@ -14,16 +14,11 @@
  */
 
 /**
- * CLI parser, CLI Option interface with abstract implementation, a factory, and a lot of CLI options.
- * 
- * 
- * <p style="text-align:center;">
- * 		<img src="doc-files/composition.png" alt="ExecS Composition">
- * </p>
+ * Application options used for the script generators and a set of common application options.
  * 
  * 
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
-package de.vandermeer.execs.cli;
+package de.vandermeer.execs.options;

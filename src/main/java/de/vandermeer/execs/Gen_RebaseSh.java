@@ -20,20 +20,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import de.vandermeer.execs.options.ApplicationOption;
+
 /**
- * Executable service to generate a rebase shell script.
+ * Application to generate a rebase shell script.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RebaseSh implements ExecutableService {
+public class Gen_RebaseSh implements ExecS_Application {
 
-	/** Service name. */
-	public final static String SERVICE_NAME = "gen-rebase";
+	/** Application name. */
+	public final static String APP_NAME = "gen-rebase";
+
+	/** Application display name. */
+	public final static String APP_DISPLAY_NAME = "Generate Rebase.SH";
+
+	/** Application version, should be same as the version in the class JavaDoc. */
+	public final static String APP_VERSION = "v0.2.0 build 150826 (26-Aug-15) for Java 1.8";
 
 	@Override
-	public int executeService(String[] args) {
+	public int executeApplication(String[] args) {
 		String fn = "/de/vandermeer/execs/bin/rebase.sh";
 		try {
 			InputStream in = getClass().getResourceAsStream(fn);
@@ -44,23 +52,37 @@ public class Gen_RebaseSh implements ExecutableService {
 			}
 		}
 		catch(NullPointerException ne){
-			System.err.println(this.getName() + ": exception while reading shell script from resource <" + fn + ">: "+ ne.getMessage());
+			System.err.println(this.getAppName() + ": exception while reading shell script from resource <" + fn + ">: " + ne.getMessage());
 		}
 		catch (IOException e) {
-			System.err.println(this.getName() + ": IO exception while reading shell script: "+ e.getMessage());
+			System.err.println(this.getAppName() + ": IO exception while reading shell script: " + e.getMessage());
 		}
 		return 0;
 	}
 
 	@Override
-	public String getName() {
-		return Gen_RebaseSh.SERVICE_NAME;
+	public String getAppDescription() {
+		return "Generates a rebase shell script, printed to standard out.";
 	}
 
 	@Override
-	public void serviceHelpScreen() {
-		System.out.println("Generates a rebase shell script, printed to standard out.");
-		System.out.println();
+	public ApplicationOption<?>[] getAppOptions() {
+		return null;
+	}
+
+	@Override
+	public String getAppName() {
+		return APP_NAME;
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
 	}
 
 }

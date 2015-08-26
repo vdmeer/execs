@@ -13,21 +13,23 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.cli;
+package de.vandermeer.execs;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
+
+import de.vandermeer.execs.options.ApplicationOption;
 
 /**
- * CLI implementation for servers.
+ * CLI implementation for applications.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS_CliParser {
@@ -50,9 +52,21 @@ public class ExecS_CliParser {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @return self to allow for chaining
 	 */
-	public ExecS_CliParser addOption(ExecS_CliOption option){
-		if(option!=null && option.getOption()!=null){
-			this.options.addOption(option.getOption());
+	public ExecS_CliParser addOption(ApplicationOption<?> option){
+		if(option!=null && option.getCliOption()!=null){
+			this.options.addOption(option.getCliOption());
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a CLI option to the parser.
+	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @return self to allow for chaining
+	 */
+	public ExecS_CliParser addOption(Option option){
+		if(option!=null){
+			this.options.addOption(option);
 		}
 		return this;
 	}
@@ -75,34 +89,7 @@ public class ExecS_CliParser {
 	}
 
 	/**
-	 * Returns a string version of the value of an option set by the parser.
-	 * @param option option to look for
-	 * @return string value if set, null otherwise
-	 */
-	public String getOption(ExecS_CliOption option){
-		String ret = null;
-		String o = (option!=null)?option.getOptionAsString():null;
-		if(o!=null && this.cmdLine.hasOption(o)){
-			ret = this.cmdLine.getOptionValue(o);
-		}
-		return ret;
-	}
-
-	/**
-	 * Tests if an option was used in the command line.
-	 * @param option option to test for
-	 * @return true if option was used, false otherwise
-	 */
-	public boolean hasOption(ExecS_CliOption option){
-		String o = (option!=null)?option.getOptionAsString():null;
-		if(o!=null){
-			return this.cmdLine.hasOption(o);
-		}
-		return false;
-	}
-
-	/**
-	 * Prints a usage screen based on set options
+	 * Prints a usage screen based on set options.
 	 * @param appName name of the application to be used for the usage screen
 	 */
 	public void usage(String appName){
@@ -111,36 +98,26 @@ public class ExecS_CliParser {
 	}
 
 	/**
-	 * Parses command line arguments for a given CLI object.
+	 * Parses command line arguments for a given CLI parser.
 	 * @param args command line arguments to parse
 	 * @param cli CLI object with options to parse for
 	 * @param appName application name for error messages
 	 * @return 0 on success, -1 on error with error being logged
 	 */
-	public static int doParse(String[] args, ExecS_CliParser cli, String appName){
-		int ret = 0;
+	static int doParse(String[] args, ExecS_CliParser cli, String appName){
 		Exception err = cli.parse(args);
 		if(err!=null){
-//TODO
-//			logger.error("{}: error parsing command line -> {}", new Object[]{appName, err.getMessage()});
 			System.err.println(appName + ": error parsing command line -> " + err.getMessage());
 			return -1; 
 		}
-		return ret;
+		return 0;
 	}
 
 	/**
-	 * Tests if a CLI object has an option and if that option is not null and not empty
-	 * @param cli CLI object for testing, must have parsed command line already
-	 * @param option option to test for
-	 * @return true if option is set and not null and not empty, false otherwise
+	 * Returns the command line.
+	 * @return command line with arguments if parsed, null otherwise
 	 */
-	public static boolean testOption(ExecS_CliParser cli, ExecS_CliOption option){
-		boolean ret = false;
-		if(cli.hasOption(option)){
-			ret = StringUtils.isNotBlank(cli.getOption(option));
-		}
-		return ret;
+	public CommandLine getCommandLine(){
+		return this.cmdLine;
 	}
-
 }

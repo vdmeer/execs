@@ -35,10 +35,10 @@ import org.stringtemplate.v4.STGroupFile;
 import de.vandermeer.execs.cf.CF;
 
 /**
- * The service executor.
+ * The application executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -52,10 +52,10 @@ public class ExecS {
 	String packageFilter = null;
 
 	/**
-	 * Map of pre-registered services.
-	 * Use {@link #addService(String, Class)} to add your own services.
+	 * Map of pre-registered applications.
+	 * Use {@link #addApplication(String, Class)} to add your own applications.
 	 */
-	protected final TreeMap<String, Class<? extends ExecutableService>> classmap;
+	protected final TreeMap<String, Class<? extends ExecS_Application>> classmap;
 
 	/** Set of all classes filled during runtime search */
 	final TreeSet<String> classNames;
@@ -77,31 +77,23 @@ public class ExecS {
 	public ExecS(String appName){
 		this.appName = (appName==null)?this.appName:appName;
 
-		this.classmap = new TreeMap<String, Class<? extends ExecutableService>>();
+		this.classmap = new TreeMap<String, Class<? extends ExecS_Application>>();
 		this.classNames = new TreeSet<String>();
 
-		this.addService(Gen_RunScripts.SERVICE_NAME, Gen_RunScripts.class);
-		this.addService(Gen_RunSh.SERVICE_NAME, Gen_RunSh.class);
-		this.addService(Gen_RebaseSh.SERVICE_NAME, Gen_RebaseSh.class);
+		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
+		this.addApplication(Gen_RunSh.APP_NAME, Gen_RunSh.class);
+		this.addApplication(Gen_RebaseSh.APP_NAME, Gen_RebaseSh.class);
 
 		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 	}
 
 	/**
-	 * Returns a set of names that have been registered as services with associated execution services.
-	 * @return list of names for registered execution services, empty list if none registered
+	 * Returns a set of names that have been registered as applications with associated execution applications.
+	 * @return list of names for registered execution applications, empty list if none registered
 	 */
-	public Set<String> getRegisteredServices(){
+	public Set<String> getRegisteredApplications(){
 		return this.classmap.keySet();
 	}
-
-//	/**
-//	 * Returns the full class map of the executor.
-//	 * @return full class map, empty if no classes set
-//	 */
-//	Map<String, Class<? extends ExecutableService>> getClassMap(){
-//		return this.classmap;
-//	}
 
 	/**
 	 * Sets the jar filter for the executor.
@@ -128,19 +120,19 @@ public class ExecS {
 	}
 
 	/**
-	 * Adds a new service at runtime, with name (shortcut to start) and related class.
-	 * @param name a unique name for the service
-	 * @param clazz the class of the service for instantiation
+	 * Adds a new application at runtime, with name (shortcut to start) and related class.
+	 * @param name a unique name for the application
+	 * @param clazz the class of the application for instantiation
 	 */
-	protected final void addService(String name, Class<? extends ExecutableService> clazz){
+	protected final void addApplication(String name, Class<? extends ExecS_Application> clazz){
 		this.classmap.put(name, clazz);
 	}
 
 	/**
-	 * Adds a set of service at runtime, as in all found services that can be executed
-	 * @param set a set of services
+	 * Adds a set of application at runtime, as in all found applications that can be executed
+	 * @param set a set of applications
 	 */
-	protected final void addAllServices(Set<Class<?>> set){
+	protected final void addAllApplications(Set<Class<?>> set){
 		for(Class<?> cls:set){
 			if(!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())){
 				if(!this.classmap.containsValue(cls)){
@@ -162,8 +154,8 @@ public class ExecS {
 		String arg = tokens.nextToken();
 		int ret = 0;
 
-		if(arg==null || "-h".equals(arg) || "--help".equals(arg)){
-			//First help: no arguments or -h or --help -> print usage and exit(0)
+		if(arg==null || "-?".equals(arg) || "--help".equals(arg)){
+			//First help: no arguments or -? or --help -> print usage and exit(0)
 			this.printUsage();
 			return 0;
 		}
@@ -172,101 +164,75 @@ public class ExecS {
 			CF cf = new CF()
 				.setJarFilter((ArrayUtils.contains(args, "-j"))?this.jarFilter:null)
 				.setPkgFilter((ArrayUtils.contains(args, "-p"))?this.packageFilter:null);
-			this.addAllServices(cf.getSubclasses(ExecutableService.class));
+			this.addAllApplications(cf.getSubclasses(ExecS_Application.class));
 			this.printList();
 			return 0;
 		}
-		else if(this.classmap.containsKey(arg)){
-			ret = this.executeByClassmap(args, tokens, arg);
-		}
 		else{
-			ret = this.executeByClassName(args, tokens, arg);
+			Object svc = null;
+			if(this.classmap.containsKey(arg)){
+				try{
+					svc = this.classmap.get(arg).newInstance();
+				}
+				catch(IllegalAccessException | InstantiationException iex){
+					System.err.println(this.appName + ": tried to execute <" + args[0] + "> by registered name -> exception: " + iex.getMessage());
+//					iex.printStackTrace();
+					ret = -99;
+				}
+			}
+			else{
+				try{
+					Class<?> c = Class.forName(arg);
+					svc = c.newInstance();
+				}
+				catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
+					System.err.println(this.appName + ": tried to execute <" + args[0] + "> as class name -> exception: " + ex.getMessage());
+//					ex.printStackTrace();
+					ret = -99;
+				}
+			}
+			ret = this.executeApplication(svc, args, arg);
 		}
 
-		if(ret==-1){
+		if(ret==-99){
 			//now we are in trouble, nothing we could do worked, so print that and quit
-			System.err.println(this.appName + ": no service could be started and nothing else could be done, try '-h' or '--help' for help");
+			System.err.println(this.appName + ": no application could be started and nothing else could be done, try '-?' or '--help' for help");
 			System.err.println();
 		}
 		return ret;
 	}
 
 	/**
-	 * Executes a service by class mapping.
-	 * @param args command line arguments
-	 * @param tokens tokenized CLI arguments
-	 * @param arg current argument
-	 * @return 0 on success, -1 on error
+	 * Executes an application.
+	 * @param svc the application, must not be null
+	 * @param args original command line arguments
+	 * @param orig the original name or class for the application for error messages
+	 * @return 0 on success, other than zero on failure (including failure of the executed application)
 	 */
-	protected int executeByClassmap(String[] args, StrTokenizer tokens, String arg){
-		int ret = 0;
-		try{
-			Object svc = this.classmap.get(arg).newInstance();
-			if(svc instanceof ExecutableService){
-				arg = tokens.nextToken();
-				if("-h".equals(arg)){
-					((ExecutableService)svc).serviceHelpScreen();
-				}
-				else{
-					if(svc instanceof Gen_RunScripts){
-						//hook for GenRunScripts to get currrent class map - registered services
-						((Gen_RunScripts)svc).setClassMap(this.classmap);
-					}
-					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
-				}
+	protected int executeApplication(Object svc, String[] args, String orig){
+		if(svc!=null && (svc instanceof ExecS_Application)){
+			if(svc instanceof Gen_RunScripts){
+				//hook for GenRunScripts to get current class map - registered applications
+				((Gen_RunScripts)svc).setClassMap(this.classmap);
 			}
+			return ((ExecS_Application)svc).executeApplication(ArrayUtils.remove(args, 0));
 		}
-		catch(IllegalAccessException | InstantiationException iex){
-			System.err.println(this.appName + ": tried to execute <" + args[0] + "> by registered name -> exception");
-//			System.err.println(iex);
-//			iex.printStackTrace();
-			ret = -1;
+		else if(svc==null){
+			System.err.println("could not create object for class or application name <" + orig + ">");
+			return -1;
 		}
-
-		return ret;
+		else if(!(svc instanceof ExecS_Application)){
+			System.err.println("given class or application name <" + orig + "> is not instance of " + ExecS_Application.class.getName());
+			return -2;
+		}
+		else{
+			System.err.println("unexpected error processing for class or application name <" + orig + ">");
+			return -3;
+		}
 	}
 
 	/**
-	 * Executes a service by class name, that is using a fully qualified class name.
-	 * @param args command line arguments
-	 * @param tokens tokenized CLI arguments
-	 * @param arg current argument
-	 * @return 0 on success, -1 on error
-	 */
-	protected int executeByClassName(String[] args, StrTokenizer tokens, String arg){
-		int ret = 0;
-		try{
-			Class<?> c = Class.forName(arg);
-			Object svc = c.newInstance();
-			if(svc instanceof ExecutableService){
-				arg = tokens.nextToken();
-				if("-h".equals(arg)){
-					((ExecutableService)svc).serviceHelpScreen();
-				}
-				else{
-					if(svc instanceof Gen_RunScripts){
-						//hook for GenRunScripts to get currrent class map - registered services
-						((Gen_RunScripts)svc).setClassMap(this.classmap);
-					}
-					ret = ((ExecutableService)svc).executeService(ArrayUtils.remove(args, 0));
-				}
-			}
-			else{
-				System.err.println("given class is not instance of " + ExecutableService.class.getName());
-				ret = -1;
-			}
-		}
-		catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
-			System.err.println(this.appName + ": tried to execute <" + args[0] + "> as class name -> exception");
-//			ex.printStackTrace();
-			ret = -1;
-		}
-
-		return ret;
-	}
-
-	/**
-	 * Prints a list of pre-registered and found services.
+	 * Prints a list of pre-registered and found applications.
 	 */
 	protected final void printList(){
 		ST list = this.stg.getInstanceOf("list");
@@ -306,14 +272,10 @@ public class ExecS {
 	}
 
 	/**
-	 * Public main to start any service.
+	 * Public main to start the application executor.
 	 * @param args command line arguments
 	 */
 	public static void main(String[] args) {
-//		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-//		lc.getBirthTime();
-//		StatusPrinter.print(lc);
-
 		ExecS run = new ExecS();
 		int ret = run.execute(args);
 		System.exit(ret);

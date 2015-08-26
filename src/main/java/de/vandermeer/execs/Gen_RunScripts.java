@@ -30,20 +30,30 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import de.vandermeer.execs.cli.ExecS_CliParser;
-import de.vandermeer.execs.cli.StandardOptions;
+import de.vandermeer.execs.options.AO_AppHomeDirectory;
+import de.vandermeer.execs.options.AO_ClassmapFile;
+import de.vandermeer.execs.options.AO_PropertyFile;
+import de.vandermeer.execs.options.AO_StgFile;
+import de.vandermeer.execs.options.AO_Target;
+import de.vandermeer.execs.options.ApplicationOption;
 
 /**
- * Executable service to generate run scripts for other executable services, supporting windows, CygWin and bash.
+ * Application to generate run scripts for other applications, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RunScripts implements ExecutableService {
+public class Gen_RunScripts implements ExecS_Application {
 
-	/** Service name. */
-	public final static String SERVICE_NAME = "gen-run-scripts";
+	/** Application name. */
+	public final static String APP_NAME = "gen-run-scripts";
+
+	/** Application display name. */
+	public final static String APP_DISPLAY_NAME = "Generate Application Run Scripts";
+
+	/** Application version, should be same as the version in the class JavaDoc. */
+	public final static String APP_VERSION = "v0.2.0 build 150826 (26-Aug-15) for Java 1.8";
 
 	/** A property key for the script name of the generic run script, without file extension. */
 	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
@@ -57,11 +67,26 @@ public class Gen_RunScripts implements ExecutableService {
 	/** The string all java properties for running the JVM must start with. */
 	public final static String PROP_JAVAPROP_START = "java.property.";
 
-	/** A property key to set auto-script generation for registered executable services. */
+	/** A property key to set auto-script generation for registered executable applications. */
 	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
 
 	/** Local CLI options for CLI parsing. */
 	protected ExecS_CliParser cli;
+
+	/** The application option for the property file. */
+	protected AO_PropertyFile optionPropFile;
+
+	/** The application option for the target. */
+	protected AO_Target optionTarget;
+
+	/** The application option for the STG file. */
+	protected AO_StgFile optionStgFile;
+
+	/** The application option for the class map file. */
+	protected AO_ClassmapFile optionClassMapFile;
+
+	/** The application option for the application home directory. */
+	protected AO_AppHomeDirectory optionAppHome;
 
 	/** Properties for configuration options. */
 	protected Properties configuration;
@@ -82,34 +107,43 @@ public class Gen_RunScripts implements ExecutableService {
 	protected String outputDir;
 
 	/** Local class map, must be set by calling ExecS instance. */
-	Map<String, Class<? extends ExecutableService>> execClassMap;
+	Map<String, Class<? extends ExecS_Application>> execClassMap;
 
 	/**
 	 * Returns a new generator with parameterized CLI object.
 	 */
 	public Gen_RunScripts() {
 		this.cli = new ExecS_CliParser();
-		this.cli.addOption(StandardOptions.TARGET);
-		this.cli.addOption(StandardOptions.STG_FILE);
-		this.cli.addOption(StandardOptions.CLASSMAP_FILE);
-		this.cli.addOption(StandardOptions.APPLICATION_HOME_DIR);
-		this.cli.addOption(StandardOptions.PROP_FILE);
+
+		this.optionPropFile = new AO_PropertyFile(false, "de/vandermeer/execs/configuration.properties", "File name of a property file with specific configuration options to generate run scripts.");
+		this.cli.addOption(this.optionPropFile);
+
+		this.optionTarget = new AO_Target(true, "The target defines if the script is generated for bat (Windows batch file), sh (UNIX bash script) or cyg (Cygwin bash script).");
+		this.cli.addOption(this.optionTarget);
+
+		this.optionStgFile = new AO_StgFile(false, "de/vandermeer/execs/executable-script.stg", "The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation.");
+		this.cli.addOption(this.optionStgFile);
+
+		this.optionClassMapFile = new AO_ClassmapFile(false, "execs.classmap", "The class map file contains mappings from a class name to a script name. This mapping is used to generate run scripts for applications that are not registered with an executor, or if automated generation (for registered applications) is not required or wanted.");
+		this.cli.addOption(this.optionClassMapFile);
+
+		this.optionAppHome = new AO_AppHomeDirectory(true, "The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path.");
+		this.cli.addOption(this.optionAppHome);
 	}
 
 	/**
 	 * Hook for a calling ExecS instance to set its class map for the script generator
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
-	public void setClassMap(Map<String, Class<? extends ExecutableService>> execClassMap){
+	public void setClassMap(Map<String, Class<? extends ExecS_Application>> execClassMap){
 		this.execClassMap = execClassMap;
 	}
 
 	@Override
-	public int executeService(String[] args) {
+	public int executeApplication(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_CliParser.doParse(args, this.cli, this.getName());
+		int ret = ExecS_Application.super.executeApplication(args);
 		if(ret!=0){
-			this.serviceHelpScreen();
 			return ret;
 		}
 
@@ -184,7 +218,7 @@ public class Gen_RunScripts implements ExecutableService {
 			}
 		}
 
-		//build scripts for all registered services using the specified run class
+		//build scripts for all registered applications using the specified run class
 		if(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED)!=null && BooleanUtils.toBoolean(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED).toString())){
 //			try{
 //				Class<?> c = Class.forName(this.configuration.get(PROP_RUN_CLASS).toString());
@@ -231,31 +265,28 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initConfiguration(){
-		String propFile = "de/vandermeer/execs/configuration.properties";
-		if(ExecS_CliParser.testOption(this.cli, StandardOptions.PROP_FILE)){
-			propFile = this.cli.getOption(StandardOptions.PROP_FILE);
-		}
+		String propFile = this.optionPropFile.getValue();
 
 		this.configuration = this.loadProperties(propFile);
 		if(this.configuration==null){
-			System.err.println(this.getName() + ": could not load configuration properties, exiting");
+			System.err.println(this.getAppName() + ": could not load configuration properties from file <" + propFile + ">, exiting");
 			return -1;
 		}
 
 		if(this.configuration.get(PROP_RUN_SCRIPT_NAME)==null){
-			System.err.println(this.getName() + ": configuration does not contain key <" + PROP_RUN_SCRIPT_NAME + ">, exiting");
+			System.err.println(this.getAppName() + ": configuration does not contain key <" + PROP_RUN_SCRIPT_NAME + ">, exiting");
 			return -1;
 		}
 		if(this.configuration.get(PROP_RUN_CLASS)==null){
-			System.err.println(this.getName() + ": configuration does not contain key <" + PROP_RUN_CLASS + ">, exiting");
+			System.err.println(this.getAppName() + ": configuration does not contain key <" + PROP_RUN_CLASS + ">, exiting");
 			return -1;
 		}
 		if(this.configuration.get(PROP_JAVA_CP)==null){
-			System.err.println(this.getName() + ": configuration does not contain key <" + PROP_JAVA_CP + ">, exiting");
+			System.err.println(this.getAppName() + ": configuration does not contain key <" + PROP_JAVA_CP + ">, exiting");
 			return -1;
 		}
 
-		System.out.println(this.getName() + ": using configuration: ");
+		System.out.println(this.getAppName() + ": using configuration: ");
 		System.out.println("  - run script name: " + this.configuration.get(PROP_RUN_SCRIPT_NAME));
 		System.out.println("  - run class      : " + this.configuration.get(PROP_RUN_CLASS));
 		System.out.println("  - java cp        : " + this.configuration.get(PROP_JAVA_CP));
@@ -280,27 +311,26 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initTargetAndStg(){
-		if(ExecS_CliParser.testOption(this.cli, StandardOptions.TARGET)){
-			this.target = this.cli.getOption(StandardOptions.TARGET);
-		}
+		this.target = this.optionTarget.getValue();
 		if(this.target==null){
-			System.err.println(this.getName() + ": no target set");
+			System.err.println(this.getAppName() + ": no target set");
 			return -1;
 		}
 
-		String fileName = "de/vandermeer/execs/executable-script.stg";
-		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
-			fileName = this.configuration.get("stg.file").toString();
-		}
-		if(ExecS_CliParser.testOption(this.cli, StandardOptions.STG_FILE)){
-			fileName = this.cli.getOption(StandardOptions.STG_FILE);
-		}
+		String fileName = this.optionStgFile.getValue();
+//				"de/vandermeer/execs/executable-script.stg";
+//		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
+//			fileName = this.configuration.get("stg.file").toString();
+//		}
+//		if(this.cliStgFile.getStgFile()!=null){
+//			fileName = this.cliStgFile.getStgFile();
+//		}
 
 		try{
 			this.stg = new STGroupFile(fileName);
 		}
 		catch(Exception e){
-			System.err.println(this.getName() + ": cannot load stg file <" + fileName + ">, general exception\n--> " + e + "");
+			System.err.println(this.getAppName() + ": cannot load stg file <" + fileName + ">, general exception\n--> " + e);
 			return -1;
 		}
 		String[] availableTargets = null;
@@ -308,19 +338,19 @@ public class Gen_RunScripts implements ExecutableService {
 			availableTargets = StringUtils.split(this.stg.getInstanceOf("supportedTargets").render(), " , ");
 		}
 		catch(Exception e){
-			System.err.println(this.getName() + ": stg file <" + fileName + "> does not contain <supportedTargets> function");
+			System.err.println(this.getAppName() + ": stg file <" + fileName + "> does not contain <supportedTargets> function");
 			return -1;
 		}
 		if(availableTargets.length==0){
-			System.err.println(this.getName() + ": stg file <" + fileName + "> does not have a list of targets in <supportedTargets> function");
+			System.err.println(this.getAppName() + ": stg file <" + fileName + "> does not have a list of targets in <supportedTargets> function");
 			return -1;
 		}
 		if(!ArrayUtils.contains(availableTargets, this.target)){
-			System.err.println(this.getName() + ": target " + this.target + " not supported in stg file <" + fileName + ">");
+			System.err.println(this.getAppName() + ": target " + this.target + " not supported in stg file <" + fileName + ">");
 			return -1;
 		}
 
-		System.out.println(this.getName() + ": generating scripts for target: " + this.target);
+		System.out.println(this.getAppName() + ": generating scripts for target: " + this.target);
 		System.out.println();
 		return 0;
 	}
@@ -333,11 +363,9 @@ public class Gen_RunScripts implements ExecutableService {
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initApplicationDir(){
-		if(ExecS_CliParser.testOption(this.cli, StandardOptions.APPLICATION_HOME_DIR)){
-			this.applicationDir = this.cli.getOption(StandardOptions.APPLICATION_HOME_DIR);
-		}
-		else{
-			System.err.println(this.getName() + ": no application directory set");
+		this.applicationDir = this.optionAppHome.getValue();
+		if(this.applicationDir==null){
+			System.err.println(this.getAppName() + ": no application directory set");
 			return -1;
 		}
 
@@ -347,32 +375,33 @@ public class Gen_RunScripts implements ExecutableService {
 	/**
 	 * Loads a classmap from a property file.
 	 * A classmap maps class names to script names.
-	 * A class name must be an implementation of the executable service interface {@link ExecutableService}.
+	 * A class name must be an implementation of the executable application interface {@link ExecS_Application}.
 	 * No default map is used.
 	 * This default can be overwritten using the property "execs.classmap" in the configuration properties file.
 	 * The default and the property file name can be overwritten using the "--classmap-file" CLI option.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initClassmap(){
-		String fileName = null;
-		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
-			fileName = this.configuration.get("execs.classmap").toString();
-		}
-		if(ExecS_CliParser.testOption(this.cli, StandardOptions.CLASSMAP_FILE)){
-			fileName = this.cli.getOption(StandardOptions.CLASSMAP_FILE);
-		}
+		this.optionClassMapFile.setPropertyValue(this.configuration);
+		String fileName = this.optionClassMapFile.getValue();
+//		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
+//			fileName = this.configuration.get("execs.classmap").toString();
+//		}
+//		if(this.cliClassMapFile.getFileName()!=null){
+//			fileName = this.cliClassMapFile.getFileName();
+//		}
 		if(fileName==null){
-			System.err.println(this.getName() + ": no classmap file name given");
+			System.err.println(this.getAppName() + ": no classmap file name given");
 			return -2;
 		}
 
 		this.classMap = this.loadProperties(fileName);
 		if(this.classMap==null){
-			System.err.println(this.getName() + ": could not load classmap, exiting");
+			System.err.println(this.getAppName() + ": could not load classmap, exiting");
 			return -1;
 		}
 
-		System.out.println(this.getName() + ": generating scripts for:");
+		System.out.println(this.getAppName() + ": generating scripts for:");
 		for(Object key : this.classMap.keySet()){
 			System.out.println("  - " + key + " --> " + this.classMap.getProperty(key.toString()));
 		}
@@ -397,27 +426,27 @@ public class Gen_RunScripts implements ExecutableService {
 		if(targetDir.exists()){
 			//target dir exists, let's see if it is what we want it to be
 			if(!targetDir.isDirectory()){
-				System.err.println(this.getName() + ": target dir <" + target + "> exists but is not a directory, exiting");
+				System.err.println(this.getAppName() + ": target dir <" + target + "> exists but is not a directory, exiting");
 				return -1;
 			}
 			if(!targetDir.canWrite()){
-				System.err.println(this.getName() + ": target dir <" + target + "> exists but but cannot write into it, exiting");
+				System.err.println(this.getAppName() + ": target dir <" + target + "> exists but but cannot write into it, exiting");
 				return -1;
 			}
 		}
 		else{
 			//target dir does not exist, let's see if we can create it the way we need
 			if(!parentDir.isDirectory()){
-				System.err.println(this.getName() + ": target dir parent <" + parent + "> exists but is not a directory, exiting");
+				System.err.println(this.getAppName() + ": target dir parent <" + parent + "> exists but is not a directory, exiting");
 				return -1;
 			}
 			if(!parentDir.canWrite()){
-				System.err.println(this.getName() + ": target dir parent <" + parent + "> exists but but cannot write into it, exiting");
+				System.err.println(this.getAppName() + ": target dir parent <" + parent + "> exists but but cannot write into it, exiting");
 				return -1;
 			}
 
 			if(!targetDir.mkdir()){
-				System.err.println(this.getName() + ": could not create target dir <" + target + ">, exiting");
+				System.err.println(this.getAppName() + ": could not create target dir <" + target + ">, exiting");
 				return -1;
 			}
 		}
@@ -455,10 +484,10 @@ public class Gen_RunScripts implements ExecutableService {
 			ret.load(url.openStream());
 		}
 		catch (IOException e){
-			System.err.println(this.getName() + ": cannot load property file <" + filename + ">, IO exception\n--><" + e + ">");
+			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, IO exception\n--><" + e + ">");
 		}
 		catch (Exception e){
-			System.err.println(this.getName() + ": cannot load property file <" + filename + ">, general exception\n--><" + e + ">");
+			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, general exception\n--><" + e + ">");
 		}
 		return ret;
 	}
@@ -489,15 +518,28 @@ public class Gen_RunScripts implements ExecutableService {
 	}
 
 	@Override
-	public void serviceHelpScreen() {
-		System.out.println("Generates run scripts for executable services.");
-		System.out.println();
-		this.cli.usage(this.getName());
+	public String getAppDescription() {
+		return "Generates run scripts for executable applications.";
 	}
 
 	@Override
-	public String getName() {
-		return Gen_RunScripts.SERVICE_NAME;
+	public String getAppName() {
+		return APP_NAME;
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public ApplicationOption<?>[] getAppOptions() {
+		return new ApplicationOption[]{this.optionAppHome, this.optionClassMapFile, this.optionPropFile, this.optionStgFile, this.optionTarget, this.optionTarget};
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
 	}
 
 }

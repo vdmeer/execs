@@ -20,21 +20,21 @@
  * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
  * @copyright  2015 Sven van der Meer
  * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
- * @version    v0.1.0 build 150812 (12-Aug-15)
+ * @version    v0.2.0 build 150826 (26-Aug-15)
  */
 
 
 
 //
-// Print a list of registered and found services.
+// Print a list of registered and found applications.
 //
 list(appName, classMap, className) ::= <<
-<appName>: list of all services (registered and found) implementing the service interface
+<appName>: list of all applications (registered and found) implementing the execution interface
 
-  registered services (name -> class name)
+  registered applications (name -> class name)
 <if(classMap)><classMap:{e |     - <e.key> -> <e.val>}; separator="\n"><else>    - [none]<endif>
 
-  services found in class path
+  applications found in class path
 <if(className)>    - <className; separator="\n    - "><else>    - [none]<endif>
 
 
@@ -47,21 +47,21 @@ list(appName, classMap, className) ::= <<
 //
 usage(appName, packageFilter, jarFilter) ::= <<
 
-<appName> requires class, service name, or arguments
+<appName> requires class, application name, or arguments
 
     usage <appName> \<class> [class-options]
-        Executes a service by classname, class must implement the EXECS service interface.
+        Executes an application by classname, class must implement the EXECS application interface.
         \<class> must be a fully qualified class name, i.e. with package and class name
-        [class-options] are command line options forwarded to the executed service
+        [class-options] are command line options forwarded to the executed application
 
-    usage: <appName> \<service> [service-options]
-        Executes a service by registered name, EXECS service interface must be implemented.
-        \<service> must be name registered with the application
-        [service-options] are command line options forwarded to the executed service
+    usage: <appName> \<application> [application-options]
+        Executes an application by registered name, EXECS application interface must be implemented.
+        \<application> must be name registered with the application
+        [application-options] are command line options forwarded to the executed application
 
     usage: <appName> [-l | --list] [-j] [-p]
-        Lists all available services, i.e. classes implementing the service interface
-        Services are found by searching through all jars in the classpath (can be SLOW!).
+        Lists all available applications, i.e. classes implementing the application interface
+        Applications are found by searching through all jars in the classpath (can be SLOW!).
         -j - activate a jar filter if set for the executor
         -p - activate a package filter if set for the executor
 

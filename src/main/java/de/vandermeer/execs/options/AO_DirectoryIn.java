@@ -13,31 +13,42 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.cli;
+package de.vandermeer.execs.options;
 
 import org.apache.commons.cli.Option;
 
 /**
- * CLI option "property-file".
+ * Application option "input-directory".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
- * @since      v0.1.1 (was in StandardOptions before)
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
+ * @since      v0.2.0
  */
-public class CliOption_PropertyFile extends AbstractClioption {
+public class AO_DirectoryIn extends AbstractApplicationOption<String> {
 
 	/**
-	 * Returns the new CLI option.
+	 * Returns the new option.
 	 * @param required true if option is required, false of it is optional
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
-	public CliOption_PropertyFile(boolean required){
-		Option.Builder builder = Option.builder();
-		builder.longOpt("property-file");
-		builder.hasArg().argName("FILE");
-		builder.desc("a property file with configuration");
-		builder.required(required);
+	public AO_DirectoryIn(boolean required, String longDescription){
+		super("input directory", longDescription);
 
-		this.option = builder.build();
+		Option.Builder builder = Option.builder();
+		builder.longOpt("input-directory");
+		builder.hasArg().argName("DIR");
+		builder.required(required);
+		this.setCliOption(builder.build());
+	}
+
+	@Override
+	public String convertValue(Object value) {
+		if(value==null){
+			return null;
+		}
+		return value.toString();
 	}
 
 }

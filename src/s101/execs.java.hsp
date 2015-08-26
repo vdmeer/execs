@@ -28,7 +28,7 @@
     <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0" />
   </restructuring>
   <sourcepaths>
-    <pathentry type="file" path="/mnt/shares/vdm/dev/github/skb-java/execs/src/main/java" />
+    <pathentry type="file" path="/mnt/shares/vdm/dev/github/skb-java/execs/src/s101/../../src/main/java" />
   </sourcepaths>
 </local-project>
 
