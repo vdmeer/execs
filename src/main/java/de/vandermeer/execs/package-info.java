@@ -100,7 +100,7 @@
  * }</pre>
  * 
  * <h4>A simple application with automated CLI parsing</h4>
- * Writing your own CLI parsing can be very tedious. Instead, we can define our CLI arguments and use the provided CLI parser {@link de.vandermeer.execs.ExecS_CliParser}.
+ * Writing your own CLI parsing can be very tedious. Instead, we can define our CLI arguments and use the provided CLI parser {@link de.vandermeer.execs.options.ExecS_CliParser}.
  * This parser can also be used to auto-generate usage information.
  * To define a CLI argument we create a new class with all instructions in the constructor:
  * <pre>{@code

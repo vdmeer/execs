@@ -1,57 +1,69 @@
 SKB Execute Service
 ===================
-A simple set of classes to execute programs from the command line with automated generation of run scripts, service options and CLI parser.
+A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.
 :toc:
 
 Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.2.0|jar[0.2.0].
 All releases are on https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%execs%22[Maven Central].
 
 
-The problem
+
+
+The Problem
 -----------
-When writing applications that consist of a number of programs that can be executed from the command line one will have a lot of +static void main()+ methods.
-Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from command line.
-The problem gets worse when code is refactored.
+When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of +static void main()+ methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
 
 
 This solution
 -------------
-Define an interface with all required functionality to run a program (here called service).
+Define an interface with all required functionality to run a program (here called application).
 Then implement a class that finds implementation of that interface and that provides a single +static void main()+ method to execute each of them.
 Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
 Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.
 
-Developing an application now means to implement classes implementing the executable service interface.
+Developing an application now means to implement classes implementing the executable application interface.
 If additional functionality is required a class extending the executor.
-Finally providing the necessary configuration information for the generators and an init script for the initial configuration of the application.
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.
 
 
 Provided functionality
 ----------------------
 
-Service Execution
-~~~~~~~~~~~~~~~~~
-* Interface for an executable service,
-* A service executor with search and list and help functionality,
-* A generator for a script (batch file or bash script) to run the service executor (including all required information such as class path),
-* A generator for scripts for all registered (static) or found (dynamic) executable services,
+Application Execution
+~~~~~~~~~~~~~~~~~~~~~
+* Interface for an executable application,
+* An application executor with search and list, search, and help functionality,
+* A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),
+* A generator for scripts for all registered (static) or found (dynamic) executable applications,
 * A generator for a re-base script that allows to change all required information if an application installation is moved.
 
 Additionally this package defines required resources:
-
 * A bash script for running a generator when installing an application,
 * A bash script for re-basing,
 * Property files with standard configurations,
 * String template files for flexible change of generator output.
 
+
 Class Finder
 ~~~~~~~~~~~~
-* A class finder that searches for implementations of the executable service interface in all jars and class files in the class path (at runtime),
+* A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),
 * A package filter for the class finder to speedup the search,
 * A jar filter for the class finder to speedup the search.
 
-Command Line Interface (CLI)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* An implementation of a CLI parser, based on Apache Commons,
-* A facade for the Apache Commons CLI Option (interface and abstract implementation),
-* A number of pre-defined CLI option.
+Application Options and CLI Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation
+* An abstract (yet fully features) implementation of the application option interface
+* A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.
+* A set of pre-defined options for common use cases, e.g.:
+	** input and output directory
+	** input and output file
+	** identifier
+	** property file
+	** server mode (flag for interactive or background mode)
+	** STG file (for string template files)

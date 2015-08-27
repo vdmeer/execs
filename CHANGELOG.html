@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.0">
-<title>v0.2.0 - maintenance - 2015--</title>
+<title>v0.2.0 - major changes - 2015-08-27</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -414,77 +414,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_v0_2_0_maintenance_2015_mark_mark">v0.2.0 - maintenance - 2015-<mark>-</mark></h2>
+<h2 id="_v0_2_0_major_changes_2015_08_27">v0.2.0 - major changes - 2015-08-27</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>changed mechanism for Gen_RunScript to get class map</p>
-<div class="ulist">
-<ul>
-<li>
-<p>removed getClassMap() from ExecS</p>
-</li>
-<li>
-<p>added setClassMap() to Gen_RunScript</p>
-</li>
-<li>
-<p>added call to ExecS just before SVC execution if service is instance of Gen_RunScript</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>removed FigletShutdown, this class is now in skb-base</p>
-</li>
-<li>
-<p>changed README and added JavaDoc</p>
-</li>
-<li>
-<p>changed cli implementation</p>
-<div class="ulist">
-<ul>
-<li>
-<p>created AbstractClioption object</p>
-</li>
-<li>
-<p>implemented all standard options in stand-alone classes, with additional optional/required feature for all but help (automatically optional)</p>
-</li>
-<li>
-<p>changed StandardOptions from enum to abstract class and added the new option implementation as statics</p>
-</li>
-<li>
-<p>moved all cli related classes in package cli</p>
-</li>
-<li>
-<p>added getAdditionalDescription() to ExecS_CliOption for more specific help options</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>renamed ExecS_Cli to ExecS_CliParser</p>
-</li>
-<li>
-<p>changes in ExecS and ExecutableService</p>
-<div class="ulist">
-<ul>
-<li>
-<p>added "--help" and "-?" to automatic help (-h) handling in ExecS</p>
-</li>
-<li>
-<p>renamed getName() to getServiceName()</p>
-</li>
-<li>
-<p>added automatic CLI parsing as default implementation to ExecutableService.executeService()</p>
-</li>
-<li>
-<p>added serviceHelpScreen(String) to ExecutableService for more specific help options</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
+<div class="paragraph">
+<p>Complete overhaul of everything
+* the executable service is not an executable application
+* fixed problems in all generators (automated generation now works)
+* ExecS can now identift Gen_RunScript application and push class map
+* ExecS does now only do ExecS help handling and delegates all arguments to an application
+* removed FigletShutdown, this class is now in skb-base
+* completely new Option implementation
+	<strong> application option interface that uses default, property, cli and potentially other value sources with generic typing and provides documentation methods
+	</strong> the interface already implements fully-automated CLI behaviour, application help arguments and application version arguments
+	<strong> abstract implementation of that interface
+	</strong> set of standard option implementations (from the old CLI arguments)
+* change in the CLI Parser
+	<strong> renamed ExecS_Cli to ExecS_CliParser
+	</strong> parser now can take standard options (defined by Apache Commons CLI) and the application option
+	** parser does not set options outside, instead one can get the parsed command line for processing
+* added some JavaDoc, but this is work-in-progress (except for overview.html)</p>
 </div>
 </div>
 </div>
@@ -750,7 +698,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-25 18:12:24 IST
+Last updated 2015-08-27 11:53:36 IST
 </div>
 </div>
 </body>

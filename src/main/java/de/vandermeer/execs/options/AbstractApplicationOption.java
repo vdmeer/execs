@@ -149,11 +149,7 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		return 0;
 	}
 
-	/**
-	 * Sets the property value of the option read from a property object.
-	 * @param properties a property object to read the value from
-	 * @return 0 if process was successful (i.e. program can proceed), non 0 otherwise (means the program should proceed)
-	 */
+	@Override
 	public int setPropertyValue(Properties properties) {
 		if(properties==null || properties.get(this.getOptionKey())==null){
 			if(this.cliOption.hasArg()){

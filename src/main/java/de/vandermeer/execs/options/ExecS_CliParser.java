@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs;
+package de.vandermeer.execs.options;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -22,8 +22,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
-import de.vandermeer.execs.options.ApplicationOption;
 
 /**
  * CLI implementation for applications.

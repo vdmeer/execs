@@ -36,6 +36,7 @@ import de.vandermeer.execs.options.AO_PropertyFile;
 import de.vandermeer.execs.options.AO_StgFile;
 import de.vandermeer.execs.options.AO_Target;
 import de.vandermeer.execs.options.ApplicationOption;
+import de.vandermeer.execs.options.ExecS_CliParser;
 
 /**
  * Application to generate run scripts for other applications, supporting windows, CygWin and bash.

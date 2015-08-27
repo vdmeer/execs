@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.0">
-<meta name="author" content="A simple set of classes to execute programs from the command line with automated generation of run scripts, service options and CLI parser.">
+<meta name="author" content="A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.">
 <title>SKB Execute Service</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
@@ -414,18 +414,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>SKB Execute Service</h1>
 <div class="details">
-<span id="author" class="author">A simple set of classes to execute programs from the command line with automated generation of run scripts, service options and CLI parser.</span><br>
+<span id="author" class="author">A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_the_problem">The problem</a></li>
+<li><a href="#_the_problem">The Problem</a></li>
 <li><a href="#_this_solution">This solution</a></li>
 <li><a href="#_provided_functionality">Provided functionality</a>
 <ul class="sectlevel2">
-<li><a href="#_service_execution">Service Execution</a></li>
+<li><a href="#_application_execution">Application Execution</a></li>
 <li><a href="#_class_finder">Class Finder</a></li>
-<li><a href="#_command_line_interface_cli">Command Line Interface (CLI)</a></li>
+<li><a href="#_application_options_and_cli_parser">Application Options and CLI Parser</a></li>
 </ul>
 </li>
 </ul>
@@ -441,12 +441,14 @@ All releases are on <a href="https://search.maven.org/#search|gav|1|g%3A%22de.va
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_problem">The problem</h2>
+<h2 id="_the_problem">The Problem</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When writing applications that consist of a number of programs that can be executed from the command line one will have a lot of <code>static void main()</code> methods.
-Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from command line.
-The problem gets worse when code is refactored.</p>
+<p>When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of <code>static void main()</code> methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.</p>
 </div>
 </div>
 </div>
@@ -454,15 +456,16 @@ The problem gets worse when code is refactored.</p>
 <h2 id="_this_solution">This solution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Define an interface with all required functionality to run a program (here called service).
+<p>Define an interface with all required functionality to run a program (here called application).
 Then implement a class that finds implementation of that interface and that provides a single <code>static void main()</code> method to execute each of them.
 Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
-Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.</p>
+Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.</p>
 </div>
 <div class="paragraph">
-<p>Developing an application now means to implement classes implementing the executable service interface.
+<p>Developing an application now means to implement classes implementing the executable application interface.
 If additional functionality is required a class extending the executor.
-Finally providing the necessary configuration information for the generators and an init script for the initial configuration of the application.</p>
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.</p>
 </div>
 </div>
 </div>
@@ -470,20 +473,20 @@ Finally providing the necessary configuration information for the generators and
 <h2 id="_provided_functionality">Provided functionality</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_service_execution">Service Execution</h3>
+<h3 id="_application_execution">Application Execution</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Interface for an executable service,</p>
+<p>Interface for an executable application,</p>
 </li>
 <li>
-<p>A service executor with search and list and help functionality,</p>
+<p>An application executor with search and list, search, and help functionality,</p>
 </li>
 <li>
-<p>A generator for a script (batch file or bash script) to run the service executor (including all required information such as class path),</p>
+<p>A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),</p>
 </li>
 <li>
-<p>A generator for scripts for all registered (static) or found (dynamic) executable services,</p>
+<p>A generator for scripts for all registered (static) or found (dynamic) executable applications,</p>
 </li>
 <li>
 <p>A generator for a re-base script that allows to change all required information if an application installation is moved.</p>
@@ -491,23 +494,11 @@ Finally providing the necessary configuration information for the generators and
 </ul>
 </div>
 <div class="paragraph">
-<p>Additionally this package defines required resources:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A bash script for running a generator when installing an application,</p>
-</li>
-<li>
-<p>A bash script for re-basing,</p>
-</li>
-<li>
-<p>Property files with standard configurations,</p>
-</li>
-<li>
-<p>String template files for flexible change of generator output.</p>
-</li>
-</ul>
+<p>Additionally this package defines required resources:
+* A bash script for running a generator when installing an application,
+* A bash script for re-basing,
+* Property files with standard configurations,
+* String template files for flexible change of generator output.</p>
 </div>
 </div>
 <div class="sect2">
@@ -515,7 +506,7 @@ Finally providing the necessary configuration information for the generators and
 <div class="ulist">
 <ul>
 <li>
-<p>A class finder that searches for implementations of the executable service interface in all jars and class files in the class path (at runtime),</p>
+<p>A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),</p>
 </li>
 <li>
 <p>A package filter for the class finder to speedup the search,</p>
@@ -527,17 +518,42 @@ Finally providing the necessary configuration information for the generators and
 </div>
 </div>
 <div class="sect2">
-<h3 id="_command_line_interface_cli">Command Line Interface (CLI)</h3>
+<h3 id="_application_options_and_cli_parser">Application Options and CLI Parser</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>An implementation of a CLI parser, based on Apache Commons,</p>
+<p>An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation</p>
 </li>
 <li>
-<p>A facade for the Apache Commons CLI Option (interface and abstract implementation),</p>
+<p>An abstract (yet fully features) implementation of the application option interface</p>
 </li>
 <li>
-<p>A number of pre-defined CLI option.</p>
+<p>A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.</p>
+</li>
+<li>
+<p>A set of pre-defined options for common use cases, e.g.:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>input and output directory</p>
+</li>
+<li>
+<p>input and output file</p>
+</li>
+<li>
+<p>identifier</p>
+</li>
+<li>
+<p>property file</p>
+</li>
+<li>
+<p>server mode (flag for interactive or background mode)</p>
+</li>
+<li>
+<p>STG file (for string template files)</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -547,7 +563,7 @@ Finally providing the necessary configuration information for the generators and
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-25 18:13:38 IST
+Last updated 2015-08-27 11:44:40 IST
 </div>
 </div>
 </body>

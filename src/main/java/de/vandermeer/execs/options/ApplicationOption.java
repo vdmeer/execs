@@ -15,6 +15,8 @@
 
 package de.vandermeer.execs.options;
 
+import java.util.Properties;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.text.StrBuilder;
@@ -182,4 +184,12 @@ public interface ApplicationOption <T> {
 	 * @param value new default value
 	 */
 	void setDefaultValue(T value);
+
+	/**
+	 * Sets the property value of the option read from a property object.
+	 * @param properties a property object to read the value from
+	 * @return 0 if process was successful (i.e. program can proceed), non 0 otherwise (means the program should proceed)
+	 */
+	int setPropertyValue(Properties properties);
+
 }

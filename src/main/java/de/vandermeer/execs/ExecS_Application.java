@@ -20,6 +20,7 @@ import org.apache.commons.cli.CommandLine;
 import de.vandermeer.execs.options.AO_Help;
 import de.vandermeer.execs.options.AO_Version;
 import de.vandermeer.execs.options.ApplicationOption;
+import de.vandermeer.execs.options.ExecS_CliParser;
 
 /**
  * Interface for an application that can be executed.
