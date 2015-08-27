@@ -34,7 +34,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * Application to generate a shell script running {@link Gen_RunScripts}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150827 (27-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunSh implements ExecS_Application {
@@ -46,7 +46,7 @@ public class Gen_RunSh implements ExecS_Application {
 	public final static String APP_DISPLAY_NAME = "Generate Run.SH";
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v0.2.0 build 150826 (26-Aug-15) for Java 1.8";
+	public final static String APP_VERSION = "v0.2.0 build 150827 (27-Aug-15) for Java 1.8";
 
 	/** Local CLI options for CLI parsing. */
 	protected ExecS_CliParser cli;
