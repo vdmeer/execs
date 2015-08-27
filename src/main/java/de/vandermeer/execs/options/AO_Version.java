@@ -13,11 +13,34 @@
  * limitations under the License.
  */
 
+package de.vandermeer.execs.options;
+
+import org.apache.commons.cli.Option;
+
 /**
- * A class finder with jar and package filters.
+ * Application option "version", automatically added to an executable application.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
- * @since      v0.0.6
+ * @since      v0.2.0
  */
-package de.vandermeer.execs.cf;
+public class AO_Version extends AbstractApplicationOption<String> {
+
+	/**
+	 * Returns the new option.
+	 */
+	public AO_Version(){
+		super("application version", "Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored).");
+
+		Option.Builder builder = Option.builder();
+		builder.longOpt("version");
+		builder.required(false);
+		this.setCliOption(builder.build());
+	}
+
+	@Override
+	public String convertValue(Object value) {
+		return null;
+	}
+
+}

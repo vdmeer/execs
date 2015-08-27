@@ -1,3 +1,23 @@
+v0.2.0 - major changes - 2015-08-27
+-----------------------------------
+Complete overhaul of everything
+* the executable service is not an executable application
+* fixed problems in all generators (automated generation now works)
+* ExecS can now identift Gen_RunScript application and push class map
+* ExecS does now only do ExecS help handling and delegates all arguments to an application
+* removed FigletShutdown, this class is now in skb-base
+* completely new Option implementation
+	** application option interface that uses default, property, cli and potentially other value sources with generic typing and provides documentation methods
+	** the interface already implements fully-automated CLI behaviour, application help arguments and application version arguments
+	** abstract implementation of that interface
+	** set of standard option implementations (from the old CLI arguments)
+* change in the CLI Parser
+	** renamed ExecS_Cli to ExecS_CliParser
+	** parser now can take standard options (defined by Apache Commons CLI) and the application option
+	** parser does not set options outside, instead one can get the parsed command line for processing
+* added some JavaDoc, but this is work-in-progress (except for overview.html)
+
+
 v0.1.0 - minor version change - 2015-08-13
 ------------------------------------------
 * edits on java files

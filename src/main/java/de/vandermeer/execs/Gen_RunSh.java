@@ -16,62 +16,95 @@
 package de.vandermeer.execs;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.vandermeer.execs.options.AO_LibDir;
+import de.vandermeer.execs.options.AO_PropertyFile;
+import de.vandermeer.execs.options.ApplicationOption;
+import de.vandermeer.execs.options.ExecS_CliParser;
+
 /**
- * Executable service to generate a shell script running {@link Gen_RunScripts}.
+ * Application to generate a shell script running {@link Gen_RunScripts}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.1.0 build 150812 (12-Aug-15) for Java 1.8
+ * @version    v0.2.0 build 150826 (26-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RunSh implements ExecutableService {
+public class Gen_RunSh implements ExecS_Application {
 
-	/** Service name. */
-	public final static String SERVICE_NAME = "gen-run";
+	/** Application name. */
+	public final static String APP_NAME = "gen-runsh";
 
-	/** A CLI option to specify a directory with all required jars. */
-	public final static ExecS_CliOption CLIOPT_LIBDIR = ExecS_Factory.newCliOption(null, "lib-dir", "DIR", "specifies a directory with requried jar files");
+	/** Application display name. */
+	public final static String APP_DISPLAY_NAME = "Generate Run.SH";
 
-	/** A CLI option to specify a property file with configurations for the generator. */
-	public final static ExecS_CliOption CLIOPT_PROP_FILE = ExecS_Factory.newCliOption("property-file", "FILE", "a property file with configurations for the generator");
+	/** Application version, should be same as the version in the class JavaDoc. */
+	public final static String APP_VERSION = "v0.2.0 build 150826 (26-Aug-15) for Java 1.8";
 
 	/** Local CLI options for CLI parsing. */
-	protected ExecS_Cli cli;
+	protected ExecS_CliParser cli;
+
+	/** The application option for the library directory. */
+	protected AO_LibDir optionLibDir;
+
+	/** The application option for the property file. */
+	protected AO_PropertyFile optionPropFile;
 
 	/**
 	 * Returns a new run shell script generator.
 	 */
 	public Gen_RunSh(){
-		this.cli = new ExecS_Cli();
-		this.cli.addOption(CLIOPT_LIBDIR);
-		this.cli.addOption(CLIOPT_PROP_FILE);
+		this.cli = new ExecS_CliParser();
+
+		this.optionLibDir = new AO_LibDir(false, "The library home needs to point to a directory with all jar files required to run an ExecS.");
+		this.cli.addOption(this.optionLibDir);
+
+		this.optionPropFile = new AO_PropertyFile(true, null, "A file name that is added to the run script for reading class map properties from.");
+		this.cli.addOption(this.optionPropFile);
 	}
 
 	@Override
-	public int executeService(String[] args) {
+	public int executeApplication(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_Cli.doParse(args, this.cli, this.getName());
+		int ret = ExecS_Application.super.executeApplication(args);
 		if(ret!=0){
-			this.serviceHelpScreen();
 			return ret;
 		}
 
 		String fn = "/de/vandermeer/execs/bin/gen-run-script.sh";
+
+		String propFile = this.optionPropFile.getValue();
+		Properties configuration = this.loadProperties(propFile);
+		if(configuration==null){
+			System.err.println(this.getAppName() + ": could not load configuration properties from file <" + propFile + ">, exiting");
+			return -1;
+		}
+		if(configuration.get(Gen_RunScripts.PROP_RUN_CLASS)==null){
+			System.err.println(this.getAppName() + ": configuration does not contain key <" + Gen_RunScripts.PROP_RUN_CLASS + ">, exiting");
+			return -1;
+		}
+		String execClass = configuration.get(Gen_RunScripts.PROP_RUN_CLASS).toString();
+
 		try {
 			InputStream in = getClass().getResourceAsStream(fn);
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while((line=input.readLine())!=null){
-				if(StringUtils.startsWith(line, "LIB_HOME=") && ExecS_Cli.testOption(this.cli, CLIOPT_LIBDIR)){
-					System.out.println("LIB_HOME=" + this.cli.getOption(CLIOPT_LIBDIR));
+				if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
+					System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
 				}
-				else if(StringUtils.startsWith(line, "PROP_FILE=") && ExecS_Cli.testOption(this.cli, CLIOPT_PROP_FILE)){
-					System.out.println("PROP_FILE=" + this.cli.getOption(CLIOPT_PROP_FILE));
+				else if(StringUtils.startsWith(line, "PROP_FILE=")){
+					System.out.println("PROP_FILE=" + propFile);
+				}
+				else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
+					System.out.println("EXECS_CLASS=" + execClass);
 				}
 				else{
 					System.out.println(line);
@@ -79,29 +112,81 @@ public class Gen_RunSh implements ExecutableService {
 			}
 		}
 		catch(NullPointerException ne){
-			System.err.println(this.getName() + ": exception while reading shell script from resource <" + fn + ">: "+ ne.getMessage());
+			System.err.println(this.getAppName() + ": exception while reading shell script from resource <" + fn + ">: " + ne.getMessage());
+			return -1;
 		}
 		catch (IOException e) {
-			System.err.println(this.getName() + ": IO exception while reading shell script: "+ e.getMessage());
+			System.err.println(this.getAppName() + ": IO exception while reading shell script: " + e.getMessage());
+			return -1;
 		}
 		return 0;
 	}
 
-	@Override
-	public String getName() {
-		return Gen_RunSh.SERVICE_NAME;
+	/**
+	 * Loads properties from a file.
+	 * @param filename property file loaded from class path or file system
+	 * @return loaded properties, null if nothing could be loaded plus error messages to standard error if exceptions are caught
+	 */
+	protected final Properties loadProperties(String filename){
+		Properties ret = new Properties();
+
+		URL url = null;
+		File f = new File(filename.toString());
+		if(f.exists()){
+			try{
+				url = f.toURI().toURL();
+			}
+			catch(Exception ignore){}
+		}
+		else{
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			url = loader.getResource(filename);
+			if(url==null){
+				loader = Gen_RunScripts.class.getClassLoader();
+				url = loader.getResource(filename);
+			}
+		}
+
+		try{
+			ret.load(url.openStream());
+		}
+		catch (IOException e){
+			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, IO exception\n--><" + e + ">");
+		}
+		catch (Exception e){
+			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, general exception\n--><" + e + ">");
+		}
+		return ret;
 	}
 
 	@Override
-	public ExecS_Cli getCli() {
+	public String getAppName() {
+		return APP_NAME;
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public ExecS_CliParser getCli() {
 		return this.cli;
 	}
 
 	@Override
-	public void serviceHelpScreen() {
-		System.out.println("Generates run shell script to generate run scripts.");
-		System.out.println();
-		this.cli.usage(this.getName());
+	public String getAppDescription() {
+		return "Generates run shell script to generate run scripts.";
+	}
+
+	@Override
+	public ApplicationOption<?>[] getAppOptions() {
+		return new ApplicationOption[]{this.optionLibDir, this.optionPropFile};
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
 	}
 
 }

@@ -1,24 +1,69 @@
 SKB Execute Service
--------------------
+===================
+A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.
+:toc:
 
-A simple set of classes to execute programmes from the command line, without littering the code with +static void main(String[] args)+.
+Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.2.0|jar[0.2.0].
+All releases are on https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%execs%22[Maven Central].
 
-This package addresses the following problem: a package (or a set of packages) contain
-a number of tools that should be run from outside java, e.g. using a +static main()+ method.
-Over time, it might (will) be hard to know (or find) all main methods.
 
-This package provides a standard way to find and execute all those tools, or as they are called here services.
-A simple interface should be used by any component that wants to be executed. Implementing +Skb_Executable+
-provides the main method +executeService()+ and a method for printing a help screen. The only requirement is that the default
-constructor must be provided, to allow for a generic instantiation at runtime.
 
-The +ClassFinder+ can be used to search all or filtered jar files (or URIs) for any class that
-implement the interface. Once all implementations are found, one can use the +Skb_Exec+ object with
-its +static main()+ to execute any service from the command line.
 
-The +Skb_Exec+ class allows to list all executable services, execute one service triggering a help screen and
-to register short names for services. These short names can be used as aliases to execute a service, otherwise a fully qualified class
-name will be required.
+The Problem
+-----------
+When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of +static void main()+ methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
 
-One can also extend the +Skb_Exec+ class to build more sophisticated versions of the execution object, to
-register specific short names or to search for other interfaces and classes in jar files at runtime.
+
+This solution
+-------------
+Define an interface with all required functionality to run a program (here called application).
+Then implement a class that finds implementation of that interface and that provides a single +static void main()+ method to execute each of them.
+Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
+Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.
+
+Developing an application now means to implement classes implementing the executable application interface.
+If additional functionality is required a class extending the executor.
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.
+
+
+Provided functionality
+----------------------
+
+Application Execution
+~~~~~~~~~~~~~~~~~~~~~
+* Interface for an executable application,
+* An application executor with search and list, search, and help functionality,
+* A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),
+* A generator for scripts for all registered (static) or found (dynamic) executable applications,
+* A generator for a re-base script that allows to change all required information if an application installation is moved.
+
+Additionally this package defines required resources:
+* A bash script for running a generator when installing an application,
+* A bash script for re-basing,
+* Property files with standard configurations,
+* String template files for flexible change of generator output.
+
+
+Class Finder
+~~~~~~~~~~~~
+* A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),
+* A package filter for the class finder to speedup the search,
+* A jar filter for the class finder to speedup the search.
+
+Application Options and CLI Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation
+* An abstract (yet fully features) implementation of the application option interface
+* A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.
+* A set of pre-defined options for common use cases, e.g.:
+	** input and output directory
+	** input and output file
+	** identifier
+	** property file
+	** server mode (flag for interactive or background mode)
+	** STG file (for string template files)
