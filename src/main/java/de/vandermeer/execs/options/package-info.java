@@ -14,7 +14,7 @@
  */
 
 /**
- * Application options used for the script generators and a set of common application options.
+ * Application options used for the script generators, a set of common application options, and a Command Line Parser (CLI).
  * 
  * 
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;

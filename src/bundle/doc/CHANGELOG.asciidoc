@@ -1,3 +1,18 @@
+v0.3.0 - major changes - 2015-09-##
+-----------------------------------
+* changed scripting behavior and related Java classes
+	** renamed gen-run-script.sh to configure.sh
+	** fixed directory tests
+	** moved rebase.sh into configure.sh
+	** added CLI parser with -c/h/r options
+	** added bin-templates and clean-up as methods with bin-templates as variable
+	** added template-dir option to Gen_RunSh
+	** removed Gen_RebaseSh.java
+	** renamed Gen_RunSh.java to Gen_ConfigureSh.java
+	** renamed resource gen_runscripts to configure.sh
+	** removed resource rebase.sh
+
+
 v0.2.0 - major changes - 2015-08-27
 -----------------------------------
 Complete overhaul of everything

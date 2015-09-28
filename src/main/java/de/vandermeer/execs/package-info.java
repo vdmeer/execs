@@ -20,9 +20,8 @@
  * <ul>
  * 		<li>An interface to implement an executable application - {@link de.vandermeer.execs.ExecS_Application},</li>
  * 		<li>A class to execute those implemented applications at runtime - {@link de.vandermeer.execs.ExecS},</li>
- * 		<li>A generator for a run script for the executor - {@link de.vandermeer.execs.Gen_RunSh},</li>
+ * 		<li>A generator for a configuration script - {@link de.vandermeer.execs.Gen_ConfigureSh},</li>
  * 		<li>A generator for run scripts for implemented applications - {@link de.vandermeer.execs.Gen_RunScripts},<li>
- * 		<li>A generator for a rebase script that allows to change an application's install directory - {@link de.vandermeer.execs.Gen_RebaseSh}.</li>
  * </ul>
  * 
  * 
@@ -182,11 +181,9 @@
  * The run scripts are realized as follows: first, a script (by default) called {@code run} will be created. This script calls the {@link ExecS} main method and has all configuration for Java.
  * Then an individual script for each executable application (class implementing {@link de.vandermeer.execs.ExecS_Application} is created. Those scripts will call the main {@code run} script.
  * By default, all the scripts above will use absolute paths. This allows to execute them from any directory, instead of requiring to go to the application directory and start them from there.
- * If the application directory changed, a provided script {@code rebase} can be used to automatically adjust the absolute path in the run scripts.
  * <ul>
- * 		<li>{@link de.vandermeer.execs.Gen_RunSh} - creates the main run script.</li>
+ * 		<li>{@link de.vandermeer.execs.Gen_ConfigureSh} - creates a configuration script (create and rebase run scripts).</li>
  * 		<li>{@link de.vandermeer.execs.Gen_RunScripts} - creates individual run scripts.</li>
- * 		<li>{@link de.vandermeer.execs.Gen_RebaseSh} - creates the {@code rebase} script.</li>
  * </ul>
  * 
  * 

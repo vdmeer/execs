@@ -319,14 +319,6 @@ public class Gen_RunScripts implements ExecS_Application {
 		}
 
 		String fileName = this.optionStgFile.getValue();
-//				"de/vandermeer/execs/executable-script.stg";
-//		if(this.configuration!=null && this.configuration.get("stg.file")!=null){
-//			fileName = this.configuration.get("stg.file").toString();
-//		}
-//		if(this.cliStgFile.getStgFile()!=null){
-//			fileName = this.cliStgFile.getStgFile();
-//		}
-
 		try{
 			this.stg = new STGroupFile(fileName);
 		}
@@ -385,12 +377,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	protected final int initClassmap(){
 		this.optionClassMapFile.setPropertyValue(this.configuration);
 		String fileName = this.optionClassMapFile.getValue();
-//		if(this.configuration!=null && this.configuration.get("execs.classmap")!=null){
-//			fileName = this.configuration.get("execs.classmap").toString();
-//		}
-//		if(this.cliClassMapFile.getFileName()!=null){
-//			fileName = this.cliClassMapFile.getFileName();
-//		}
+
 		if(fileName==null){
 			System.err.println(this.getAppName() + ": no classmap file name given");
 			return -2;

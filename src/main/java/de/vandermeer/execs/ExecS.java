@@ -81,8 +81,7 @@ public class ExecS {
 		this.classNames = new TreeSet<String>();
 
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
-		this.addApplication(Gen_RunSh.APP_NAME, Gen_RunSh.class);
-		this.addApplication(Gen_RebaseSh.APP_NAME, Gen_RebaseSh.class);
+		this.addApplication(Gen_ConfigureSh.APP_NAME, Gen_ConfigureSh.class);
 
 		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 	}

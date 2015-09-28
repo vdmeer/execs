@@ -27,23 +27,24 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.vandermeer.execs.options.AO_LibDir;
 import de.vandermeer.execs.options.AO_PropertyFile;
+import de.vandermeer.execs.options.AO_TemplateDir;
 import de.vandermeer.execs.options.ApplicationOption;
 import de.vandermeer.execs.options.ExecS_CliParser;
 
 /**
- * Application to generate a shell script running {@link Gen_RunScripts}.
+ * Application to generate a configuration shell script.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.2.0 build 150827 (27-Aug-15) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RunSh implements ExecS_Application {
+public class Gen_ConfigureSh implements ExecS_Application {
 
 	/** Application name. */
-	public final static String APP_NAME = "gen-runsh";
+	public final static String APP_NAME = "gen-configure";
 
 	/** Application display name. */
-	public final static String APP_DISPLAY_NAME = "Generate Run.SH";
+	public final static String APP_DISPLAY_NAME = "Generate Configure.SH";
 
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.2.0 build 150827 (27-Aug-15) for Java 1.8";
@@ -54,17 +55,23 @@ public class Gen_RunSh implements ExecS_Application {
 	/** The application option for the library directory. */
 	protected AO_LibDir optionLibDir;
 
+	/** The application option for the template directory. */
+	protected AO_TemplateDir optionTemplateDir;
+
 	/** The application option for the property file. */
 	protected AO_PropertyFile optionPropFile;
 
 	/**
-	 * Returns a new run shell script generator.
+	 * Returns a new configure shell script generator.
 	 */
-	public Gen_RunSh(){
+	public Gen_ConfigureSh(){
 		this.cli = new ExecS_CliParser();
 
 		this.optionLibDir = new AO_LibDir(false, "The library home needs to point to a directory with all jar files required to run an ExecS.");
 		this.cli.addOption(this.optionLibDir);
+
+		this.optionTemplateDir = new AO_TemplateDir(false, "The template directory needs to point to a directory with templates for scripts.");
+		this.cli.addOption(this.optionTemplateDir);
 
 		this.optionPropFile = new AO_PropertyFile(true, null, "A file name that is added to the run script for reading class map properties from.");
 		this.cli.addOption(this.optionPropFile);
@@ -78,7 +85,7 @@ public class Gen_RunSh implements ExecS_Application {
 			return ret;
 		}
 
-		String fn = "/de/vandermeer/execs/bin/gen-run-script.sh";
+		String fn = "/de/vandermeer/execs/bin/configure.sh";
 
 		String propFile = this.optionPropFile.getValue();
 		Properties configuration = this.loadProperties(propFile);
@@ -105,6 +112,9 @@ public class Gen_RunSh implements ExecS_Application {
 				}
 				else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
 					System.out.println("EXECS_CLASS=" + execClass);
+				}
+				else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
+					System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
 				}
 				else{
 					System.out.println(line);
@@ -176,7 +186,7 @@ public class Gen_RunSh implements ExecS_Application {
 
 	@Override
 	public String getAppDescription() {
-		return "Generates run shell script to generate run scripts.";
+		return "Generates configuration shell script for an application.";
 	}
 
 	@Override

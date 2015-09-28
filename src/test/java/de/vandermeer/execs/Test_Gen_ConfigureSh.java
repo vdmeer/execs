@@ -20,48 +20,48 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * Tests for {@link Gen_RunSh}.
+ * Tests for {@link Gen_ConfigureSh}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.2.0 build 150827 (27-Aug-15) for Java 1.8
  * @since      v0.0.2
  */
-public class Test_Gen_RunSh {
+public class Test_Gen_ConfigureSh {
 
 	@Test
 	public void testCliHelp(){
 		ExecS execs = new ExecS();
 		int run;
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "-?"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-?"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "--help"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "-?", "lib-dir"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-?", "lib-dir"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "--help", "lib-dir"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help", "lib-dir"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "--help", "lib-dir", "-i"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help", "lib-dir", "-i"});
 		assertEquals(-1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName(), "--version"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--version"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_RunSh.class.getName()});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName()});
 		assertEquals(-1, run);
 
 		run = execs.execute(new String[]{
-				Gen_RunSh.class.getName(),
+				Gen_ConfigureSh.class.getName(),
 				"--property-file", "prop",
 		});
 		assertEquals(-1, run);
 
 		run = execs.execute(new String[]{
-				Gen_RunSh.class.getName(),
+				Gen_ConfigureSh.class.getName(),
 				"--lib-dir", "lib",
 				"--property-file", "prop",
 		});
