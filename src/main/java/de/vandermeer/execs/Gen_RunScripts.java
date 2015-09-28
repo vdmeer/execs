@@ -69,6 +69,9 @@ public class Gen_RunScripts implements ExecS_Application {
 	public final static String PROP_JAVAPROP_START = "java.property.";
 
 	/** A property key to set auto-script generation for registered executable applications. */
+	public final static String PROP_EXECS_CLASSMAP = "execs.classmap";
+
+	/** A property key to set class map for executable applications. */
 	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
 
 	/** Local CLI options for CLI parsing. */
@@ -125,7 +128,7 @@ public class Gen_RunScripts implements ExecS_Application {
 		this.optionStgFile = new AO_StgFile(false, "de/vandermeer/execs/executable-script.stg", "The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation.");
 		this.cli.addOption(this.optionStgFile);
 
-		this.optionClassMapFile = new AO_ClassmapFile(false, "execs.classmap", "The class map file contains mappings from a class name to a script name. This mapping is used to generate run scripts for applications that are not registered with an executor, or if automated generation (for registered applications) is not required or wanted.");
+		this.optionClassMapFile = new AO_ClassmapFile(false, PROP_EXECS_CLASSMAP, "The class map file contains mappings from a class name to a script name. This mapping is used to generate run scripts for applications that are not registered with an executor, or if automated generation (for registered applications) is not required or wanted.");
 		this.cli.addOption(this.optionClassMapFile);
 
 		this.optionAppHome = new AO_AppHomeDirectory(true, "The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path.");
@@ -210,34 +213,20 @@ public class Gen_RunScripts implements ExecS_Application {
 				System.out.println(" --> generating script from class map - " + outFN);
 
 				ST targetExecST = this.generateScript(key.toString(), targetMap);
-//				this.stg.getInstanceOf("generateExec");
-//				targetExecST.add("target", targetMap);
-//				targetExecST.add("applicationHome", this.applicationDir);
-//				targetExecST.add("runName", this.configuration.get(PROP_RUN_SCRIPT_NAME));
-//				targetExecST.add("class", key);
 				this.writeFile(outFN, targetExecST);
 			}
 		}
 
 		//build scripts for all registered applications using the specified run class
 		if(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED)!=null && BooleanUtils.toBoolean(this.configuration.get(PROP_EXECS_AUTOGEN_REGISTERED).toString())){
-//			try{
-//				Class<?> c = Class.forName(this.configuration.get(PROP_RUN_CLASS).toString());
-//				Object svc = c.newInstance();
-//				Map<String, Class<? extends ExecutableService>> map = ((ExecS)svc).getClassMap();//TODO
-				if(this.execClassMap!=null){
-					for(String s : execClassMap.keySet()){
-						outFN = this.outputDir + File.separator + s + fnExtension;
-						System.out.println(" --> generating script from auto-gen-reg - " + outFN);
-
-						ST targetExecST = this.generateScript(execClassMap.get(s).getName(), targetMap);
-						this.writeFile(outFN, targetExecST);
-					}
+			if(this.execClassMap!=null){
+				for(String s : execClassMap.keySet()){
+					outFN = this.outputDir + File.separator + s + fnExtension;
+					System.out.println(" --> generating script from auto-gen-reg - " + outFN);
+					ST targetExecST = this.generateScript(execClassMap.get(s).getName(), targetMap);
+					this.writeFile(outFN, targetExecST);
 				}
-//			}
-//			catch(ClassNotFoundException | InstantiationException | IllegalAccessException e){
-//				e.printStackTrace();
-//			}
+			}
 		}
 
 		//build a generic header that can be used outside this class for generating other scripts
@@ -522,12 +511,30 @@ public class Gen_RunScripts implements ExecS_Application {
 
 	@Override
 	public ApplicationOption<?>[] getAppOptions() {
-		return new ApplicationOption[]{this.optionAppHome, this.optionClassMapFile, this.optionPropFile, this.optionStgFile, this.optionTarget, this.optionTarget};
+		return new ApplicationOption[]{this.optionAppHome, this.optionClassMapFile, this.optionPropFile, this.optionStgFile, this.optionTarget};
 	}
 
 	@Override
 	public String getAppVersion() {
 		return APP_VERSION;
+	}
+
+	@Override
+	public void appHelpScreen(){
+		ExecS_Application.super.appHelpScreen();
+
+		System.out.println("Property file keys:");
+		System.out.println(" - " + PROP_RUN_CLASS + " - the class name for executing applications");
+		System.out.println(" - " + PROP_RUN_SCRIPT_NAME + " - the script name for running the main application executor");
+		System.out.println(" - " + PROP_JAVA_CP + " - JAVA classpath, comma separates list, {APPLICATION_HOME} will be added to all entries");
+		System.out.println(" - " + PROP_JAVAPROP_START + " - start of a particular JAVA runtime property");
+		System.out.println("      + any key with the start should have the form of key:value and will be translated to -Dkey:value");
+		System.out.println("      + for example: 'java.property.encoding = file.encoding:UTF-8' will be translated to -Dfile.encoding:UTF-8");
+		System.out.println("      + {APPLICATION_HOME} will be added to all entries");
+		System.out.println(" - " + PROP_EXECS_CLASSMAP + " - class map file with mappings from class to executable name");
+		System.out.println(" - " + PROP_EXECS_AUTOGEN_REGISTERED + " - flag to auto generate all registered applications");
+
+		System.out.println();
 	}
 
 }
