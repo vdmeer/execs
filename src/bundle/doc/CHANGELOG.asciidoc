@@ -1,4 +1,4 @@
-v0.3.0 - major changes - 2015-09-##
+v0.3.0 - major changes - 2015-09-28
 -----------------------------------
 * changed scripting behavior and related Java classes
 	** renamed gen-run-script.sh to configure.sh
