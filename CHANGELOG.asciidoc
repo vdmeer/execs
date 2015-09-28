@@ -1,14 +1,29 @@
+v0.3.0 - major changes - 2015-09-##
+-----------------------------------
+* changed scripting behavior and related Java classes
+	** renamed gen-run-script.sh to configure.sh
+	** fixed directory tests
+	** moved rebase.sh into configure.sh
+	** added CLI parser with -c/h/r options
+	** added bin-templates and clean-up as methods with bin-templates as variable
+	** added template-dir option to Gen_RunSh
+	** removed Gen_RebaseSh.java
+	** renamed Gen_RunSh.java to Gen_ConfigureSh.java
+	** renamed resource gen_runscripts to configure.sh
+	** removed resource rebase.sh
+
+
 v0.2.0 - major changes - 2015-08-27
 -----------------------------------
 Complete overhaul of everything
 * the executable service is not an executable application
 * fixed problems in all generators (automated generation now works)
-* ExecS can now identift Gen_RunScript application and push class map
+* ExecS can now identify Gen_RunScript application and push class map
 * ExecS does now only do ExecS help handling and delegates all arguments to an application
 * removed FigletShutdown, this class is now in skb-base
 * completely new Option implementation
-	** application option interface that uses default, property, cli and potentially other value sources with generic typing and provides documentation methods
-	** the interface already implements fully-automated CLI behaviour, application help arguments and application version arguments
+	** application option interface that uses default, property, CLI and potentially other value sources with generic typing and provides documentation methods
+	** the interface already implements fully-automated CLI behavior, application help arguments and application version arguments
 	** abstract implementation of that interface
 	** set of standard option implementations (from the old CLI arguments)
 * change in the CLI Parser
@@ -86,14 +101,14 @@ v0.0.3 - feature add - 2015-06-18
 * moved into own repo at Github
 * added simple CLI parser
 * added standard options
-* added getCLI() and getName() with default implementations to executale
+* added getCLI() and getName() with default implementations to executable
 
 
 v0.0.2 - feature add - 2014-06-25
 ---------------------------------
 * added CLI interface using Apache Common CLI
-* externalised use of jar and package filters (via CLI)
-* changed internal behviour for new CLI
+* externalized use of jar and package filters (via CLI)
+* changed internal behavior for new CLI
 * sub-classes can now overwrite the jar/package filters
 * changed help/list screen print outs
 * added test to not show named executables

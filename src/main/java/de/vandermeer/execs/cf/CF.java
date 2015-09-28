@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * A class finder searching for all subclasses of a given class with jar and package filters.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.2.0 build 150827 (27-Aug-15) for Java 1.8
+ * @version    v0.3.0 build 150928 (28-Sep-15) for Java 1.8
  * @since      v0.0.6
  */
 public class CF {
@@ -167,7 +167,7 @@ public class CF {
 	}
 
 	/**
-	 * Returns all known sublcasses for a given class, location and package name
+	 * Returns all known subclasses for a given class, location and package name
 	 * @param clazz class to search for
 	 * @param location a URL to look into
 	 * @param packageName a package name

@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.0">
-<meta name="author" content="A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.">
+<meta name="author" content="A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.">
 <title>SKB Execute Service</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
@@ -414,7 +414,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>SKB Execute Service</h1>
 <div class="details">
-<span id="author" class="author">A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible applcation option handling.</span><br>
+<span id="author" class="author">A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -435,7 +435,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Current release is <a href="https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.2.0|jar">0.2.0</a>.
+<p>Current release is <a href="https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.3.0|jar">0.3.0</a>.
 All releases are on <a href="https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%execs%22">Maven Central</a>.</p>
 </div>
 </div>
@@ -488,15 +488,11 @@ Finally providing the necessary configuration information for the generators and
 <li>
 <p>A generator for scripts for all registered (static) or found (dynamic) executable applications,</p>
 </li>
-<li>
-<p>A generator for a re-base script that allows to change all required information if an application installation is moved.</p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Additionally this package defines required resources:
-* A bash script for running a generator when installing an application,
-* A bash script for re-basing,
+* A bash script for running a generator when installing an application (including rebase if application is moved),
 * Property files with standard configurations,
 * String template files for flexible change of generator output.</p>
 </div>
@@ -563,7 +559,7 @@ Finally providing the necessary configuration information for the generators and
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-27 12:03:47 IST
+Last updated 2015-09-28 20:21:11 IST
 </div>
 </div>
 </body>

@@ -38,7 +38,7 @@ import de.vandermeer.execs.cf.CF;
  * The application executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.2.0 build 150827 (27-Aug-15) for Java 1.8
+ * @version    v0.3.0 build 150928 (28-Sep-15) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -81,8 +81,7 @@ public class ExecS {
 		this.classNames = new TreeSet<String>();
 
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
-		this.addApplication(Gen_RunSh.APP_NAME, Gen_RunSh.class);
-		this.addApplication(Gen_RebaseSh.APP_NAME, Gen_RebaseSh.class);
+		this.addApplication(Gen_ConfigureSh.APP_NAME, Gen_ConfigureSh.class);
 
 		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 	}

@@ -18,28 +18,27 @@ package de.vandermeer.execs.options;
 import org.apache.commons.cli.Option;
 
 /**
- * Application option "classmap-file".
+ * Application option "template-dir".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.3.0 build 150928 (28-Sep-15) for Java 1.8
- * @since      v0.2.0
+ * @since      v0.2.1
  */
-public class AO_ClassmapFile extends AbstractApplicationOption<String> {
+public class AO_TemplateDir extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the new option.
 	 * @param required true if option is required, false of it is optional
-	 * @param optionKey option key
 	 * @param longDescription option long description
-	 * @throws NullPointerException - if optioneKey or description parameter is null
-	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
-	public AO_ClassmapFile(boolean required, String optionKey, String longDescription){
-		super(optionKey, null, "a property file with class names (executable applications) mapped to script names", longDescription);
+	public AO_TemplateDir(boolean required, String longDescription){
+		super("specifies a directory with templates for an application", longDescription);
 
 		Option.Builder builder = Option.builder();
-		builder.longOpt("classmap-file");
-		builder.hasArg().argName("FILE");
+		builder.longOpt("template-dir");
+		builder.hasArg().argName("DIR");
 		builder.required(required);
 		this.setCliOption(builder.build());
 	}

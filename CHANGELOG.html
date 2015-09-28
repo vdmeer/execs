@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.0">
-<title>v0.2.0 - major changes - 2015-08-27</title>
+<title>v0.3.0 - major changes - 2015-09-##</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -414,18 +414,64 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
+<h2 id="_v0_3_0_major_changes_2015_09">v0.3.0 - major changes - 2015-09-##</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>changed scripting behavior and related Java classes</p>
+<div class="ulist">
+<ul>
+<li>
+<p>renamed gen-run-script.sh to configure.sh</p>
+</li>
+<li>
+<p>fixed directory tests</p>
+</li>
+<li>
+<p>moved rebase.sh into configure.sh</p>
+</li>
+<li>
+<p>added CLI parser with -c/h/r options</p>
+</li>
+<li>
+<p>added bin-templates and clean-up as methods with bin-templates as variable</p>
+</li>
+<li>
+<p>added template-dir option to Gen_RunSh</p>
+</li>
+<li>
+<p>removed Gen_RebaseSh.java</p>
+</li>
+<li>
+<p>renamed Gen_RunSh.java to Gen_ConfigureSh.java</p>
+</li>
+<li>
+<p>renamed resource gen_runscripts to configure.sh</p>
+</li>
+<li>
+<p>removed resource rebase.sh</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_v0_2_0_major_changes_2015_08_27">v0.2.0 - major changes - 2015-08-27</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Complete overhaul of everything
 * the executable service is not an executable application
 * fixed problems in all generators (automated generation now works)
-* ExecS can now identift Gen_RunScript application and push class map
+* ExecS can now identify Gen_RunScript application and push class map
 * ExecS does now only do ExecS help handling and delegates all arguments to an application
 * removed FigletShutdown, this class is now in skb-base
 * completely new Option implementation
-	<strong> application option interface that uses default, property, cli and potentially other value sources with generic typing and provides documentation methods
-	</strong> the interface already implements fully-automated CLI behaviour, application help arguments and application version arguments
+	<strong> application option interface that uses default, property, CLI and potentially other value sources with generic typing and provides documentation methods
+	</strong> the interface already implements fully-automated CLI behavior, application help arguments and application version arguments
 	<strong> abstract implementation of that interface
 	</strong> set of standard option implementations (from the old CLI arguments)
 * change in the CLI Parser
@@ -650,7 +696,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>added standard options</p>
 </li>
 <li>
-<p>added getCLI() and getName() with default implementations to executale</p>
+<p>added getCLI() and getName() with default implementations to executable</p>
 </li>
 </ul>
 </div>
@@ -665,10 +711,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>added CLI interface using Apache Common CLI</p>
 </li>
 <li>
-<p>externalised use of jar and package filters (via CLI)</p>
+<p>externalized use of jar and package filters (via CLI)</p>
 </li>
 <li>
-<p>changed internal behviour for new CLI</p>
+<p>changed internal behavior for new CLI</p>
 </li>
 <li>
 <p>sub-classes can now overwrite the jar/package filters</p>
@@ -698,7 +744,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-08-27 12:03:47 IST
+Last updated 2015-09-28 20:20:40 IST
 </div>
 </div>
 </body>

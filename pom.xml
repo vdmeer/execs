@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.vandermeer</groupId>
 	<artifactId>execs</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<packaging>jar</packaging>
 
 	<name>Execution Service</name>
@@ -48,7 +48,7 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:vdmeer/execs.git</developerConnection>
 		<connection>scm:git:git://github.com/vdmeer/execs.git</connection>
-		<tag>execs-0.2.0</tag>
+		<tag>execs-0.3.0</tag>
 		<url>https://github.com/vdmeer/execs</url>
 	</scm>
 
@@ -120,7 +120,7 @@
 						<id>bundle-asciidoc</id>
 						<phase>process-resources</phase>
 						<configuration>
-							<sourceDirectory>src/main/bundle/doc</sourceDirectory>
+							<sourceDirectory>src/bundle/doc</sourceDirectory>
 							<outputDirectory>./</outputDirectory>
 							<backend>html</backend>
 						</configuration>
@@ -140,7 +140,7 @@
 							<outputDirectory>./</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/bundle/doc</directory>
+									<directory>src/bundle/doc</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
