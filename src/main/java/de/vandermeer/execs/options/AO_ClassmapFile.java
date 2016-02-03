@@ -35,9 +35,22 @@ public class AO_ClassmapFile extends AbstractApplicationOption<String> {
 	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
 	 */
 	public AO_ClassmapFile(boolean required, String optionKey, String longDescription){
+		this(required, optionKey, null, longDescription);
+	}
+
+	/**
+	 * Returns the new option.
+	 * @param required true if option is required, false of it is optional
+	 * @param optionKey option key
+	 * @param shortOption character for sort version of the option
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if optioneKey or description parameter is null
+	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
+	 */
+	public AO_ClassmapFile(boolean required, String optionKey, Character shortOption, String longDescription){
 		super(optionKey, null, "a property file with class names (executable applications) mapped to script names", longDescription);
 
-		Option.Builder builder = Option.builder();
+		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
 		builder.longOpt("classmap-file");
 		builder.hasArg().argName("FILE");
 		builder.required(required);

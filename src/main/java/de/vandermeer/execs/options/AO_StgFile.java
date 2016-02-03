@@ -35,9 +35,22 @@ public class AO_StgFile extends AbstractApplicationOption<String> {
 	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
 	public AO_StgFile(boolean required, String defaultValue, String longDescription){
+		this(required, defaultValue, null, longDescription);
+	}
+
+	/**
+	 * Returns the new option.
+	 * @param required true if option is required, false of it is optional
+	 * @param defaultValue option default value
+	 * @param shortOption character for sort version of the option
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
+	 */
+	public AO_StgFile(boolean required, String defaultValue, Character shortOption, String longDescription){
 		super(defaultValue, "specifies a string template (stg) file", longDescription);
 
-		Option.Builder builder = Option.builder();
+		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
 		builder.longOpt("stg-file");
 		builder.hasArg().argName("FILE");
 		builder.required(required);

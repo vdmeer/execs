@@ -15,6 +15,9 @@
 
 package de.vandermeer.execs.options;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -38,21 +41,26 @@ public class ExecS_CliParser {
 	/** Parsed command line. */
 	protected CommandLine cmdLine;
 
+	/** Set of options already added, used. */
+	protected final Set<String> usedOptions;
+
 	/**
 	 * Returns a new CLI parser.
 	 */
 	public ExecS_CliParser(){
 		this.options = new Options();
+		this.usedOptions = new HashSet<>();
 	}
 
 	/**
 	 * Adds a CLI option to the parser.
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @throws IllegalArgumentException if the option uses short/long options already in use
 	 * @return self to allow for chaining
 	 */
 	public ExecS_CliParser addOption(ApplicationOption<?> option){
 		if(option!=null && option.getCliOption()!=null){
-			this.options.addOption(option.getCliOption());
+			this._addOption(option.getCliOption());
 		}
 		return this;
 	}
@@ -60,13 +68,30 @@ public class ExecS_CliParser {
 	/**
 	 * Adds a CLI option to the parser.
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @throws IllegalArgumentException if the option uses short/long options already in use
 	 * @return self to allow for chaining
 	 */
 	public ExecS_CliParser addOption(Option option){
 		if(option!=null){
-			this.options.addOption(option);
+			this._addOption(option);
 		}
 		return this;
+	}
+
+	protected void _addOption(Option option){
+		if(this.usedOptions.contains(option.getOpt())){
+			throw new IllegalArgumentException("ExecS Cli: short option <" + option.getOpt() + "> already in use");
+		}
+		if(this.usedOptions.contains(option.getLongOpt())){
+			throw new IllegalArgumentException("ExecS Cli: long option <" + option.getLongOpt() + "> already in use");
+		}
+		this.options.addOption(option);
+		if(option.getOpt()!=null){
+			this.usedOptions.add(option.getOpt());
+		}
+		if(option.getLongOpt()!=null){
+			this.usedOptions.add(option.getLongOpt());
+		}
 	}
 
 	/**

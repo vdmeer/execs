@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.vandermeer</groupId>
 	<artifactId>execs</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.2</version>
 	<packaging>jar</packaging>
 
 	<name>Execution Service</name>
@@ -48,7 +48,7 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:vdmeer/execs.git</developerConnection>
 		<connection>scm:git:git://github.com/vdmeer/execs.git</connection>
-		<tag>execs-0.3.0</tag>
+		<tag>execs-0.3.2</tag>
 		<url>https://github.com/vdmeer/execs</url>
 	</scm>
 

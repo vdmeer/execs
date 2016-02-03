@@ -1,3 +1,19 @@
+v0.3.2 - release edits - 2016-02-03
+-----------------------------------
+* only minor edits for a maven release
+
+
+v0.3.1 - some changes - 2016-02-03
+----------------------------------
+* added Verbose option
+* added setDescriptionLong to options to enable changing long description after instantiation
+* added optional short option constructor to all application options
+* AO_Id no longer uses "-i" as default
+* added option test to ExecS_CliParser - throws exception for re-added short/long options
+* added an array for excluded package/class names and added check in CF.searchJar for it
+* not published on maven
+
+
 v0.3.0 - major changes - 2015-09-28
 -----------------------------------
 * changed scripting behavior and related Java classes
