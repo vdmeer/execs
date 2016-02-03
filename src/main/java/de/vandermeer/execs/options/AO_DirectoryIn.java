@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "input-directory".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.0 build 160203 (03-Feb-16) for Java 1.8
+ * @version    v0.3.2 build 160203 (03-Feb-16) for Java 1.8
  * @since      v0.2.0
  */
 public class AO_DirectoryIn extends AbstractApplicationOption<String> {
