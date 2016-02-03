@@ -131,6 +131,12 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	}
 
 	@Override
+	public void setDescriptionLong(String longDescription){
+		Validate.notBlank(longDescription, "long description cannot be empty");
+		this.descrLong = longDescription;
+	}
+
+	@Override
 	public int setCliValue(CommandLine cmdLine){
 		if(!cmdLine.hasOption(this.cliOptionAsString())){
 			return 0;

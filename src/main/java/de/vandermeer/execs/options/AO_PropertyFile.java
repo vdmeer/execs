@@ -35,9 +35,22 @@ public class AO_PropertyFile extends AbstractApplicationOption<String> {
 	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
 	public AO_PropertyFile(boolean required, String defaultValue, String longDescription){
+		this(required, defaultValue, null, longDescription);
+	}
+
+	/**
+	 * Returns the new option.
+	 * @param required true if option is required, false of it is optional
+	 * @param defaultValue option default value
+	 * @param shortOption character for sort version of the option
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
+	 */
+	public AO_PropertyFile(boolean required, String defaultValue, Character shortOption, String longDescription){
 		super(defaultValue, "a property file with configuration", longDescription);
 
-		Option.Builder builder = Option.builder();
+		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
 		builder.longOpt("property-file");
 		builder.hasArg().argName("FILE");
 		builder.required(required);

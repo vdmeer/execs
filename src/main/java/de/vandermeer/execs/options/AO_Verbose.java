@@ -18,43 +18,40 @@ package de.vandermeer.execs.options;
 import org.apache.commons.cli.Option;
 
 /**
- * Application option "classmap-file".
+ * Application option "verbose", activate extended progress messages.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.3.0 build 150928 (28-Sep-15) for Java 1.8
  * @since      v0.2.0
  */
-public class AO_ClassmapFile extends AbstractApplicationOption<String> {
+public class AO_Verbose extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the new option.
-	 * @param required true if option is required, false of it is optional
-	 * @param optionKey option key
-	 * @param longDescription option long description
-	 * @throws NullPointerException - if optioneKey or description parameter is null
-	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
 	 */
-	public AO_ClassmapFile(boolean required, String optionKey, String longDescription){
-		this(required, optionKey, null, longDescription);
+	public AO_Verbose(){
+		this(null);
 	}
 
 	/**
 	 * Returns the new option.
-	 * @param required true if option is required, false of it is optional
-	 * @param optionKey option key
 	 * @param shortOption character for sort version of the option
-	 * @param longDescription option long description
-	 * @throws NullPointerException - if optioneKey or description parameter is null
-	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
 	 */
-	public AO_ClassmapFile(boolean required, String optionKey, Character shortOption, String longDescription){
-		super(optionKey, null, "a property file with class names (executable applications) mapped to script names", longDescription);
+	public AO_Verbose(Character shortOption){
+		super("verbose mode for application", "Sets an application verbose mode, meaning the application will printout extended progress messages.");
 
 		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("classmap-file");
-		builder.hasArg().argName("FILE");
-		builder.required(required);
+		builder.longOpt("verbose");
+		builder.required(false);
 		this.setCliOption(builder.build());
+	}
+
+	/**
+	 * Returns the verbose mode settings.
+	 * @return true of verbose mode is set, false otherwise
+	 */
+	public boolean inVerboseMode(){
+		return this.inCli;
 	}
 
 	@Override

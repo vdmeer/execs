@@ -30,9 +30,17 @@ public class AO_Version extends AbstractApplicationOption<String> {
 	 * Returns the new option.
 	 */
 	public AO_Version(){
+		this(null);
+	}
+
+	/**
+	 * Returns the new option.
+	 * @param shortOption character for sort version of the option
+	 */
+	public AO_Version(Character shortOption){
 		super("application version", "Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored).");
 
-		Option.Builder builder = Option.builder();
+		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
 		builder.longOpt("version");
 		builder.required(false);
 		this.setCliOption(builder.build());

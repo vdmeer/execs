@@ -34,9 +34,21 @@ public class AO_TemplateDir extends AbstractApplicationOption<String> {
 	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
 	public AO_TemplateDir(boolean required, String longDescription){
+		this(required, null, longDescription);
+	}
+
+	/**
+	 * Returns the new option.
+	 * @param required true if option is required, false of it is optional
+	 * @param shortOption character for sort version of the option
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if description parameter is null
+	 * @throws IllegalArgumentException - if description parameter is empty
+	 */
+	public AO_TemplateDir(boolean required, Character shortOption, String longDescription){
 		super("specifies a directory with templates for an application", longDescription);
 
-		Option.Builder builder = Option.builder();
+		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
 		builder.longOpt("template-dir");
 		builder.hasArg().argName("DIR");
 		builder.required(required);

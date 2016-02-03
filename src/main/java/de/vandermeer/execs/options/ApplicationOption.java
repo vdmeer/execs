@@ -75,6 +75,12 @@ public interface ApplicationOption <T> {
 	String getDescriptionLong();
 
 	/**
+	 * Sets or changes the long description of the option.
+	 * @param longDescription new long description, cannot be null or blank
+	 */
+	void setDescriptionLong(String longDescription);
+
+	/**
 	 * Returns the CLI value of the option if any set.
 	 * @return CLI value, null if none set
 	 */

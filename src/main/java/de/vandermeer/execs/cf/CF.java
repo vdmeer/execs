@@ -54,6 +54,20 @@ public class CF {
 	/** List of processed artifacts. */
 	protected final Set<String> processed;
 
+	/** Array of (partial) class and package names that are permanently excluded from search. */
+	protected String[] excludedNames = new String[]{
+			"java.",
+			"javax.",
+			"org.apache.",
+			"ch.qos.",
+			"org.codehaus.",
+			"junit.",
+			"org.antlr.",
+			"org.stringtemplate.",
+			"org.jboss.",
+			"org.slf4j."
+	};
+
 	/**
 	 * Returns a new class finder object.
 	 */
@@ -244,17 +258,19 @@ public class CF {
 						classname = classname.substring(1);
 					}
 					classname = classname.replace('/','.');
-					try{
-						Class<?> c=Class.forName(classname);
-						if(clazz.isAssignableFrom(c) && !clazz.getName().equals(classname)){
-							ret.put(c, location);
+					if(!StringUtils.startsWithAny(classname, this.excludedNames)){
+						try{
+							Class<?> c = Class.forName(classname);
+							if(clazz.isAssignableFrom(c) && !clazz.getName().equals(classname)){
+								ret.put(c, location);
+							}
 						}
-					}
-					catch(Exception exception){
-						errors.add(exception);
-					}
-					catch(Error error){
-						errors.add(error);
+						catch(Exception exception){
+							errors.add(exception);
+						}
+						catch(Error error){
+							errors.add(error);
+						}
 					}
 				}
 			}
