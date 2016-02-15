@@ -38,7 +38,7 @@ import de.vandermeer.execs.cf.CF;
  * The application executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.2 build 160203 (03-Feb-16) for Java 1.8
+ * @version    v0.3.3 build 160203 (03-Feb-16) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -56,6 +56,9 @@ public class ExecS {
 	 * Use {@link #addApplication(String, Class)} to add your own applications.
 	 */
 	protected final TreeMap<String, Class<? extends ExecS_Application>> classmap;
+
+	/** Application version, should be same as the version in the class JavaDoc. */
+	public final static String APP_VERSION = "v0.3.3 build 160203 (03-Feb-16) for Java 1.8";
 
 	/** Set of all classes filled during runtime search */
 	final TreeSet<String> classNames;
@@ -153,10 +156,14 @@ public class ExecS {
 		String arg = tokens.nextToken();
 		int ret = 0;
 
-		if(arg==null || "-?".equals(arg) || "--help".equals(arg)){
+		if(arg==null || "-?".equals(arg) || "-h".equals(arg) || "--help".equals(arg)){
 			//First help: no arguments or -? or --help -> print usage and exit(0)
 			this.printUsage();
 			return 0;
+		}
+		else if("-v".equals(arg) || "--version".equals(arg)){
+			System.out.println(this.appName + " - " + ExecS.APP_VERSION);
+			System.out.println();
 		}
 		else if("-l".equals(arg) || "--list".equals(arg)){
 			//Second list: if -l or --list -> trigger search and exit(0)
@@ -258,6 +265,7 @@ public class ExecS {
 		usage.add("appName", this.appName);
 		usage.add("packageFilter", this.packageFilter);
 		usage.add("jarFilter", this.jarFilter);
+		usage.add("excludedNames", new TreeSet<>(Arrays.asList(new CF().excludedNames)));
 		System.out.println(usage.render());
 	}
 

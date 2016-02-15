@@ -20,7 +20,7 @@
  * @author     Sven van der Meer <vdmeer.sven@mykolab.com>
  * @copyright  2015 Sven van der Meer
  * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
- * @version    v0.3.2 build 160203 (03-Feb-16)
+ * @version    v0.3.3 build 160203 (03-Feb-16)
  */
 
 
@@ -45,32 +45,36 @@ list(appName, classMap, className) ::= <<
 //
 // Print usage information with appName and filters.
 //
-usage(appName, packageFilter, jarFilter) ::= <<
+usage(appName, packageFilter, jarFilter, excludedNames) ::= <<
 
 <appName> requires class, application name, or arguments
 
-    usage <appName> \<class> [class-options]
-        Executes an application by classname, class must implement the EXECS application interface.
-        \<class> must be a fully qualified class name, i.e. with package and class name
-        [class-options] are command line options forwarded to the executed application
+usage: <appName> \<class> [class-options]
+   Executes an application by classname, class must implement the EXECS application interface.
+   \<class> must be a fully qualified class name, i.e. with package and class name
+   [class-options] are command line options forwarded to the executed application
 
-    usage: <appName> \<application> [application-options]
-        Executes an application by registered name, EXECS application interface must be implemented.
-        \<application> must be name registered with the application
-        [application-options] are command line options forwarded to the executed application
+usage: <appName> \<application> [application-options]
+   Executes an application by registered name, EXECS application interface must be implemented.
+   \<application> must be name registered with the application
+   [application-options] are command line options forwarded to the executed application
 
-    usage: <appName> [-l | --list] [-j] [-p]
-        Lists all available applications, i.e. classes implementing the application interface
-        Applications are found by searching through all jars in the classpath (can be SLOW!).
-        -j - activate a jar filter if set for the executor
-        -p - activate a package filter if set for the executor
+usage: <appName> [-l | --list] [-j] [-p]
+   Lists all available applications, i.e. classes implementing the application interface
+   Applications are found by searching through all jars in the classpath (can be SLOW!).
+   -j - activate a jar filter if set for the executor
+   -p - activate a package filter if set for the executor
 
-    usage: <appName> [-h | --help]
-        Prints this help screen.
+usage: <appName> [-? | -h | --help]
+   Prints this help screen.
 
-    set values: <appName>
-        package filter: <if(packageFilter)><packageFilter><else>not set<endif>
-        jar filter: <if(jarFilter)><jarFilter; separator=", "><else>not set<endif>
+usage: <appName> [-v | --version]
+   Prints version information.
+
+set values: <appName>
+   package filter: <if(packageFilter)><packageFilter><else>not set<endif>
+   jar filter    : <if(jarFilter)><jarFilter; separator=", "><else>not set<endif>
+   excluded      : <if(excludedNames)><excludedNames; separator=", "><else>not set<endif>
 
 
 >>
