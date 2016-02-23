@@ -1,5 +1,11 @@
 v0.3.3 - some changes - 2016-##-##
 ----------------------------------
+* added -v and --version options to Execs, version auto-generated with jdoc version
+* added -h to help options (since this now does not impact executed applications anymore)
+* added excluded Names from CF to help screen
+* updated help screen
+* pushed asciidoctor plugin to 1.5.3
+* added Quiet option
 
 
 v0.3.2 - release edits - 2016-02-03

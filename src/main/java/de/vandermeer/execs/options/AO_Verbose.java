@@ -21,8 +21,8 @@ import org.apache.commons.cli.Option;
  * Application option "verbose", activate extended progress messages.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.2 build 160203 (03-Feb-16) for Java 1.8
- * @since      v0.2.0
+ * @version    v0.3.3 build 160203 (03-Feb-16) for Java 1.8
+ * @since      v0.3.1
  */
 public class AO_Verbose extends AbstractApplicationOption<String> {
 

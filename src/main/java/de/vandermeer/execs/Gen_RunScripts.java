@@ -42,7 +42,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * Application to generate run scripts for other applications, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.2 build 160203 (03-Feb-16) for Java 1.8
+ * @version    v0.3.3 build 160203 (03-Feb-16) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunScripts implements ExecS_Application {
@@ -54,7 +54,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	public final static String APP_DISPLAY_NAME = "Generate Application Run Scripts";
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v0.3.2 build 160203 (03-Feb-16) for Java 1.8";
+	public final static String APP_VERSION = "v0.3.3 build 160203 (03-Feb-16) for Java 1.8";
 
 	/** A property key for the script name of the generic run script, without file extension. */
 	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
