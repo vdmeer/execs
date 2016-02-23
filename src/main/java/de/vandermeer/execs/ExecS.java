@@ -38,7 +38,7 @@ import de.vandermeer.execs.cf.CF;
  * The application executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.3 build 160203 (03-Feb-16) for Java 1.8
+ * @version    v0.3.3 build 160223 (23-Feb-16) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -58,7 +58,7 @@ public class ExecS {
 	protected final TreeMap<String, Class<? extends ExecS_Application>> classmap;
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v0.3.3 build 160203 (03-Feb-16) for Java 1.8";
+	public final static String APP_VERSION = "v0.3.3 build 160223 (23-Feb-16) for Java 1.8";
 
 	/** Set of all classes filled during runtime search */
 	final TreeSet<String> classNames;

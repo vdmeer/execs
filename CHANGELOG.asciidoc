@@ -1,4 +1,4 @@
-v0.3.3 - some changes - 2016-##-##
+v0.3.3 - some changes - 2016-02-23
 ----------------------------------
 * added -v and --version options to Execs, version auto-generated with jdoc version
 * added -h to help options (since this now does not impact executed applications anymore)
