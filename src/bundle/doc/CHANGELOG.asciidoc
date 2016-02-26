@@ -1,3 +1,8 @@
+v0.3.4 - some changes - 2016-##-##
+----------------------------------
+* moved external dependencies from skb file into settings, using skb v2.1.0 modules script now
+
+
 v0.3.3 - some changes - 2016-02-23
 ----------------------------------
 * added -v and --version options to Execs, version auto-generated with jdoc version
