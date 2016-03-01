@@ -1,4 +1,4 @@
-v0.3.4 - some changes - 2016-##-##
+v0.3.4 - some changes - 2016-03-01
 ----------------------------------
 * added print-stack-trace option
 * removed old module/ settings, added bundle/pm settings
