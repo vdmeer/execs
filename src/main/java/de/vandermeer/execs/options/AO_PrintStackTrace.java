@@ -18,13 +18,13 @@ package de.vandermeer.execs.options;
 import org.apache.commons.cli.Option;
 
 /**
- * Application option "quiet".
+ * Application option "print-stack-trace".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.3.4-SNAPSHOT build 160301 (01-Mar-16) for Java 1.8
- * @since      v0.3.3
+ * @since      v0.3.4
  */
-public class AO_Quiet extends AbstractApplicationOption<String> {
+public class AO_PrintStackTrace extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the new option.
@@ -32,20 +32,20 @@ public class AO_Quiet extends AbstractApplicationOption<String> {
 	 * @throws NullPointerException - if description parameter is null
 	 * @throws IllegalArgumentException - if description parameter is empty
 	 */
-	public AO_Quiet(String longDescription){
-		super("puts the application in quiet mode, no progres or error messages will be printed", longDescription);
+	public AO_PrintStackTrace(String longDescription){
+		super("sets a flag to print the stack trace of exceptions", longDescription);
 
-		Option.Builder builder = Option.builder("q");
-		builder.longOpt("quiet");
+		Option.Builder builder = Option.builder();
+		builder.longOpt("print-stack-trace");
 		builder.required(false);
 		this.setCliOption(builder.build());
 	}
 
 	/**
-	 * Returns the quiet flag setting.
-	 * @return true if quiet flag is set, false otherwise
+	 * Returns the print stack trace flag setting.
+	 * @return true if stack trace should be printed, false otherwise
 	 */
-	public boolean isQuiet(){
+	public boolean shouldPrintStackTrace(){
 		return this.inCli;
 	}
 
