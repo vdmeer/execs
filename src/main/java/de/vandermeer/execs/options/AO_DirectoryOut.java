@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "output-directory".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.3 build 160223 (23-Feb-16) for Java 1.8
+ * @version    v0.3.4-SNAPSHOT build 160301 (01-Mar-16) for Java 1.8
  * @since      v0.2.0
  */
 public class AO_DirectoryOut extends AbstractApplicationOption<String> {

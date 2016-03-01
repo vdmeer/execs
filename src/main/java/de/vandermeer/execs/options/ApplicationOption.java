@@ -25,7 +25,7 @@ import org.apache.commons.lang3.text.StrBuilder;
  * An application option of generic type with CLI option, property value, default value, and multiple levels of descriptions.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.3 build 160223 (23-Feb-16) for Java 1.8
+ * @version    v0.3.4-SNAPSHOT build 160301 (01-Mar-16) for Java 1.8
  * @since      v0.2.0
  */
 public interface ApplicationOption <T> {
@@ -152,10 +152,10 @@ public interface ApplicationOption <T> {
 			}
 
 			if(this.getCliOption().isRequired()){
-				ret.append(" (required option)");
+				ret.append(" (required)");
 			}
 			else{
-				ret.append(" (mandatory option)");
+				ret.append(" (optional)");
 			}
 
 			ret.append("  -  ").append(this.getDescription());
