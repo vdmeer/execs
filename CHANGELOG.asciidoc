@@ -1,3 +1,11 @@
+v0.3.5 - bug fixes- 2016-##-##
+------------------------------
+* fixed MAC problems in configure.sh
+  ** +uname -o+ doesn't exist on MAC, added function using +uname -s+ from https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux#3466183
+  ** problem with find on bin templates, changed call null test from +!= ""+ to +-n $+
+  ** problem with the +sed -i+ on MAC, changed using the ignore addition, now +sed -i''+
+
+
 v0.3.4 - some changes - 2016-03-01
 ----------------------------------
 * added print-stack-trace option
