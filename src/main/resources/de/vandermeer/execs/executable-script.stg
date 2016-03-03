@@ -63,12 +63,12 @@ header(target, applicationHome) ::= <<
 REM --> change APPLICATION_HOME to the root path of the application
 set APPLICATION_HOME=<applicationHome>
 <elseif(target.cyg)>
-#!/bin/bash
+#!/usr/bin/env bash
 
 # --> change APPLICATION_HOME to the root path of the application
 APPLICATION_HOME=<applicationHome>
 <elseif(target.sh)>
-#!/bin/bash
+#!/usr/bin/env bash
 
 # --> change APPLICATION_HOME to the root path of the application
 APPLICATION_HOME=<applicationHome>

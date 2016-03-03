@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 ## Copyright 2014-2015 Sven van der Meer <vdmeer.sven@mykolab.com>
@@ -45,6 +45,21 @@ BIN_TEMPLATES=../etc/bin-templates
 DoTemplates()
 {
 	if [ -d "${BIN_TEMPLATES}/$1" ]; then
+
+##Not sure yet which version works better (i.e. is portable). going with find right now
+
+##		for template in `ls ${BIN_TEMPLATES}/$1`
+##		do
+##			if [ -f ${BIN_TEMPLATES}/$1/$template ]; then
+##				cat ./$1/_header ${BIN_TEMPLATES}/$1/$template > $1/$(basename "$template").$1
+##				chmod 755 $1/$(basename "$template").$1
+##				if [ "$1" = "cyg" ]; then
+##					mv $1/$(basename "$template").$1 $1/$(basename "$template").sh
+##				fi
+##			fi
+##		done
+
+## The code below didn't work on MAC OS when we tried, to we go back to ls (see above)
 		for template in `find ${BIN_TEMPLATES}/$1 -type f`
 		do
 			cat ./$1/_header $template > $1/$(basename "$template").$1
@@ -79,9 +94,10 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target sh"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target sh --property-file ${PROP_FILE} --application-dir ${dir_project_home_sh} $*
-		for file in `find -type f -print|grep "sh/"`
+		for file in `find sh/ -type f -print`
 		do
-			sed -i'' 's/\r//' $file
+			sed -i'TMP' 's/\r//' $file
+			rm ${file}TMP
 		done
 		DoTemplates sh
 		CleanUp sh
@@ -94,9 +110,10 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target cyg"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target cyg --property-file ${PROP_FILE} --application-dir ${dir_project_home_cyg} $*
-		for file in `find -type f -print|grep "cyg/"`
+		for file in `find cyg/ -type f -print`
 		do
-			sed -i'' 's/\r//' $file
+			sed -i'TMP' 's/\r//' $file
+			rm ${file}TMP
 		done
 		DoTemplates cyg
 		CleanUp cyg
@@ -109,9 +126,10 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target bat"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target bat --property-file ${PROP_FILE} --application-dir ${dir_project_home_bat} $*
-		for file in `find -type f -print|grep "bat/"`
+		for file in `find bat/ -type f -print`
 		do
-			sed -i'' 's/$/\r/' $file
+			sed -i'TMP' 's/$/\r/' $file
+			rm ${file}TMP
 		done
 		DoTemplates bat
 		CleanUp bat
@@ -129,7 +147,8 @@ Rebase()
 		echo "- rebasing sh folder"
 		for file in `ls sh`
 		do
-			sed -i'' 's|^APPLICATION_HOME=.*$|APPLICATION_HOME='$dir_project_home_sh'|' sh/$file
+			sed -i'TMP' 's|^APPLICATION_HOME=.*$|APPLICATION_HOME='$dir_project_home_sh'|' sh/$file
+			rm sh/${file}TMP
 		done
 	fi
 
@@ -137,7 +156,8 @@ Rebase()
 		echo "- rebasing cyg folder"
 		for file in `ls cyg`
 		do
-			sed -i'' 's|^APPLICATION_HOME=.*$|APPLICATION_HOME='$dir_project_home_cyg'|' cyg/$file
+			sed -i'TMP' 's|^APPLICATION_HOME=.*$|APPLICATION_HOME='$dir_project_home_cyg'|' cyg/$file
+			rm cyg/${file}TMP
 		done
 	fi
 
@@ -145,7 +165,8 @@ Rebase()
 		echo "- rebasing bat folder"
 		for file in `ls bat`
 		do
-			sed -i'' 's|^set APPLICATION_HOME=.*$|set APPLICATION_HOME='$dir_project_home_bat'|' bat/$file
+			sed -i'TMP' 's|^set APPLICATION_HOME=.*$|set APPLICATION_HOME='$dir_project_home_bat'|' bat/$file
+			rm bat/${file}TMP
 		done
 	fi
 }
