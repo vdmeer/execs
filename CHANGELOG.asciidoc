@@ -1,4 +1,4 @@
-v0.3.5 - bug fixes- 2016-##-##
+v0.3.5 - bug fixes- 2016-03-03
 ------------------------------
 * fixed MAC problems in configure.sh
   ** +uname -o+ doesn't exist on MAC, added function using +uname -s+ from https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux#3466183

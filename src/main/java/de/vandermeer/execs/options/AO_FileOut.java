@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "output-file".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.5-SNAPSHOT build 160303 (03-Mar-16) for Java 1.8
+ * @version    v0.3.5 build 160303 (03-Mar-16) for Java 1.8
  * @since      v0.0.6
  */
 public class AO_FileOut extends AbstractApplicationOption<String> {
