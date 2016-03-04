@@ -1,5 +1,10 @@
-v0.3.6 - ### - 2016-##-##
--------------------------
+v0.3.6 - bug fixes - 2016-03-04
+-------------------------------
+* changed all +/usr/bin/bash+ to +/usr/bin/env bash+
+* chaned in +configure.sh+
+  ** +sed -i+ now with backup pattern, didn't work w/o on MAC OS
+  ** fixed a +find -type...+ problem, on MAC find wants a directory before options
+  ** added an +ls+ mechanism for bin templates (but using the find one right now) - experiementing with MAC OS problems on find
 
 
 v0.3.5 - bug fixes- 2016-03-03
