@@ -3,7 +3,7 @@ SKB Execute Service
 A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.
 :toc:
 
-Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.3.5|jar[0.3.5].
+Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.3.6|jar[0.3.6].
 All releases are on https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22[Maven Central].
 
 

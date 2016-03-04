@@ -25,7 +25,7 @@ import org.apache.commons.lang3.text.StrBuilder;
  * An application option of generic type with CLI option, property value, default value, and multiple levels of descriptions.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6-SNAPSHOT build 160304 (04-Mar-16) for Java 1.8
+ * @version    v0.3.6 build 160304 (04-Mar-16) for Java 1.8
  * @since      v0.2.0
  */
 public interface ApplicationOption <T> {
