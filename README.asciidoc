@@ -16,7 +16,7 @@ The problem gets worse when code is re-factored.
 Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
 
 
-This solution
+This Solution
 -------------
 Define an interface with all required functionality to run a program (here called application).
 Then implement a class that finds implementation of that interface and that provides a single +static void main()+ method to execute each of them.

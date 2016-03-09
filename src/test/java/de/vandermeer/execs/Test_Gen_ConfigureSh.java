@@ -23,7 +23,7 @@ import org.junit.Test;
  * Tests for {@link Gen_ConfigureSh}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6 build 160304 (04-Mar-16) for Java 1.8
+ * @version    v0.3.6 build 160306 (06-Mar-16) for Java 1.8
  * @since      v0.0.2
  */
 public class Test_Gen_ConfigureSh {
