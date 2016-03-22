@@ -36,7 +36,7 @@ import java.util.jar.JarFile;
  * A locator for jar files with jar and package filter.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6 build 160306 (06-Mar-16) for Java 1.8
+ * @version    v0.3.6 build 160319 (19-Mar-16) for Java 1.8
  * @since      v0.0.6
  */
 public class CF_Locator {

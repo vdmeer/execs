@@ -24,7 +24,7 @@
 ## @author     Sven van der Meer <vdmeer.sven@mykolab.com>
 ## @copyright  2014-2015 Sven van der Meer
 ## @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
-## @version    v0.3.6 build 160306 (06-Mar-16)
+## @version    v0.3.6 build 160319 (19-Mar-16)
 ##
 
 
@@ -94,11 +94,6 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target sh"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target sh --property-file ${PROP_FILE} --application-dir ${dir_project_home_sh} $*
-		for file in `find sh/ -type f -print`
-		do
-			sed -i'TMP' 's/\r//' $file
-			rm ${file}TMP
-		done
 		DoTemplates sh
 		CleanUp sh
 		echo "-----------------------------------------------------------------"
@@ -110,11 +105,6 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target cyg"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target cyg --property-file ${PROP_FILE} --application-dir ${dir_project_home_cyg} $*
-		for file in `find cyg/ -type f -print`
-		do
-			sed -i'TMP' 's/\r//' $file
-			rm ${file}TMP
-		done
 		DoTemplates cyg
 		CleanUp cyg
 		echo "-----------------------------------------------------------------"
@@ -126,11 +116,6 @@ CreateBin()
 		echo "-----------------------------------------------------------------"
 		echo "- generating for target bat"
 		java -classpath "${CP}" ${EXECS_CLASS} gen-run-scripts --target bat --property-file ${PROP_FILE} --application-dir ${dir_project_home_bat} $*
-		for file in `find bat/ -type f -print`
-		do
-			sed -i'TMP' 's/$/\r/' $file
-			rm ${file}TMP
-		done
 		DoTemplates bat
 		CleanUp bat
 		echo "-----------------------------------------------------------------"
@@ -170,6 +155,42 @@ Rebase()
 		done
 	fi
 }
+
+
+
+##
+## Change Line endings (LFCR/LF/CR)
+##
+ChangeLineEnding()
+{
+	if [ -n "$dir_project_home_sh" ]; then
+		echo "- changing line endings in sh"
+		for file in `find sh/ -type f -print`
+		do
+			sed -i'TMP' 's/\r//' $file
+			rm ${file}TMP
+		done
+	fi
+
+	if [ -n "$dir_project_home_cyg" ]; then
+		echo "- changing line endings in cyg"
+		for file in `find cyg/ -type f -print`
+		do
+			sed -i'TMP' 's/\r//' $file
+			rm ${file}TMP
+		done
+	fi
+
+	if [ -n "$dir_project_home_bat" ]; then
+		echo "- changing line endings in bat"
+		for file in `find bat/ -type f -print`
+		do
+			sed -i'TMP' 's/$/\r/' $file
+			rm ${file}TMP
+		done
+	fi
+}
+
 
 
 ##
@@ -263,7 +284,13 @@ while [ $# -gt 0 ]
 do
 	case $1 in
 		#-c create bin directories
-		-c)		CreateBin;exit 255;;
+		-c)
+			CreateBin
+			if [ "$system" == "CYGWIN" ] ; then
+				ChangeLineEnding
+			fi
+			exit 255
+			;;
 
 		#-h prints help and exists
 		-h)		Help;exit 255;;
