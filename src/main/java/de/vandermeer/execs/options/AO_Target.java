@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "target".
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6 build 160319 (19-Mar-16) for Java 1.8
+ * @version    v0.3.6 build 170331 (31-Mar-17) for Java 1.8
  * @since      v0.2.0
  */
 public class AO_Target extends AbstractApplicationOption<String> {
