@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "version", automatically added to an executable application.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6 build 170331 (31-Mar-17) for Java 1.8
+ * @version    v0.3.6 build 170404 (04-Apr-17) for Java 1.8
  * @since      v0.3.3
  */
 public class AO_Version extends AbstractApplicationOption<String> {
