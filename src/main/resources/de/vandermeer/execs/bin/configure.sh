@@ -24,7 +24,7 @@
 ## @author     Sven van der Meer <vdmeer.sven@mykolab.com>
 ## @copyright  2014-2015 Sven van der Meer
 ## @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License, Version 2.0
-## @version    v0.3.6 build 170404 (04-Apr-17)
+## @version    v0.3.7 build 170404 (04-Apr-17)
 ##
 
 

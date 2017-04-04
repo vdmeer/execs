@@ -3,7 +3,7 @@ SKB Execute Service
 A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.
 :toc:
 
-Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.3.6|jar[0.3.6].
+Current release is https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.3.7|jar[0.3.7].
 All releases are on https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22[Maven Central].
 
 
@@ -16,7 +16,7 @@ The problem gets worse when code is re-factored.
 Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
 
 
-This Solution
+This solution
 -------------
 Define an interface with all required functionality to run a program (here called application).
 Then implement a class that finds implementation of that interface and that provides a single +static void main()+ method to execute each of them.

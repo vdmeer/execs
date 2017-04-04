@@ -1,3 +1,10 @@
+v0.3.7 - maintenance - 2017-04-04
+---------------------------------
+* changes in configure.sh
+  ** moved line ending conversion into single function, now only called on Cygwin (not needed anywhere else)
+  ** tested on MAC Darwin, Ubuntu 14 and Cygwin
+
+
 v0.3.6 - bug fixes - 2016-03-04
 -------------------------------
 * changed all +/usr/bin/bash+ to +/usr/bin/env bash+

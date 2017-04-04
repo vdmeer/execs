@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * A class finder searching for all subclasses of a given class with jar and package filters.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.6 build 170404 (04-Apr-17) for Java 1.8
+ * @version    v0.3.7 build 170404 (04-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
 public class CF {
