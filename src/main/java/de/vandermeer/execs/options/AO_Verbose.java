@@ -48,7 +48,7 @@ public class AO_Verbose extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the verbose mode settings.
-	 * @return true of verbose mode is set, false otherwise
+	 * @return true if verbose mode is set, false otherwise
 	 */
 	public boolean inVerboseMode(){
 		return this.inCli;

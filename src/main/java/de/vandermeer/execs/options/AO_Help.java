@@ -40,8 +40,8 @@ public class AO_Help extends AbstractApplicationOption<String> {
 	}
 
 	/**
-	 * Returns the server mode settings.
-	 * @return true of server mode is set, false otherwise
+	 * Returns the help settings.
+	 * @return true if help is set, false otherwise
 	 */
 	public boolean inServerMode(){
 		return this.inCli;

@@ -70,6 +70,7 @@ public class ExecS_CliParser {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @throws IllegalArgumentException if the option uses short/long options already in use
 	 * @return self to allow for chaining
+	 * @throws IllegalArgumentException if short or long option was in use already
 	 */
 	public ExecS_CliParser addOption(Option option){
 		if(option!=null){
@@ -78,7 +79,16 @@ public class ExecS_CliParser {
 		return this;
 	}
 
+	/**
+	 * Adds a CLI option to the parser.
+	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @throws IllegalArgumentException if short or long option was in use already
+	 */
 	protected void _addOption(Option option){
+		if(option==null){
+			return;
+		}
+
 		if(this.usedOptions.contains(option.getOpt())){
 			throw new IllegalArgumentException("ExecS Cli: short option <" + option.getOpt() + "> already in use");
 		}
@@ -92,6 +102,24 @@ public class ExecS_CliParser {
 		if(option.getLongOpt()!=null){
 			this.usedOptions.add(option.getLongOpt());
 		}
+	}
+
+	/**
+	 * Tests if an option is already added to the parser.
+	 * @param option the option to test for
+	 * @return false if option was null or n short and long version of this option is used, true otherwise
+	 */
+	public boolean hasOption(Option option){
+		if(option==null){
+			return false;
+		}
+		if(this.usedOptions.contains(option.getOpt())){
+			return true;
+		}
+		if(this.usedOptions.contains(option.getLongOpt())){
+			return true;
+		}
+		return false;
 	}
 
 	/**
