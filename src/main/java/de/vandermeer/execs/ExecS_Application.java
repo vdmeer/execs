@@ -26,7 +26,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * Interface for an application that can be executed.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.7 build 170404 (04-Apr-17) for Java 1.8
+ * @version    v0.3.8 build 170405 (05-Apr-17) for Java 1.8
  * @since      v0.0.1
  */
 public interface ExecS_Application {
