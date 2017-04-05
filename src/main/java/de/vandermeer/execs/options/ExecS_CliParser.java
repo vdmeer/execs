@@ -70,7 +70,7 @@ public class ExecS_CliParser {
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
 	 * @throws IllegalArgumentException if the option uses short/long options already in use
 	 * @return self to allow for chaining
-	 * @throws {@link IllegalArgumentException} if short or long option was in use already
+	 * @throws IllegalArgumentException if short or long option was in use already
 	 */
 	public ExecS_CliParser addOption(Option option){
 		if(option!=null){
@@ -82,7 +82,7 @@ public class ExecS_CliParser {
 	/**
 	 * Adds a CLI option to the parser.
 	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
-	 * @throws {@link IllegalArgumentException} if short or long option was in use already
+	 * @throws IllegalArgumentException if short or long option was in use already
 	 */
 	protected void _addOption(Option option){
 		if(option==null){
