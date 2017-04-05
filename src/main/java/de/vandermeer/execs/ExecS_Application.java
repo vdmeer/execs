@@ -41,9 +41,14 @@ public interface ExecS_Application {
 		if(this.getCli()!=null){
 			//add the help option
 			AO_Help optionHelp = new AO_Help();
+			if(!this.getCli().hasOption(optionHelp.getCliOption())){
+				this.getCli().addOption(optionHelp);
+			}
+
 			AO_Version optionVersion = new AO_Version();
-			this.getCli().addOption(optionHelp);
-			this.getCli().addOption(optionVersion);
+			if(!this.getCli().hasOption(optionVersion.getCliOption())){
+				this.getCli().addOption(optionVersion);
+			}
 
 			//if there are arguments, and the first one is either -? or --help we need to process a help request
 			if(args.length>0 && (args[0].equals("-" + optionHelp.getCliOption().getOpt()) || args[0].equals("--" + optionHelp.getCliOption().getLongOpt()))){

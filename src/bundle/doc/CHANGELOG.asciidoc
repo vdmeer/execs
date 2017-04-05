@@ -1,3 +1,9 @@
+v0.3.8 - bug fixes - 2017-04-05
+-------------------------------
+* added a test option method to CLI parser
+* testing help/version options now in ExecS_Application application execution (so that it can be rerun)
+
+
 v0.3.7 - maintenance - 2017-04-04
 ---------------------------------
 * changes in configure.sh

@@ -56,7 +56,7 @@ public class AO_Servermode extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the server mode settings.
-	 * @return true of server mode is set, false otherwise
+	 * @return true if server mode is set, false otherwise
 	 */
 	public boolean inServerMode(){
 		return this.inCli;
