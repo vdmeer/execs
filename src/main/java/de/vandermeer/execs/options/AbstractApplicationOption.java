@@ -71,19 +71,6 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	}
 
 	/**
-	 * Returns a new application option with description, long description, and default value but without option key.
-	 * @param defaultValue option default value
-	 * @param description option description
-	 * @param longDescription option long description
-	 * @throws NullPointerException - if any description parameter is null
-	 * @throws IllegalArgumentException - if any description parameter is empty
-	 */
-	public AbstractApplicationOption(T defaultValue, String description, String longDescription){
-		this(description, longDescription);
-		this.ValueDefault = defaultValue;
-	}
-
-	/**
 	 * Returns a new application option with description, long description, default value, and option key.
 	 * @param optionKey option key
 	 * @param defaultValue option default value
@@ -99,9 +86,57 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		this.optionKey = optionKey;
 	}
 
+	/**
+	 * Returns a new application option with description, long description, and default value but without option key.
+	 * @param defaultValue option default value
+	 * @param description option description
+	 * @param longDescription option long description
+	 * @throws NullPointerException - if any description parameter is null
+	 * @throws IllegalArgumentException - if any description parameter is empty
+	 */
+	public AbstractApplicationOption(T defaultValue, String description, String longDescription){
+		this(description, longDescription);
+		this.ValueDefault = defaultValue;
+	}
+
 	@Override
 	public Option getCliOption(){
 		return this.cliOption;
+	}
+
+	@Override
+	public T getCliValue(){
+		return this.valueCli;
+	}
+
+	@Override
+	public T getDefaultValue(){
+		return this.ValueDefault;
+	}
+
+	@Override
+	public String getDescription(){
+		return this.descr;
+	}
+
+	@Override
+	public String getDescriptionLong(){
+		return this.descrLong;
+	}
+
+	@Override
+	public String getOptionKey(){
+		return this.optionKey;
+	}
+
+	@Override
+	public T getPropertValue(){
+		return this.valueProperty;
+	}
+
+	@Override
+	public boolean inCli(){
+		return this.inCli;
 	}
 
 	/**
@@ -118,22 +153,6 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		else{
 			this.cliOption.setDescription(this.descr);
 		}
-	}
-
-	@Override
-	public String getDescription(){
-		return this.descr;
-	}
-
-	@Override
-	public String getDescriptionLong(){
-		return this.descrLong;
-	}
-
-	@Override
-	public void setDescriptionLong(String longDescription){
-		Validate.notBlank(longDescription, "long description cannot be empty");
-		this.descrLong = longDescription;
 	}
 
 	@Override
@@ -156,6 +175,19 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	}
 
 	@Override
+	public void setDefaultValue(T value){
+		if(value!=null){
+			this.ValueDefault = value;
+		}
+	}
+
+	@Override
+	public void setDescriptionLong(String longDescription){
+		Validate.notBlank(longDescription, "long description cannot be empty");
+		this.descrLong = longDescription;
+	}
+
+	@Override
 	public int setPropertyValue(Properties properties) {
 		if(properties==null || properties.get(this.getOptionKey())==null){
 			if(this.cliOption.hasArg()){
@@ -165,37 +197,5 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		}
 		this.valueProperty = this.convertValue(properties.get(this.getOptionKey()));
 		return 0;
-	}
-
-	@Override
-	public T getCliValue(){
-		return this.valueCli;
-	}
-
-	@Override
-	public T getDefaultValue(){
-		return this.ValueDefault;
-	}
-
-	@Override
-	public T getPropertValue(){
-		return this.valueProperty;
-	}
-
-	@Override
-	public String getOptionKey(){
-		return this.optionKey;
-	}
-
-	@Override
-	public boolean inCli(){
-		return this.inCli;
-	}
-
-	@Override
-	public void setDefaultValue(T value){
-		if(value!=null){
-			this.ValueDefault = value;
-		}
 	}
 }
