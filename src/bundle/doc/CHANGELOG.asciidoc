@@ -1,3 +1,11 @@
+v0.4.0 - feature add - 2017-04-##
+----------------------------------
+* added application to generate OS dependent execution scripts if run from an executable jar (with all dependencies) as `Gen_ExecJarScripts`
+* added methods to use iterables to add CLI options to application
+* added methods to use arrays to add CLI options to application
+* changed Windows parameters in executable-script.stg function `arguments(target)`
+  ** from `%1 %2 %3 %4 %5 %6 %7 %8 %9` to `%*`
+
 v0.3.8 - bug fixes - 2017-04-05
 -------------------------------
 * added a test option method to CLI parser

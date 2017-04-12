@@ -30,7 +30,7 @@ import org.apache.commons.cli.ParseException;
  * CLI implementation for applications.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.8 build 170405 (05-Apr-17) for Java 1.8
+ * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS_CliParser {
@@ -61,6 +61,34 @@ public class ExecS_CliParser {
 	public ExecS_CliParser addOption(ApplicationOption<?> option){
 		if(option!=null && option.getCliOption()!=null){
 			this._addOption(option.getCliOption());
+		}
+		return this;
+	}
+
+	/**
+	 * Adds all given option ignoring null elements.
+	 * @param options iterable of options
+	 * @return self to allow for chaining
+	 */
+	public ExecS_CliParser addAllOptions(Iterable<ApplicationOption<?>> options){
+		if(options!=null){
+			for(ApplicationOption<?> option : options){
+				this.addOption(option);
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds all given option ignoring null elements.
+	 * @param options array of options
+	 * @return self to allow for chaining
+	 */
+	public ExecS_CliParser addAllOptions(ApplicationOption<?>[] options){
+		if(options!=null){
+			for(ApplicationOption<?> option : options){
+				this.addOption(option);
+			}
 		}
 		return this;
 	}

@@ -42,7 +42,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * Application to generate run scripts for other applications, supporting windows, CygWin and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.8 build 170405 (05-Apr-17) for Java 1.8
+ * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
 public class Gen_RunScripts implements ExecS_Application {
@@ -54,7 +54,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	public final static String APP_DISPLAY_NAME = "Generate Application Run Scripts";
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v0.3.8 build 170405 (05-Apr-17) for Java 1.8";
+	public final static String APP_VERSION = "v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8";
 
 	/** A property key for the script name of the generic run script, without file extension. */
 	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
@@ -62,7 +62,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	/** A property key for the class name of the ExexS executor to be used, must be a fully qualified class name. */
 	public final static String PROP_RUN_CLASS = "run.script.class";
 
-	/** A property key for the JAVA classpath. */
+	/** A property key for the JAVA class path. */
 	public final static String PROP_JAVA_CP = "java.classpath";
 
 	/** The string all java properties for running the JVM must start with. */
@@ -238,6 +238,12 @@ public class Gen_RunScripts implements ExecS_Application {
 		return 0;
 	}
 
+	/**
+	 * Generates a script.
+	 * @param clazz the class for the script
+	 * @param targetMap map for targets
+	 * @return the final template for the script
+	 */
 	protected final ST generateScript(String clazz, HashMap<String, Boolean> targetMap){
 		ST ret = this.stg.getInstanceOf("generateExec");
 		ret.add("target", targetMap);

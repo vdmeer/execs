@@ -38,7 +38,7 @@ import de.vandermeer.execs.cf.CF;
  * The application executor.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.8 build 170405 (05-Apr-17) for Java 1.8
+ * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
  * @since      v0.0.1
  */
 public class ExecS {
@@ -58,7 +58,7 @@ public class ExecS {
 	protected final TreeMap<String, Class<? extends ExecS_Application>> classmap;
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v0.3.8 build 170405 (05-Apr-17) for Java 1.8";
+	public final static String APP_VERSION = "v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8";
 
 	/** Set of all classes filled during runtime search */
 	final TreeSet<String> classNames;
@@ -85,6 +85,7 @@ public class ExecS {
 
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
 		this.addApplication(Gen_ConfigureSh.APP_NAME, Gen_ConfigureSh.class);
+		this.addApplication(Gen_ExecJarScripts.APP_NAME, Gen_ExecJarScripts.class);
 
 		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 	}
@@ -220,6 +221,10 @@ public class ExecS {
 			if(svc instanceof Gen_RunScripts){
 				//hook for GenRunScripts to get current class map - registered applications
 				((Gen_RunScripts)svc).setClassMap(this.classmap);
+			}
+			if(svc instanceof Gen_ExecJarScripts){
+				//hook for Gen_ExecJarScripts to get current class map - registered applications
+				((Gen_ExecJarScripts)svc).setClassMap(this.classmap);
 			}
 			return ((ExecS_Application)svc).executeApplication(ArrayUtils.remove(args, 0));
 		}
