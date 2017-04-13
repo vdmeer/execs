@@ -26,7 +26,7 @@ import org.apache.commons.lang3.Validate;
  * Abstract (but fully featured) implementation of {@link ApplicationOption}.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
+ * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.2.0
  */
 public abstract class AbstractApplicationOption<T> implements ApplicationOption<T> {

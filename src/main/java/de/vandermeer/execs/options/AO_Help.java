@@ -21,7 +21,7 @@ import org.apache.commons.cli.Option;
  * Application option "help", automatically added to an executable application.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
+ * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.2.0
  */
 public class AO_Help extends AbstractApplicationOption<String> {

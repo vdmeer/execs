@@ -36,7 +36,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * Application to generate starts scripts when running ExecS from an executable JAR.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
+ * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.4.0
  */
 public class Gen_ExecJarScripts implements ExecS_Application {
@@ -48,7 +48,7 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 	public final static String APP_DISPLAY_NAME = "Generate JAR Scripts for Executable JARs";
 
 	/** Application version, should be same as the version in the class JavaDoc. */
-	public final static String APP_VERSION = "v2.0.0-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8";
+	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
 	/** CLI parser. */
 	final private ExecS_CliParser cli;
