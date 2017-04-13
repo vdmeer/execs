@@ -120,7 +120,9 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 				File file = new File(fn);
 				List<String> lines = new ArrayList<>();
 				lines.add("#!/usr/bin/env bash");
+				lines.add("");
 				lines.add("java -jar " + jarFn + " " + s + " $*");
+				lines.add("");
 				if(!this.writeFile(file, lines)){
 					return -5;
 				}
@@ -129,7 +131,10 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 				String fn = dir + "/" + s + ".bat";
 				File file = new File(fn);
 				List<String> lines = new ArrayList<>();
+				lines.add("@echo off");
+				lines.add("");
 				lines.add("java -jar " + jarFn + " " + s + " %*");
+				lines.add("");
 				if(!this.writeFile(file, lines)){
 					return -6;
 				}
@@ -153,6 +158,7 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 			FileWriter out = new FileWriter(file);
 			for(String s : lines){
 				out.write(s);
+				out.write(System.getProperty("line.separator"));
 			}
 			out.close();
 			file.setExecutable(true);
