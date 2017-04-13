@@ -25,23 +25,10 @@ import org.apache.commons.lang3.text.StrBuilder;
  * An application option of generic type with CLI option, property value, default value, and multiple levels of descriptions.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
- * @version    v0.3.8 build 170405 (05-Apr-17) for Java 1.8
+ * @version    v0.3.9-SNAPSHOT build 170411 (11-Apr-17) for Java 1.8
  * @since      v0.2.0
  */
 public interface ApplicationOption <T> {
-
-	/**
-	 * Returns the created CLI option.
-	 * @return the created CLI option, null if none set
-	 */
-	Option getCliOption();
-
-	/**
-	 * Converts a value of some type to the type the option is using
-	 * @param value the value to be converted
-	 * @return the value converted to the type of the option, null if not possible
-	 */
-	T convertValue(Object value);
 
 	/**
 	 * Returns the CLI options a string.
@@ -63,22 +50,17 @@ public interface ApplicationOption <T> {
 	}
 
 	/**
-	 * Returns a description for the option.
-	 * @return description for the option, should not be null
+	 * Converts a value of some type to the type the option is using
+	 * @param value the value to be converted
+	 * @return the value converted to the type of the option, null if not possible
 	 */
-	String getDescription();
+	T convertValue(Object value);
 
 	/**
-	 * Returns a long description of the option, possibly with use case and application specific information.
-	 * @return long description for the option, blank if not set
+	 * Returns the created CLI option.
+	 * @return the created CLI option, null if none set
 	 */
-	String getDescriptionLong();
-
-	/**
-	 * Sets or changes the long description of the option.
-	 * @param longDescription new long description, cannot be null or blank
-	 */
-	void setDescriptionLong(String longDescription);
+	Option getCliOption();
 
 	/**
 	 * Returns the CLI value of the option if any set.
@@ -93,10 +75,16 @@ public interface ApplicationOption <T> {
 	T getDefaultValue();
 
 	/**
-	 * Returns the property value of the option.
-	 * @return property value, blank if none set
+	 * Returns a description for the option.
+	 * @return description for the option, should not be null
 	 */
-	T getPropertValue();
+	String getDescription();
+
+	/**
+	 * Returns a long description of the option, possibly with use case and application specific information.
+	 * @return long description for the option, blank if not set
+	 */
+	String getDescriptionLong();
 
 	/**
 	 * Returns the key used for this option for instance in a property file or object or a map.
@@ -105,28 +93,10 @@ public interface ApplicationOption <T> {
 	String getOptionKey();
 
 	/**
-	 * Tests if the option was present in a parsed command line.
-	 * @return true if it was present, false otherwise
+	 * Returns the property value of the option.
+	 * @return property value, blank if none set
 	 */
-	boolean inCli();
-
-	/**
-	 * Returns the value of the option calculated from all possible values.
-	 * First, if the CLI value is set it will be returned.
-	 * Second, of the property value is set it will be returned.
-	 * Third, if the default value is set it will be returned.
-	 * Last, null is returned.
-	 * @return option value determined from CLI value, property value and default value, blank if none set
-	 */
-	default T getValue(){
-		if(this.getCliValue()!=null){
-			return this.getCliValue();
-		}
-		if(this.getPropertValue()!=null){
-			return this.getPropertValue();
-		}
-		return this.getDefaultValue();
-	}
+	T getPropertValue();
 
 	/**
 	 * Returns usage information for the option.
@@ -179,6 +149,30 @@ public interface ApplicationOption <T> {
 	}
 
 	/**
+	 * Returns the value of the option calculated from all possible values.
+	 * First, if the CLI value is set it will be returned.
+	 * Second, of the property value is set it will be returned.
+	 * Third, if the default value is set it will be returned.
+	 * Last, null is returned.
+	 * @return option value determined from CLI value, property value and default value, blank if none set
+	 */
+	default T getValue(){
+		if(this.getCliValue()!=null){
+			return this.getCliValue();
+		}
+		if(this.getPropertValue()!=null){
+			return this.getPropertValue();
+		}
+		return this.getDefaultValue();
+	}
+
+	/**
+	 * Tests if the option was present in a parsed command line.
+	 * @return true if it was present, false otherwise
+	 */
+	boolean inCli();
+
+	/**
 	 * Sets the CLI value of the option.
 	 * @param cmdLine the processed command line
 	 * @return 0 if process was successful (i.e. program can proceed), non 0 otherwise (means the program should proceed)
@@ -190,6 +184,12 @@ public interface ApplicationOption <T> {
 	 * @param value new default value
 	 */
 	void setDefaultValue(T value);
+
+	/**
+	 * Sets or changes the long description of the option.
+	 * @param longDescription new long description, cannot be null or blank
+	 */
+	void setDescriptionLong(String longDescription);
 
 	/**
 	 * Sets the property value of the option read from a property object.
