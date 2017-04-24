@@ -19,7 +19,8 @@ import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.apache.commons.lang3.text.StrBuilder;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroupFile;
 
 /**
  * An application option of generic type with CLI option, property value, default value, and multiple levels of descriptions.
@@ -63,6 +64,14 @@ public interface ApplicationOption <T> {
 	Option getCliOption();
 
 	/**
+	 * Returns a description of an argument if required for a CLI option.
+	 * @return the argument description, null of none set
+	 */
+	default String getCliArgumentDescription(){
+		return null;
+	}
+
+	/**
 	 * Returns the CLI value of the option if any set.
 	 * @return CLI value, null if none set
 	 */
@@ -75,16 +84,16 @@ public interface ApplicationOption <T> {
 	T getDefaultValue();
 
 	/**
-	 * Returns a description for the option.
-	 * @return description for the option, should not be null
+	 * Returns a short description for the option.
+	 * @return short description for the option, should not be null
 	 */
-	String getDescription();
+	String getShortDescription();
 
 	/**
 	 * Returns a long description of the option, possibly with use case and application specific information.
 	 * @return long description for the option, blank if not set
 	 */
-	String getDescriptionLong();
+	String getLongDescription();
 
 	/**
 	 * Returns the key used for this option for instance in a property file or object or a map.
@@ -99,53 +108,42 @@ public interface ApplicationOption <T> {
 	T getPropertValue();
 
 	/**
-	 * Returns usage information for the option.
-	 * @return usage information, which is the CLI usage (if CLI option is set), a short description and (if set) a long description
+	 * Returns a string with a long help on the CLI option, generated using an STG template.
+	 * @return string with long help
 	 */
-	default StrBuilder getUsage(){
-		StrBuilder ret = new StrBuilder(100);
+	default String getCliLongHelp(){
+		STGroupFile stg = new STGroupFile("de/vandermeer/execs/options/option-help.stg");
+		ST st = stg.getInstanceOf("longCliHelp");
 
-		if(this.getCliOption()!=null){
-			ret.append("CLI option:  ");
-			if(this.getCliOption().getOpt()!=null && this.getCliOption().getLongOpt()!=null){
-				ret.append('-').append(this.getCliOption().getOpt()).append(", --").append(this.getCliOption().getLongOpt());
-			}
-			else if(this.getCliOption().getOpt()!=null){
-				ret.append('-').append(this.getCliOption().getOpt());
-			}
-			else if(this.getCliOption().getLongOpt()!=null){
-				ret.append("--").append(this.getCliOption().getLongOpt());
-			}
-
-			if(this.getCliOption().hasArg()){
-				ret.append(" <").append(this.getCliOption().getArgName()).append(">");
-			}
-
-			if(this.getCliOption().isRequired()){
-				ret.append(" (required)");
-			}
-			else{
-				ret.append(" (optional)");
-			}
-
-			ret.append("  -  ").append(this.getDescription());
-			ret.appendNewLine();
-
-			if(this.getDescriptionLong()!=null){
-				ret.append("Description: ").appendNewLine().append(this.getDescriptionLong()).appendNewLine();
-			}
+		st.add("shortOption", this.getCliOption().getOpt());
+		st.add("longOption", this.getCliOption().getLongOpt());
+		if(this.getCliOption().hasArg()){
+			st.add("argument", this.getCliOption().getArgName());
+			st.add("argumentDescription", this.getCliArgumentDescription());
 		}
-		else if(this.getOptionKey()!=null){
-			ret.append("Option key:  ");
-			ret.append(this.getOptionKey());
-			ret.append("  -  ").append(this.getDescription());
-			ret.appendNewLine();
-			if(this.getDescriptionLong()!=null){
-				ret.append("Description: ").appendNewLine().append(this.getDescriptionLong()).appendNewLine();
-			}
+		if(this.getCliOption().isRequired()){
+			st.add("required", this.getCliOption().getArgName());
 		}
+		st.add("shortDescription", this.getShortDescription());
+		st.add("longDescription", this.getLongDescription());
+		st.add("defaultValue", this.getDefaultValue());
 
-		return ret;
+		return st.render();
+	}
+
+	/**
+	 * Returns a string with a long help on the KEY option, generated using an STG template.
+	 * @return usage information
+	 */
+	default String getKeyLongHelp(){
+		STGroupFile stg = new STGroupFile("de/vandermeer/execs/options/option-help.stg");
+		ST st = stg.getInstanceOf("longKeyHelp");
+
+		st.add("key", this.getOptionKey());
+		st.add("shortOption", this.getCliOption().getOpt());
+		st.add("longOption", this.getCliOption().getLongOpt());
+
+		return st.render();
 	}
 
 	/**
@@ -184,12 +182,6 @@ public interface ApplicationOption <T> {
 	 * @param value new default value
 	 */
 	void setDefaultValue(T value);
-
-	/**
-	 * Sets or changes the long description of the option.
-	 * @param longDescription new long description, cannot be null or blank
-	 */
-	void setDescriptionLong(String longDescription);
 
 	/**
 	 * Sets the property value of the option read from a property object.

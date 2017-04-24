@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "lib-dir".
  *
@@ -47,12 +45,7 @@ public class AO_LibDir extends AbstractApplicationOption<String> {
 	 */
 	public AO_LibDir(boolean required, Character shortOption, String longDescription){
 		super("specifies a directory with required jar files", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("lib-dir");
-		builder.hasArg().argName("DIR");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "lib-dir", "DIR", required);
 	}
 
 	@Override

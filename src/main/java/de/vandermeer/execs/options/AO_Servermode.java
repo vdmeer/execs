@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "srv-mode".
  *
@@ -47,11 +45,7 @@ public class AO_Servermode extends AbstractApplicationOption<String> {
 	 */
 	public AO_Servermode(boolean required, Character shortOption, String longDescription){
 		super("tells a server to run in background mode", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("srv-mode");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "srv-mode", null, required);
 	}
 
 	/**

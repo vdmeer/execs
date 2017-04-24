@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "target".
  *
@@ -47,12 +45,7 @@ public class AO_Target extends AbstractApplicationOption<String> {
 	 */
 	public AO_Target(boolean required, Character shortOption, String longDescription){
 		super("specifies a target, for instance for a compilation", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("target");
-		builder.hasArg().argName("TARGET");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "target", "TARGET", required);
 	}
 
 	@Override

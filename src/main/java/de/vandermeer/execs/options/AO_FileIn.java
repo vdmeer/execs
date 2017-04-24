@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "input-file".
  *
@@ -47,12 +45,7 @@ public class AO_FileIn extends AbstractApplicationOption<String> {
 	 */
 	public AO_FileIn(boolean required, Character shortOption, String longDescription){
 		super("input filename", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("input-file");
-		builder.hasArg().argName("FILE");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "input-file", "FILE", required);
 	}
 
 	@Override

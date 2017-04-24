@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "version", automatically added to an executable application.
  *
@@ -39,11 +37,7 @@ public class AO_Version extends AbstractApplicationOption<String> {
 	 */
 	public AO_Version(Character shortOption){
 		super("application version", "Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored).");
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("version");
-		builder.required(false);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "version", null, false);
 	}
 
 	@Override

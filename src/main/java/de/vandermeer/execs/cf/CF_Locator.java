@@ -153,14 +153,16 @@ public class CF_Locator {
 		}
 
 		File[] dirs = file.listFiles(CF_Utils.DIRECTORIES_ONLY);
-		for(int i=0; i<dirs.length; i++){
-			try{
-				this.locationMap.put(new URI("file://" + dirs[i].getCanonicalPath()), name + dirs[i].getName());
-			}
-			catch(IOException ignore){return;}
-			catch(URISyntaxException ignore){return;}
+		if(dirs!=null){
+			for(int i=0; i<dirs.length; i++){
+				try{
+					this.locationMap.put(new URI("file://" + dirs[i].getCanonicalPath()), name + dirs[i].getName());
+				}
+				catch(IOException ignore){return;}
+				catch(URISyntaxException ignore){return;}
 
-			this.include(name + dirs[i].getName(), dirs[i]);
+				this.include(name + dirs[i].getName(), dirs[i]);
+			}
 		}
 	}
 

@@ -214,17 +214,19 @@ public class CF {
 		Map<Class<?>, URI> ret = new HashMap<>();
 
 		String[] files = directory.list();
-		for(int i=0; i<files.length; i++){
-			if(files[i].endsWith(".class")){
-				String classname = files[i].substring(0, files[i].length()-6);
-				try{
-					Class<?> c = Class.forName(packageName + "." + classname);
-					if(clazz.isAssignableFrom(c) && !clazz.getName().equals(packageName + "." + classname)){
-						ret.put(c, location);
+		if(files!=null){
+			for(int i=0; i<files.length; i++){
+				if(files[i].endsWith(".class")){
+					String classname = files[i].substring(0, files[i].length()-6);
+					try{
+						Class<?> c = Class.forName(packageName + "." + classname);
+						if(clazz.isAssignableFrom(c) && !clazz.getName().equals(packageName + "." + classname)){
+							ret.put(c, location);
+						}
 					}
-				}
-				catch(Exception ex){
-					errors.add(ex);
+					catch(Exception ex){
+						errors.add(ex);
+					}
 				}
 			}
 		}

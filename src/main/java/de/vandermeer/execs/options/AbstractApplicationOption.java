@@ -21,6 +21,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.stringtemplate.v4.STGroupFile;
 
 /**
  * Abstract (but fully featured) implementation of {@link ApplicationOption}.
@@ -34,11 +35,11 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	/** A generated CLI option. */
 	protected Option cliOption;
 
-	/** The option description, as a short form, if CLI option is set identical to that description. */
-	protected String descr;
+	/** A short description, used in a CLI option as description. */
+	protected final String shortDescription;
 
-	/** Long description for the option. */
-	protected String descrLong;
+	/** Long description with detailed information. */
+	protected final String longDescription;
 
 	/** Option value read from CLI, blank or null if not set. */
 	protected T valueCli;
@@ -55,8 +56,11 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	/** Key used for this option for example in a property file or object or in a map. */
 	protected String optionKey;
 
+	/** A description of a an argument if used in the CLI option. */
+	protected String cliArgDescription;
+
 	/**
-	 * Returns a new application option with description and long description but without option key and default value.
+	 * Creates a new application option with description and long description.
 	 * @param description option description
 	 * @param longDescription option long description
 	 * @throws NullPointerException - if any description parameter is null
@@ -66,37 +70,70 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		Validate.notBlank(description, "description cannot be empty");
 		Validate.notBlank(longDescription, "long description cannot be empty");
 
-		this.descr = description;
-		this.descrLong = longDescription;
+		this.shortDescription = description;
+		this.longDescription = longDescription;
 	}
 
 	/**
-	 * Returns a new application option with description, long description, default value, and option key.
+	 * Creates a new application option with description, long description, and option key.
 	 * @param optionKey option key
-	 * @param defaultValue option default value
 	 * @param description option description
 	 * @param longDescription option long description
 	 * @throws NullPointerException - if optioneKey or any description parameter is null
 	 * @throws IllegalArgumentException - if optionKey or any description parameter is empty
 	 */
-	public AbstractApplicationOption(String optionKey, T defaultValue, String description, String longDescription){
-		this(defaultValue, description, longDescription);
-
+	public AbstractApplicationOption(String optionKey, String description, String longDescription){
+		this(description, longDescription);
 		Validate.notBlank(optionKey, "option key cannot be empty");
+
 		this.optionKey = optionKey;
 	}
 
 	/**
-	 * Returns a new application option with description, long description, and default value but without option key.
-	 * @param defaultValue option default value
-	 * @param description option description
-	 * @param longDescription option long description
-	 * @throws NullPointerException - if any description parameter is null
-	 * @throws IllegalArgumentException - if any description parameter is empty
+	 * Creates a new application option taking all settings from an STG file.
+	 * @param stgFile file name for an STG file with short and long description, must not be empty
+	 * @param required true for a required CLI option, false for an optional one
+	 * @throws NullPointerException - if argument was null
+	 * @throws IllegalArgumentException - if argument was empty
 	 */
-	public AbstractApplicationOption(T defaultValue, String description, String longDescription){
-		this(description, longDescription);
-		this.ValueDefault = defaultValue;
+	public AbstractApplicationOption(String stgFile, boolean required){
+		Validate.notBlank(stgFile, "stgFile cannot be empty");
+
+		STGroupFile stgf = new STGroupFile(stgFile);
+
+		this.shortDescription = stgf.getInstanceOf("shortDescription").render();
+		Validate.notBlank(this.shortDescription, "short description cannot be empty");
+
+		this.longDescription = stgf.getInstanceOf("longDescription").render();
+		Validate.notBlank(this.longDescription, "long description cannot be empty");
+
+		String shortOpt = stgf.getInstanceOf("shortOption").render();
+		if(!StringUtils.isEmpty(shortOpt)){
+			Validate.validState(shortOpt.length()==1, "a short option must be a single character");
+			Validate.validState(StringUtils.isAlphanumeric(shortOpt), "a short option must be a alphanumeric");
+		}
+
+		String longOpt = stgf.getInstanceOf("longOption").render();
+		Validate.notEmpty(longOpt);
+		Validate.validState(!StringUtils.contains(longOpt, ' '), "long options must not contain blanks");
+
+		String argument = stgf.getInstanceOf("argument").render();
+
+		Option.Builder builder = (StringUtils.isEmpty(shortOpt))?Option.builder():Option.builder(shortOpt);
+		builder.longOpt(longOpt);
+		if(!StringUtils.isEmpty(argument)){
+			builder.hasArg().argName(argument);
+		}
+		builder.required(required);
+		this.cliOption = builder.build();
+		this.cliOption.setDescription(this.shortDescription);
+
+		if(!StringUtils.isBlank(argument)){
+			String ad = stgf.getInstanceOf("argumentHelp").render();
+			if(!StringUtils.isBlank(ad)){
+				this.cliArgDescription = ad;
+			}
+		}
 	}
 
 	@Override
@@ -115,13 +152,13 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	}
 
 	@Override
-	public String getDescription(){
-		return this.descr;
+	public String getShortDescription(){
+		return this.shortDescription;
 	}
 
 	@Override
-	public String getDescriptionLong(){
-		return this.descrLong;
+	public String getLongDescription(){
+		return this.longDescription;
 	}
 
 	@Override
@@ -140,19 +177,25 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 	}
 
 	/**
-	 * Sets the CLI option.
-	 * @param option CLI option, only used if not null
+	 * Sets the CLI argument for this application option.
+	 * @param shortOpt the short option, null if none wanted, alphanumeric character otherwise
+	 * @param longOpt the long option, must not be blank
+	 * @param arg an optional argument, null if none wanted, none-empty string otherwise
+	 * @param required true for a required CLI option, false for an optional one
 	 */
-	protected final void setCliOption(Option option){
-		if(option!=null){
-			this.cliOption = option;
+	protected final void setCliArgument(Character shortOpt, String longOpt, String arg, boolean required){
+		Validate.validState(shortOpt==null || StringUtils.isAlphanumeric(shortOpt.toString()));
+		Validate.notNull(longOpt);
+		Validate.validState(arg==null || !StringUtils.isEmpty(arg));
+
+		Option.Builder builder = (shortOpt==null)?Option.builder():Option.builder(shortOpt.toString());
+		builder.longOpt(longOpt);
+		if(arg!=null){
+			builder.hasArg().argName(arg);
 		}
-		if(this.cliOption.getDescription()!=null){
-			this.descr = this.cliOption.getDescription();
-		}
-		else{
-			this.cliOption.setDescription(this.descr);
-		}
+		builder.required(required);
+		this.cliOption = builder.build();
+		this.cliOption.setDescription(this.shortDescription);
 	}
 
 	@Override
@@ -181,11 +224,11 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		}
 	}
 
-	@Override
-	public void setDescriptionLong(String longDescription){
-		Validate.notBlank(longDescription, "long description cannot be empty");
-		this.descrLong = longDescription;
-	}
+//	@Override
+//	public void setDescriptionLong(String longDescription){
+//		Validate.notBlank(longDescription, "long description cannot be empty");
+//		this.longDescription = longDescription;
+//	}
 
 	@Override
 	public int setPropertyValue(Properties properties) {
@@ -197,5 +240,19 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		}
 		this.valueProperty = this.convertValue(properties.get(this.getOptionKey()));
 		return 0;
+	}
+
+	/**
+	 * Sets the argument description.
+	 * @param description the argument description, must not be empty
+	 */
+	public void setCliArgumentDescription(String description){
+		Validate.notEmpty(description);
+		this.cliArgDescription = description;
+	}
+
+	@Override
+	public String getCliArgumentDescription(){
+		return this.cliArgDescription;
 	}
 }

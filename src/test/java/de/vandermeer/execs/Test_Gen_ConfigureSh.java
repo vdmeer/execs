@@ -33,13 +33,13 @@ public class Test_Gen_ConfigureSh {
 		ExecS execs = new ExecS();
 		int run;
 
-		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-?"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-h"});
 		assertEquals(1, run);
 
 		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help"});
 		assertEquals(1, run);
 
-		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-?", "lib-dir"});
+		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "-h", "lib-dir"});
 		assertEquals(1, run);
 
 		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help", "lib-dir"});

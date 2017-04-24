@@ -40,7 +40,7 @@ public interface ExecS_Application {
 	default int executeApplication(String[] args){
 		if(this.getCli()!=null){
 			//add the help option
-			AO_Help optionHelp = new AO_Help();
+			AO_Help optionHelp = new AO_Help(this.useShortHelp());
 			if(!this.getCli().hasOption(optionHelp.getCliOption())){
 				this.getCli().addOption(optionHelp);
 			}
@@ -80,6 +80,7 @@ public interface ExecS_Application {
 			Exception err = this.getCli().parse(args);
 			if(err!=null){
 				System.err.println(this.getAppName() + ": error parsing command line -> " + err.getMessage());
+				System.err.println(this.getAppName() + ": try '--help' for list of CLI options or '--help <option>' for detailed help on a CLI option");
 				return -1; 
 			}
 
@@ -168,13 +169,13 @@ public interface ExecS_Application {
 			for(ApplicationOption<?> opt : options){
 				if(opt.getCliOption()!=null){
 					if(arg.equals(opt.getCliOption().getOpt()) || arg.equals(opt.getCliOption().getLongOpt())){
-						System.out.println(opt.getUsage());
+						System.out.println(opt.getCliLongHelp());
 						found = true;
 					}
 				}
 				else if(opt.getOptionKey()!=null){
 					if(arg.equals(opt.getOptionKey())){
-						System.out.println(opt.getUsage());
+						System.out.println(opt.getKeyLongHelp());
 						found = true;
 					}
 				}
@@ -206,4 +207,13 @@ public interface ExecS_Application {
 		}
 		return ret;
 	}
+
+	/**
+	 * Flag for using the short option `-h` for help.
+	 * @return true to use short option, false otherwise, default is false
+	 */
+	default boolean useShortHelp(){
+		return false;
+	}
+
 }

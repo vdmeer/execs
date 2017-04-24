@@ -1,3 +1,13 @@
+=== v0.5.0 - small changes and feature add - 2017-##-##
+* removed constructors with `defaultValue` from `AbstractApplicationOption`
+* added constructor using STG file in  AbstractApplicationOption`
+* deprecated `setCliOption(option)` and added `setCliArgument(...)` with full arguments
+* removed `-?` from help option
+  ** added boolean in constructor for using `-h` as short option
+  ** added method in `ExecS_Application` as flag for using short help option, defaults to false
+  ** using the flag now in `executeApplication`
+
+
 === v0.4.0 - feature add - 2017-04-13
 * added application to generate OS dependent execution scripts if run from an executable jar (with all dependencies) as `Gen_ExecJarScripts`
 * added methods to use iterables to add CLI options to application

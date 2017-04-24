@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "input-directory".
  *
@@ -47,12 +45,7 @@ public class AO_DirectoryIn extends AbstractApplicationOption<String> {
 	 */
 	public AO_DirectoryIn(boolean required, Character shortOption, String longDescription){
 		super("input directory", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("input-directory");
-		builder.hasArg().argName("DIR");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "input-directory", "DIR", required);
 	}
 
 	@Override

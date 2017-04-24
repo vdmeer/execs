@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "help", automatically added to an executable application.
  *
@@ -28,15 +26,11 @@ public class AO_Help extends AbstractApplicationOption<String> {
 
 	/**
 	 * Returns the new option.
+	 * @param useShort true for using the short option `-h`, false for no short option
 	 */
-	public AO_Help(){
+	public AO_Help(boolean useShort){
 		super("application and argument help", "Without argument, help will print a usage and help screen with all CLI arguments and further information for the application. With an argument, help will print specific help information for the given CLI argument if applicable to the application.");
-
-		Option.Builder builder = Option.builder("?");
-		builder.longOpt("help");
-		builder.hasArg().argName("ARG").optionalArg(true);
-		builder.required(false);
-		this.setCliOption(builder.build());
+		this.setCliArgument((useShort)?'h':null, "help", "ARG", false);
 	}
 
 	/**

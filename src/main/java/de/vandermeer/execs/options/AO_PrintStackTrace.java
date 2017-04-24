@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "print-stack-trace".
  *
@@ -34,11 +32,7 @@ public class AO_PrintStackTrace extends AbstractApplicationOption<String> {
 	 */
 	public AO_PrintStackTrace(String longDescription){
 		super("sets a flag to print the stack trace of exceptions", longDescription);
-
-		Option.Builder builder = Option.builder();
-		builder.longOpt("print-stack-trace");
-		builder.required(false);
-		this.setCliOption(builder.build());
+		this.setCliArgument(null, "print-stack-trace", null, false);
 	}
 
 	/**

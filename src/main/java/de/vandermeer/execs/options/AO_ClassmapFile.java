@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "classmap-file".
  *
@@ -48,13 +46,8 @@ public class AO_ClassmapFile extends AbstractApplicationOption<String> {
 	 * @throws IllegalArgumentException - if optionKey or description parameter is empty
 	 */
 	public AO_ClassmapFile(boolean required, String optionKey, Character shortOption, String longDescription){
-		super(optionKey, null, "a property file with class names (executable applications) mapped to script names", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("classmap-file");
-		builder.hasArg().argName("FILE");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		super(optionKey, "a property file with class names (executable applications) mapped to script names", longDescription);
+		this.setCliArgument(shortOption, "classmap-file", "FILE", required);
 	}
 
 	@Override

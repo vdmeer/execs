@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "verbose", activate extended progress messages.
  *
@@ -39,11 +37,7 @@ public class AO_Verbose extends AbstractApplicationOption<String> {
 	 */
 	public AO_Verbose(Character shortOption){
 		super("verbose mode for application", "Sets an application verbose mode, meaning the application will printout extended progress messages.");
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("verbose");
-		builder.required(false);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "verbose", null, false);
 	}
 
 	/**

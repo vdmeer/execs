@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "quiet".
  *
@@ -34,11 +32,7 @@ public class AO_Quiet extends AbstractApplicationOption<String> {
 	 */
 	public AO_Quiet(String longDescription){
 		super("puts the application in quiet mode, no progres or error messages will be printed", longDescription);
-
-		Option.Builder builder = Option.builder("q");
-		builder.longOpt("quiet");
-		builder.required(false);
-		this.setCliOption(builder.build());
+		this.setCliArgument('q', "quiet", null, false);
 	}
 
 	/**

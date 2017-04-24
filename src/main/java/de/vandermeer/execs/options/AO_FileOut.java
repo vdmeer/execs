@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "output-file".
  *
@@ -47,12 +45,7 @@ public class AO_FileOut extends AbstractApplicationOption<String> {
 	 */
 	public AO_FileOut(boolean required, Character shortOption, String longDescription){
 		super("output filename", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("output-file");
-		builder.hasArg().argName("FILE");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "output-file", "FILE", required);
 	}
 
 	@Override

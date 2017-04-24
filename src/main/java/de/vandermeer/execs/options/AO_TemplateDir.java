@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.cli.Option;
-
 /**
  * Application option "template-dir".
  *
@@ -47,12 +45,7 @@ public class AO_TemplateDir extends AbstractApplicationOption<String> {
 	 */
 	public AO_TemplateDir(boolean required, Character shortOption, String longDescription){
 		super("specifies a directory with templates for an application", longDescription);
-
-		Option.Builder builder = (shortOption==null)?Option.builder():Option.builder(shortOption.toString());
-		builder.longOpt("template-dir");
-		builder.hasArg().argName("DIR");
-		builder.required(required);
-		this.setCliOption(builder.build());
+		this.setCliArgument(shortOption, "template-dir", "DIR", required);
 	}
 
 	@Override
