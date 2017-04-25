@@ -51,7 +51,7 @@ public interface ApplicationOption <T> {
 	}
 
 	/**
-	 * Converts a value of some type to the type the option is using
+	 * Converts a value of some type to the type the option is using.
 	 * @param value the value to be converted
 	 * @return the value converted to the type of the option, null if not possible
 	 */

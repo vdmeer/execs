@@ -224,12 +224,6 @@ public abstract class AbstractApplicationOption<T> implements ApplicationOption<
 		}
 	}
 
-//	@Override
-//	public void setDescriptionLong(String longDescription){
-//		Validate.notBlank(longDescription, "long description cannot be empty");
-//		this.longDescription = longDescription;
-//	}
-
 	@Override
 	public int setPropertyValue(Properties properties) {
 		if(properties==null || properties.get(this.getOptionKey())==null){

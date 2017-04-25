@@ -242,7 +242,7 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 	}
 
 	/**
-	 * Hook for a calling ExecS instance to set its class map for the script generator
+	 * Hook for a calling ExecS instance to set its class map for the script generator.
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
 	public void setClassMap(Map<String, Class<? extends ExecS_Application>> execClassMap){

@@ -95,7 +95,7 @@ public class ExecS_CliParser {
 
 	/**
 	 * Adds a CLI option to the parser.
-	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @param option new CLI option, ignored if the option is `null` or `getOption()` on the option is `null`
 	 * @throws IllegalArgumentException if the option uses short/long options already in use
 	 * @return self to allow for chaining
 	 * @throws IllegalArgumentException if short or long option was in use already
@@ -109,7 +109,7 @@ public class ExecS_CliParser {
 
 	/**
 	 * Adds a CLI option to the parser.
-	 * @param option new CLI option, ignored if the option is null or getOption() on the option is null
+	 * @param option new CLI option, ignored if the option is `null` or `getOption()` on the option is `null`
 	 * @throws IllegalArgumentException if short or long option was in use already
 	 */
 	protected void _addOption(Option option){
@@ -135,7 +135,7 @@ public class ExecS_CliParser {
 	/**
 	 * Tests if an option is already added to the parser.
 	 * @param option the option to test for
-	 * @return false if option was null or n short and long version of this option is used, true otherwise
+	 * @return false if option was null or no short and long version of this option is used, true otherwise
 	 */
 	public boolean hasOption(Option option){
 		if(option==null){

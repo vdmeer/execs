@@ -181,7 +181,7 @@ public class CF {
 	}
 
 	/**
-	 * Returns all known subclasses for a given class, location and package name
+	 * Returns all known subclasses for a given class, location and package name.
 	 * @param clazz class to search for
 	 * @param location a URL to look into
 	 * @param packageName a package name
@@ -234,7 +234,7 @@ public class CF {
 	}
 
 	/**
-	 * Returns all known subclasses found in a given location
+	 * Returns all known subclasses found in a given location.
 	 * @param clazz class name to look for
 	 * @param location a URI location for return map
 	 * @return a map with found classes, empty if none found

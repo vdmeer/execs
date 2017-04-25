@@ -113,8 +113,8 @@ public class ExecS {
 
 	/**
 	 * Sets the filter for package names.
-	 * The string is used using a "starts-with" comparison of any package name during the search process.
-	 * A filter set to "null" means no package filter is applied.
+	 * The string is used using a `starts-with` comparison of any package name during the search process.
+	 * A filter set to `null` means no package filter is applied.
 	 * Filters can be set any time, a new filter will overwrite an existing one (using null will disable filtering).
 	 * @param filter package filter, null means no filter will be applied
 	 */
@@ -132,7 +132,7 @@ public class ExecS {
 	}
 
 	/**
-	 * Adds a set of application at runtime, as in all found applications that can be executed
+	 * Adds a set of application at runtime, as in all found applications that can be executed.
 	 * @param set a set of applications
 	 */
 	protected final void addAllApplications(Set<Class<?>> set){
@@ -146,7 +146,7 @@ public class ExecS {
 	}
 
 	/**
-	 * Main method
+	 * Main method.
 	 * @param args command line arguments
 	 * @return 0 on success, -1 on error with message on STDERR
 	 */

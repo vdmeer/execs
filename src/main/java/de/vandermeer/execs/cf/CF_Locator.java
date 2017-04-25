@@ -167,7 +167,7 @@ public class CF_Locator {
 	}
 
 	/**
-	 * Include from a jar file
+	 * Include from a jar file.
 	 * @param file jar file
 	 */
 	private void includeJar(File file){

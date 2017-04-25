@@ -39,7 +39,7 @@ import de.vandermeer.execs.options.ApplicationOption;
 import de.vandermeer.execs.options.ExecS_CliParser;
 
 /**
- * Application to generate run scripts for other applications, supporting windows, CygWin and bash.
+ * Application to generate run scripts for other applications, supporting windows, CygWin, and bash.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
@@ -255,8 +255,8 @@ public class Gen_RunScripts implements ExecS_Application {
 
 	/**
 	 * Loads and tests the configuration from configuration properties file.
-	 * The default configuration file name is "de/vandermeer/execs/configuration.properties".
-	 * The file name can be overwritten using the "--property-file" CLI option.
+	 * The default configuration file name is `de/vandermeer/execs/configuration.properties`.
+	 * The file name can be overwritten using the `--property-file` CLI option.
 	 * The method will also test for some configuration keys to exist and fail if they are not defined.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
@@ -300,10 +300,10 @@ public class Gen_RunScripts implements ExecS_Application {
 
 	/**
 	 * Sets target for generation and initializes an STG object from an stg template file.
-	 * The default template file name is "de/vandermeer/execs/executable-script.stg".
-	 * This default can be overwritten using the property "stg.file" in the configuration properties file.
-	 * The default and the property file name can be overwritten using the "--stg-file" CLI option.
-	 * The set target (CLI option "--target") must be supported by the template file, otherwise this method will fail.
+	 * The default template file name is `de/vandermeer/execs/executable-script.stg`.
+	 * This default can be overwritten using the property `stg.file` in the configuration properties file.
+	 * The default and the property file name can be overwritten using the `--stg-file` CLI option.
+	 * The set target (CLI option `--target`) must be supported by the template file, otherwise this method will fail.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initTargetAndStg(){
@@ -346,7 +346,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	/**
 	 * Initializes the application directory for the generator.
 	 * There is no default set and no configuration property can be used.
-	 * The application directory has to be set using the CLI option "--application-directory".
+	 * The application directory has to be set using the CLI option `--application-directory`.
 	 * Otherwise this method will fail.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
@@ -365,8 +365,8 @@ public class Gen_RunScripts implements ExecS_Application {
 	 * A classmap maps class names to script names.
 	 * A class name must be an implementation of the executable application interface {@link ExecS_Application}.
 	 * No default map is used.
-	 * This default can be overwritten using the property "execs.classmap" in the configuration properties file.
-	 * The default and the property file name can be overwritten using the "--classmap-file" CLI option.
+	 * This default can be overwritten using the property `execs.classmap` in the configuration properties file.
+	 * The default and the property file name can be overwritten using the `--classmap-file` CLI option.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
 	 */
 	protected final int initClassmap(){
@@ -395,7 +395,7 @@ public class Gen_RunScripts implements ExecS_Application {
 
 	/**
 	 * Tests and if necessary creates an output directory.
-	 * The root path is the current directory as given by the system property "user.dir".
+	 * The root path is the current directory as given by the system property `user.dir`.
 	 * The created output directory has the name of the specified target for the generator.
 	 * The method fails if the output directory cannot be created or if it exists and is write protected.
 	 * @return 0 on success with configuration loaded, -1 on error with errors printed on standard error
