@@ -46,7 +46,7 @@ public class Test_Gen_ConfigureSh {
 		assertEquals(1, run);
 
 		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--help", "lib-dir", "-i"});
-		assertEquals(-1, run);
+		assertEquals(1, run);
 
 		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName(), "--version"});
 		assertEquals(1, run);

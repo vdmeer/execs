@@ -33,6 +33,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 import de.vandermeer.execs.cf.CF;
+import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
  * The application executor.
@@ -55,7 +56,7 @@ public class ExecS {
 	 * Map of pre-registered applications.
 	 * Use {@link #addApplication(String, Class)} to add your own applications.
 	 */
-	protected final TreeMap<String, Class<? extends ExecS_Application>> classmap;
+	protected final TreeMap<String, Class<? extends IsApplication>> classmap;
 
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
@@ -80,7 +81,7 @@ public class ExecS {
 	public ExecS(String appName){
 		this.appName = (appName==null)?this.appName:appName;
 
-		this.classmap = new TreeMap<String, Class<? extends ExecS_Application>>();
+		this.classmap = new TreeMap<String, Class<? extends IsApplication>>();
 		this.classNames = new TreeSet<String>();
 
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
@@ -127,7 +128,7 @@ public class ExecS {
 	 * @param name a unique name for the application
 	 * @param clazz the class of the application for instantiation
 	 */
-	protected final void addApplication(String name, Class<? extends ExecS_Application> clazz){
+	protected final void addApplication(String name, Class<? extends IsApplication> clazz){
 		this.classmap.put(name, clazz);
 	}
 
@@ -171,7 +172,7 @@ public class ExecS {
 			CF cf = new CF()
 				.setJarFilter((ArrayUtils.contains(args, "-j"))?this.jarFilter:null)
 				.setPkgFilter((ArrayUtils.contains(args, "-p"))?this.packageFilter:null);
-			this.addAllApplications(cf.getSubclasses(ExecS_Application.class));
+			this.addAllApplications(cf.getSubclasses(IsApplication.class));
 			this.printList();
 			return 0;
 		}
@@ -217,7 +218,7 @@ public class ExecS {
 	 * @return 0 on success, other than zero on failure (including failure of the executed application)
 	 */
 	protected int executeApplication(Object svc, String[] args, String orig){
-		if(svc!=null && (svc instanceof ExecS_Application)){
+		if(svc!=null && (svc instanceof IsApplication)){
 			if(svc instanceof Gen_RunScripts){
 				//hook for GenRunScripts to get current class map - registered applications
 				((Gen_RunScripts)svc).setClassMap(this.classmap);
@@ -226,14 +227,14 @@ public class ExecS {
 				//hook for Gen_ExecJarScripts to get current class map - registered applications
 				((Gen_ExecJarScripts)svc).setClassMap(this.classmap);
 			}
-			return ((ExecS_Application)svc).executeApplication(ArrayUtils.remove(args, 0));
+			return ((IsApplication)svc).executeApplication(ArrayUtils.remove(args, 0));
 		}
 		else if(svc==null){
 			System.err.println("could not create object for class or application name <" + orig + ">");
 			return -1;
 		}
-		else if(!(svc instanceof ExecS_Application)){
-			System.err.println("given class or application name <" + orig + "> is not instance of " + ExecS_Application.class.getName());
+		else if(!(svc instanceof IsApplication)){
+			System.err.println("given class or application name <" + orig + "> is not instance of " + IsApplication.class.getName());
 			return -2;
 		}
 		else{

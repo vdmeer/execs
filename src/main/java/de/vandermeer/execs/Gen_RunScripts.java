@@ -30,13 +30,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import de.vandermeer.execs.options.AO_AppHomeDirectory;
-import de.vandermeer.execs.options.AO_ClassmapFile;
-import de.vandermeer.execs.options.AO_PropertyFile;
-import de.vandermeer.execs.options.AO_StgFile;
-import de.vandermeer.execs.options.AO_Target;
-import de.vandermeer.execs.options.ApplicationOption;
-import de.vandermeer.execs.options.ExecS_CliParser;
+import de.vandermeer.execs.options.typed.AO_ApplicationDir_New;
+import de.vandermeer.execs.options.typed.AO_ClassmapFilename_CP;
+import de.vandermeer.execs.options.typed.AO_PropertyFilename_New;
+import de.vandermeer.execs.options.typed.AO_StgFilename_New;
+import de.vandermeer.execs.options.typed.AO_Target_New;
+import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
  * Application to generate run scripts for other applications, supporting windows, CygWin, and bash.
@@ -45,7 +44,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RunScripts implements ExecS_Application {
+public class Gen_RunScripts extends AbstractAppliction implements IsApplication {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-run-scripts";
@@ -74,23 +73,20 @@ public class Gen_RunScripts implements ExecS_Application {
 	/** A property key to set class map for executable applications. */
 	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
 
-	/** Local CLI options for CLI parsing. */
-	protected ExecS_CliParser cli;
-
 	/** The application option for the property file. */
-	protected AO_PropertyFile optionPropFile;
+	protected final AO_PropertyFilename_New optionPropFile;
 
 	/** The application option for the target. */
-	protected AO_Target optionTarget;
+	protected final AO_Target_New optionTarget;
 
 	/** The application option for the STG file. */
-	protected AO_StgFile optionStgFile;
+	protected final AO_StgFilename_New optionStgFile;
 
 	/** The application option for the class map file. */
-	protected AO_ClassmapFile optionClassMapFile;
+	protected final AO_ClassmapFilename_CP optionClassMapFile;
 
 	/** The application option for the application home directory. */
-	protected AO_AppHomeDirectory optionAppHome;
+	protected final AO_ApplicationDir_New optionAppHome;
 
 	/** Properties for configuration options. */
 	protected Properties configuration;
@@ -111,42 +107,48 @@ public class Gen_RunScripts implements ExecS_Application {
 	protected String outputDir;
 
 	/** Local class map, must be set by calling ExecS instance. */
-	Map<String, Class<? extends ExecS_Application>> execClassMap;
+	Map<String, Class<? extends IsApplication>> execClassMap;
 
 	/**
 	 * Returns a new generator with parameterized CLI object.
 	 */
 	public Gen_RunScripts() {
-		this.cli = new ExecS_CliParser();
+		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
 
-		this.optionPropFile = new AO_PropertyFile(false, "de/vandermeer/execs/configuration.properties", "File name of a property file with specific configuration options to generate run scripts.");
-		this.cli.addOption(this.optionPropFile);
+		this.optionPropFile = new AO_PropertyFilename_New(null, false, "a propery file", " sets the filename for a configuration property file");
+		this.optionPropFile.setLongDescription("File name of a property file with specific configuration options to generate run scripts.");
+		this.optionPropFile.setDefaultValue("de/vandermeer/execs/configuration.properties");
+		this.addOption(this.optionPropFile);
 
-		this.optionTarget = new AO_Target(true, "The target defines if the script is generated for bat (Windows batch file), sh (UNIX bash script) or cyg (Cygwin bash script).");
-		this.cli.addOption(this.optionTarget);
+		this.optionTarget = new AO_Target_New(null, true, "the target, valid targets are: bat, s, cyg", "specifies the target operating system for run scripts");
+		this.optionTarget.setLongDescription("The target defines if the script is generated for bat (Windows batch file), sh (UNIX bash script) or cyg (Cygwin bash script).");
+		this.addOption(this.optionTarget);
 
-		this.optionStgFile = new AO_StgFile(false, "de/vandermeer/execs/executable-script.stg", "The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation.");
-		this.cli.addOption(this.optionStgFile);
+		this.optionStgFile = new AO_StgFilename_New(null, false, "a plain text file, in STG syntax, with all required methods", "specifies a string template (stg) file for generting run scripts");
+		this.optionStgFile.setLongDescription("The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation.");
+		this.optionStgFile.setDefaultValue("de/vandermeer/execs/executable-script.stg");
+		this.addOption(this.optionStgFile);
 
-		this.optionClassMapFile = new AO_ClassmapFile(false, PROP_EXECS_CLASSMAP, "The class map file contains mappings from a class name to a script name. This mapping is used to generate run scripts for applications that are not registered with an executor, or if automated generation (for registered applications) is not required or wanted.");
-		this.cli.addOption(this.optionClassMapFile);
+		this.optionClassMapFile = new AO_ClassmapFilename_CP(null, PROP_EXECS_CLASSMAP);
+		this.addOption(this.optionClassMapFile);
 
-		this.optionAppHome = new AO_AppHomeDirectory(true, "The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path.");
-		this.cli.addOption(this.optionAppHome);
+		this.optionAppHome = new AO_ApplicationDir_New(null, true, "a directory name, will be created if not exists", "application home directory specific to a given target format");
+		this.optionAppHome.setLongDescription("The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path.");
+		this.addOption(this.optionAppHome);
 	}
 
 	/**
 	 * Hook for a calling ExecS instance to set its class map for the script generator
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
-	public void setClassMap(Map<String, Class<? extends ExecS_Application>> execClassMap){
+	public void setClassMap(Map<String, Class<? extends IsApplication>> execClassMap){
 		this.execClassMap = execClassMap;
 	}
 
 	@Override
 	public int executeApplication(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_Application.super.executeApplication(args);
+		int ret = IsApplication.super.executeApplication(args);
 		if(ret!=0){
 			return ret;
 		}
@@ -363,7 +365,7 @@ public class Gen_RunScripts implements ExecS_Application {
 	/**
 	 * Loads a classmap from a property file.
 	 * A classmap maps class names to script names.
-	 * A class name must be an implementation of the executable application interface {@link ExecS_Application}.
+	 * A class name must be an implementation of the executable application interface {@link IsApplication}.
 	 * No default map is used.
 	 * This default can be overwritten using the property `execs.classmap` in the configuration properties file.
 	 * The default and the property file name can be overwritten using the `--classmap-file` CLI option.
@@ -496,11 +498,6 @@ public class Gen_RunScripts implements ExecS_Application {
 	}
 
 	@Override
-	public ExecS_CliParser getCli() {
-		return this.cli;
-	}
-
-	@Override
 	public String getAppDescription() {
 		return "Generates run scripts for executable applications.";
 	}
@@ -516,18 +513,13 @@ public class Gen_RunScripts implements ExecS_Application {
 	}
 
 	@Override
-	public ApplicationOption<?>[] getAppOptions() {
-		return new ApplicationOption[]{this.optionAppHome, this.optionClassMapFile, this.optionPropFile, this.optionStgFile, this.optionTarget};
-	}
-
-	@Override
 	public String getAppVersion() {
 		return APP_VERSION;
 	}
 
 	@Override
 	public void appHelpScreen(){
-		ExecS_Application.super.appHelpScreen();
+		IsApplication.super.appHelpScreen();
 
 		System.out.println("Property file keys:");
 		System.out.println(" - " + PROP_RUN_CLASS + " - the class name for executing applications");

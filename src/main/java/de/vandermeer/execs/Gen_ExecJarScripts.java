@@ -29,8 +29,7 @@ import java.util.jar.Manifest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import de.vandermeer.execs.options.ApplicationOption;
-import de.vandermeer.execs.options.ExecS_CliParser;
+import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
  * Application to generate starts scripts when running ExecS from an executable JAR.
@@ -39,7 +38,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.4.0
  */
-public class Gen_ExecJarScripts implements ExecS_Application {
+public class Gen_ExecJarScripts extends AbstractAppliction implements IsApplication {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-exec-jar-scripts";
@@ -50,25 +49,19 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
-	/** CLI parser. */
-	final private ExecS_CliParser cli;
-
-	/** List of application options. */
-	final private ArrayList<ApplicationOption<?>> options = new ArrayList<>();
-
 	/** Local class map, must be set by calling ExecS instance. */
-	Map<String, Class<? extends ExecS_Application>> execClassMap;
+	Map<String, Class<? extends IsApplication>> execClassMap;
 
 	/**
 	 * Creates a new application.
 	 */
 	public Gen_ExecJarScripts(){
-		this.cli = new ExecS_CliParser();
+		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
 	}
 
 	@Override
 	public int executeApplication(String[] args) {
-		int ret = ExecS_Application.super.executeApplication(args);
+		int ret = IsApplication.super.executeApplication(args);
 		if(ret!=0){
 			return ret;
 		}
@@ -200,17 +193,6 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 		return true;
 	}
 
-	/**
-	 * Adds a new option to CLI parser and option list.
-	 * @param option new option, ignored if null
-	 */
-	protected void addOption(ApplicationOption<?> option){
-		if(option!=null){
-			this.getCli().addOption(option);
-			this.options.add(option);
-		}
-	}
-
 	@Override
 	public String getAppDescription() {
 		return "Generates scripts (OS specific) for running S2V applications from the JAR with all dependencies";
@@ -227,25 +209,15 @@ public class Gen_ExecJarScripts implements ExecS_Application {
 	}
 
 	@Override
-	public ApplicationOption<?>[] getAppOptions() {
-		return this.options.toArray(new ApplicationOption<?>[]{});
-	}
-
-	@Override
 	public String getAppVersion() {
 		return APP_VERSION;
-	}
-
-	@Override
-	public ExecS_CliParser getCli() {
-		return this.cli;
 	}
 
 	/**
 	 * Hook for a calling ExecS instance to set its class map for the script generator.
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
-	public void setClassMap(Map<String, Class<? extends ExecS_Application>> execClassMap){
+	public void setClassMap(Map<String, Class<? extends IsApplication>> execClassMap){
 		this.execClassMap = execClassMap;
 	}
 }

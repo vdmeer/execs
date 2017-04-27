@@ -25,11 +25,10 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.execs.options.AO_LibDir;
-import de.vandermeer.execs.options.AO_PropertyFile;
-import de.vandermeer.execs.options.AO_TemplateDir;
-import de.vandermeer.execs.options.ApplicationOption;
-import de.vandermeer.execs.options.ExecS_CliParser;
+import de.vandermeer.execs.options.typed.AO_LibDir_New;
+import de.vandermeer.execs.options.typed.AO_PropertyFilename_New;
+import de.vandermeer.execs.options.typed.AO_TemplateDir_New;
+import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
  * Application to generate a configuration shell script.
@@ -38,7 +37,7 @@ import de.vandermeer.execs.options.ExecS_CliParser;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_ConfigureSh implements ExecS_Application {
+public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-configure";
@@ -49,38 +48,38 @@ public class Gen_ConfigureSh implements ExecS_Application {
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
-	/** Local CLI options for CLI parsing. */
-	protected ExecS_CliParser cli;
-
 	/** The application option for the library directory. */
-	protected AO_LibDir optionLibDir;
+	protected AO_LibDir_New optionLibDir;
 
 	/** The application option for the template directory. */
-	protected AO_TemplateDir optionTemplateDir;
+	protected AO_TemplateDir_New optionTemplateDir;
 
 	/** The application option for the property file. */
-	protected AO_PropertyFile optionPropFile;
+	protected AO_PropertyFilename_New optionPropFile;
 
 	/**
 	 * Returns a new configure shell script generator.
 	 */
 	public Gen_ConfigureSh(){
-		this.cli = new ExecS_CliParser();
+		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
 
-		this.optionLibDir = new AO_LibDir(false, "The library home needs to point to a directory with all jar files required to run an ExecS.");
-		this.cli.addOption(this.optionLibDir);
+		this.optionLibDir = new AO_LibDir_New(null, false, "directory with jar files, must exist", "specifies a directory with required jar files");
+		this.optionLibDir.setLongDescription("The library home needs to point to a directory with all jar files required to run an ExecS.");
+		this.addOption(optionLibDir);
 
-		this.optionTemplateDir = new AO_TemplateDir(false, "The template directory needs to point to a directory with templates for scripts.");
-		this.cli.addOption(this.optionTemplateDir);
+		this.optionTemplateDir = new AO_TemplateDir_New(null, false, "template directory, must exist", "specifies a directory with templates for an application");
+		this.optionLibDir.setLongDescription("The template directory needs to point to a directory with templates for scripts.");
+		this.addOption(this.optionTemplateDir);
 
-		this.optionPropFile = new AO_PropertyFile(true, null, "A file name that is added to the run script for reading class map properties from.");
-		this.cli.addOption(this.optionPropFile);
+		this.optionPropFile = new AO_PropertyFilename_New(null, true, "filename of an existing property file", "filename for a property file with configuration information");
+		this.optionPropFile.setLongDescription("A file name that is added to the run script for reading class map properties from.");
+		this.addOption(this.optionPropFile);
 	}
 
 	@Override
 	public int executeApplication(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = ExecS_Application.super.executeApplication(args);
+		int ret = IsApplication.super.executeApplication(args);
 		if(ret!=0){
 			return ret;
 		}
@@ -180,27 +179,12 @@ public class Gen_ConfigureSh implements ExecS_Application {
 	}
 
 	@Override
-	public ExecS_CliParser getCli() {
-		return this.cli;
-	}
-
-	@Override
 	public String getAppDescription() {
 		return "Generates configuration shell script for an application.";
 	}
 
 	@Override
-	public ApplicationOption<?>[] getAppOptions() {
-		return new ApplicationOption[]{this.optionLibDir, this.optionTemplateDir, this.optionPropFile};
-	}
-
-	@Override
 	public String getAppVersion() {
 		return APP_VERSION;
-	}
-
-	@Override
-	public boolean useShortHelp(){
-		return true;
 	}
 }
