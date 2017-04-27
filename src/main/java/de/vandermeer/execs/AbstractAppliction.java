@@ -1,3 +1,18 @@
+/* Copyright 2017 Sven van der Meer <vdmeer.sven@mykolab.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.vandermeer.execs;
 
 import java.util.HashSet;
@@ -15,6 +30,13 @@ import de.vandermeer.skb.interfaces.application.Apo_TypedP;
 import de.vandermeer.skb.interfaces.application.App_CliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 
+/**
+ * Abstract implementation of an application.
+ *
+ * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
+ * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
+ * @since      v0.5.0
+ */
 public abstract class AbstractAppliction implements IsApplication {
 
 	public final static int NO_HELP					= 0;
@@ -36,16 +58,27 @@ public abstract class AbstractAppliction implements IsApplication {
 	/** Application CLI parser. */
 	protected final App_CliParser cli;
 
+	/** All environment options of the application. */
 	protected final Set<Apo_TypedE<?>> environmentOptions;
 
+	/** All property options of the application. */
 	protected final Set<Apo_TypedP<?>> propertyOptions;
 
+	/** A simple help object, null if not required. */
 	protected final Apo_SimpleC aoSimpleHelp;
 
+	/** A typed help object, null if not required. */
 	protected final Apo_TypedC<String> aoTypedHelp;
 
+	/** A simple version object, null if not required. */
 	protected final Apo_SimpleC aoVersion;
 
+	/**
+	 * Creates a new application.
+	 * @param cli the CLI parser to use
+	 * @param useHelp an integer requesting a help option
+	 * @param useVersion an integer requesting a version option
+	 */
 	protected AbstractAppliction(App_CliParser cli, int useHelp, int useVersion){
 		Validate.validState(cli!=null, "ExecS: CLI parser cannot be null");
 		this.cli = cli;
