@@ -22,7 +22,7 @@
       -->
     <name>Execution Service</name>
     <description>A simple set of classes to execute programmes from the command line, without littering the code with static void main(String[] args). This package addresses the following problem: a package (or a set of packages) contain a number of tools that should be run from outside java, e.g. using a static main() method. Over time, it might (will) be hard to know (or find) all main methods.</description>
-    <url>https://github.com/vdmeer/execs</url>
+    <url>http://www.vandermeer.de/projects/skb/java/execs</url>
     <inceptionYear>2010</inceptionYear>
 
     <!--
@@ -65,7 +65,7 @@
 		<pm.version.doxia-site-renderer>1.7</pm.version.doxia-site-renderer>
 		<pm.version.maven-resources-plugin>3.0.2</pm.version.maven-resources-plugin>
 		<pm.version.maven-antrun-plugin>1.8</pm.version.maven-antrun-plugin>
-		<mp.project.url>https://github.com/vdmeer/execs</mp.project.url>
+		<mp.project.url>http://www.vandermeer.de/projects/skb/java/execs</mp.project.url>
     </properties>
 
     <!--
@@ -96,21 +96,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>skb-interfaces</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
             <version>1.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>ST4</artifactId>
-            <version>4.0.8</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -140,6 +134,47 @@
                         <exclude>**/doc-files/</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-site-plugin</artifactId>
+            	<version>${pm.version.maven-site-plugin}</version>
+
+            	<configuration>
+            		<asciidoc>
+            <!--
+            			<templateDirs>
+            				<dir>src/site/asciidoc/templates</dir>
+            			</templateDirs>
+            			<requires>
+            				<require>asciidoctor-diagram</require>
+            			</requires>
+            -->
+            			<attributes>
+            				<source-highlighter>coderay</source-highlighter>
+            				<coderay-css>style</coderay-css>
+            				<release-version>${project.version}</release-version>
+            				<basedir>${project.basedir}/src</basedir>
+            			</attributes>
+            		</asciidoc>
+            		<moduleExcludes>
+            			<asciidoc>**/_*.adoc</asciidoc>
+            		</moduleExcludes>
+            	</configuration>
+
+            	<dependencies>
+            		<dependency>
+            			<groupId>org.apache.maven.doxia</groupId>
+            			<artifactId>doxia-site-renderer</artifactId>
+            			<version>${pm.version.doxia-site-renderer}</version>
+            		</dependency>
+            		<dependency>
+            			<groupId>org.asciidoctor</groupId>
+            			<artifactId>asciidoctor-maven-plugin</artifactId>
+            			<version>${pm.version.asciidoctor-maven-plugin}</version>
+            		</dependency>
+            	</dependencies>
             </plugin>
 
             <plugin>
@@ -275,11 +310,24 @@
         							<goal>jar</goal>
         						</goals>
         						<configuration>
+        							<source>${maven.compiler.target}</source>
+        							<doclet>org.asciidoctor.Asciidoclet</doclet>
+        							<docletArtifact>
+        								<groupId>org.asciidoctor</groupId>
+        								<artifactId>asciidoclet</artifactId>
+        								<version>${pm.version.asciidoctor.asciidoclet}</version>
+        							</docletArtifact>
+        							<overview>src/main/asciidoc/overview.adoc</overview>
+        							<additionalparam>
+        								--base-dir ${project.basedir}/src
+        								--attribute "name=${project.name}"
+        								--attribute "release-version=${project.version}"
+        								--attribute "title-link=${mp.project.url}/[${project.name} ${project.version}]"
+        							</additionalparam>
         							<encoding>${project.resources.sourceEncoding}</encoding>
         							<docencoding>${project.resources.sourceEncoding}</docencoding>
         							<charset>${project.resources.sourceEncoding}</charset>
         							<aggregate>true</aggregate>
-        							<overview>${basedir}/src/main/javadoc/overview.html</overview>
         							<nohelp>true</nohelp>
         							<header>${project.name}: ${project.version}</header>
         							<footer>${project.name}: ${project.version}</footer>
@@ -297,6 +345,54 @@
         	</build>
         </profile>
     </profiles>
+
+    <reporting>
+        <plugins>
+        	<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-javadoc-plugin</artifactId>
+        		<version>${pm.version.maven-javadoc-plugin}</version>
+        		<reportSets>
+        			<reportSet>
+        				<id>default</id>
+        				<reports>
+        					<report>javadoc</report>
+        				</reports>
+        			</reportSet>
+        		</reportSets>
+        		<configuration>
+        			<source>${maven.compiler.target}</source>
+        			<doclet>org.asciidoctor.Asciidoclet</doclet>
+        			<docletArtifact>
+        				<groupId>org.asciidoctor</groupId>
+        				<artifactId>asciidoclet</artifactId>
+        				<version>${pm.version.asciidoctor.asciidoclet}</version>
+        			</docletArtifact>
+        			<overview>src/main/asciidoc/overview.adoc</overview>
+        			<additionalparam>
+        				--base-dir ${project.basedir}/src
+        				--attribute "name=${project.name}"
+        				--attribute "release-version=${project.version}"
+        				--attribute "title-link=${mp.project.url}/[${project.name} ${project.version}]"
+        			</additionalparam>
+        			<encoding>${project.resources.sourceEncoding}</encoding>
+        			<docencoding>${project.resources.sourceEncoding}</docencoding>
+        			<charset>${project.resources.sourceEncoding}</charset>
+        			<aggregate>true</aggregate>
+        			<nohelp>true</nohelp>
+        			<header>${project.name}: ${project.version}</header>
+        			<footer>${project.name}: ${project.version}</footer>
+        			<doctitle>${project.name}: ${project.version}</doctitle>
+        			<noqualifier>all</noqualifier>
+        			<detectLinks>true</detectLinks>
+        			<detectJavaApiLink>true</detectJavaApiLink>
+        			<javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+        			<docfilessubdirs>true</docfilessubdirs>
+        		</configuration>
+        	</plugin>
+        </plugins>
+
+    </reporting>
 
     <!-- Environment Settings -->
     <issueManagement>

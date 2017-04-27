@@ -1,0 +1,76 @@
+<html>
+	<body>
+
+		A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.
+
+		<h3>The Problem</h3>
+		<p>
+			When writing applications that consist of a number of programs that can be executed from the command line
+			one will have a lot of {@code static void main()} methods.
+			Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+			The problem gets worse when code is re-factored.
+			Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
+		</p>
+
+
+		<h3>This Solution</h3>
+		<p>
+			Define an interface with all required functionality to run a program (here called application).
+			Then implement a class that finds implementation of that interface and that provides a single {@code static void main()} method to execute each of them.
+			Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
+			Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+			To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.
+		</p>
+		<p>
+			Developing an application now means to implement classes implementing the executable application interface.
+			If additional functionality is required a class extending the executor.
+			Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.
+		</p>
+
+
+		<h3>Provided Functionality</h3>
+
+			<h4>Application Execution</h4>
+			<ul>
+				<li>Interface for an executable application,</li>
+				<li>An application executor with search and list, search, and help functionality,</li>
+				<li>A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),</li>
+				<li>A generator for scripts for all registered (static) or found (dynamic) executable applications,</li>
+				<li>A generator for a re-base script that allows to change all required information if an application installation is moved.</li>
+			</ul>
+
+			Additionally this package defines required resources:
+			<ul>
+				<li>A bash script for running a generator when installing an application,</li>
+				<li>A bash script for re-basing,</li>
+				<li>Property files with standard configurations,</li>
+				<li>String template files for flexible change of generator output.</li>
+			</ul>
+
+
+			<h4>Class Finder</h4>
+			<ul>
+				<li>A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),</li>
+				<li>A package filter for the class finder to speedup the search,</li>
+				<li>A jar filter for the class finder to speedup the search.</li>
+			</ul>
+
+
+			<h4>Application Options and CLI Parser</h4>
+			<ul>
+				<li>An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation</li>
+				<li>An abstract (yet fully features) implementation of the application option interface</li>
+				<li>A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.</li>
+				<li>A set of pre-defined options for common use cases, e.g.:
+					<ul>
+						<li>input and output directory</li>
+						<li>input and output file</li>
+						<li>identifier</li>
+						<li>property file</li>
+						<li>server mode (flag for interactive or background mode)</li>
+						<li>STG file (for string template files)</li>
+					</ul>
+				</li>
+			</ul>
+	</body>
+</html>

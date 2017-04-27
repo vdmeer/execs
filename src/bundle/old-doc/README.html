@@ -5,7 +5,8 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<title>v0.5.0 - small changes and feature add - 2017--</title>
+<meta name="author" content="A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.">
+<title>SKB Execute Service</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -511,563 +512,154 @@ table.CodeRay td.code>pre{padding:0}
 </head>
 <body class="article">
 <div id="header">
+<h1>SKB Execute Service</h1>
+<div class="details">
+<span id="author" class="author">A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.</span><br>
+</div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_the_problem">The Problem</a></li>
+<li><a href="#_this_solution">This Solution</a></li>
+<li><a href="#_provided_functionality">Provided Functionality</a>
 <ul class="sectlevel2">
-<li><a href="#_v0_5_0_small_changes_and_feature_add_2017_mark_mark">v0.5.0 - small changes and feature add - 2017-<mark>-</mark></a></li>
-<li><a href="#_v0_4_0_feature_add_2017_04_13">v0.4.0 - feature add - 2017-04-13</a></li>
-<li><a href="#_v0_3_8_bug_fixes_2017_04_05">v0.3.8 - bug fixes - 2017-04-05</a></li>
-<li><a href="#_v0_3_7_maintenance_2017_04_04">v0.3.7 - maintenance - 2017-04-04</a></li>
-<li><a href="#_v0_3_6_bug_fixes_2016_03_04">v0.3.6 - bug fixes - 2016-03-04</a></li>
-<li><a href="#_v0_3_5_bug_fixes_2016_03_03">v0.3.5 - bug fixes- 2016-03-03</a></li>
-<li><a href="#_v0_3_4_some_changes_2016_03_01">v0.3.4 - some changes - 2016-03-01</a></li>
-<li><a href="#_v0_3_3_some_changes_2016_02_23">v0.3.3 - some changes - 2016-02-23</a></li>
-<li><a href="#_v0_3_2_release_edits_2016_02_03">v0.3.2 - release edits - 2016-02-03</a></li>
-<li><a href="#_v0_3_1_some_changes_2016_02_03">v0.3.1 - some changes - 2016-02-03</a></li>
-<li><a href="#_v0_3_0_major_changes_2015_09_28">v0.3.0 - major changes - 2015-09-28</a></li>
-<li><a href="#_v0_2_0_major_changes_2015_08_27">v0.2.0 - major changes - 2015-08-27</a></li>
-<li><a href="#_v0_1_0_minor_version_change_2015_08_13">v0.1.0 - minor version change - 2015-08-13</a></li>
-<li><a href="#_v0_0_8_minor_changes_2015_07_21">v0.0.8 - minor changes - 2015-07-21</a></li>
-<li><a href="#_v0_0_7_feature_add_2015_07_12">v0.0.7 - feature add - 2015-07-12</a></li>
-<li><a href="#_v0_0_6_feature_add_2015_07_01">v0.0.6 - feature add - 2015-07-01</a></li>
-<li><a href="#_v0_0_5_feature_add_2015_06_23">v0.0.5 - feature add - 2015-06-23</a></li>
-<li><a href="#_v0_0_4_maintenance_2015_06_19">v0.0.4 - maintenance - 2015-06-19</a></li>
-<li><a href="#_v0_0_3_feature_add_2015_06_18">v0.0.3 - feature add - 2015-06-18</a></li>
-<li><a href="#_v0_0_2_feature_add_2014_06_25">v0.0.2 - feature add - 2014-06-25</a></li>
-<li><a href="#_v0_0_1_initial_release_2014_06_10">v0.0.1 - initial release - 2014-06-10</a></li>
+<li><a href="#_application_execution">Application Execution</a></li>
+<li><a href="#_class_finder">Class Finder</a></li>
+<li><a href="#_application_options_and_cli_parser">Application Options and CLI Parser</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect2">
-<h3 id="_v0_5_0_small_changes_and_feature_add_2017_mark_mark">v0.5.0 - small changes and feature add - 2017-<mark>-</mark></h3>
-<div class="ulist">
-<ul>
-<li>
-<p>removed constructors with <code>defaultValue</code> from <code>AbstractApplicationOption</code></p>
-</li>
-<li>
-<p>added constructor using STG file in  AbstractApplicationOption`</p>
-</li>
-<li>
-<p>deprecated <code>setCliOption(option)</code> and added <code>setCliArgument(&#8230;&#8203;)</code> with full arguments</p>
-</li>
-<li>
-<p>removed <code>-?</code> from help option</p>
-<div class="ulist">
-<ul>
-<li>
-<p>added boolean in constructor for using <code>-h</code> as short option</p>
-</li>
-<li>
-<p>added method in <code>ExecS_Application</code> as flag for using short help option, defaults to false</p>
-</li>
-<li>
-<p>using the flag now in <code>executeApplication</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>changed all Javadoc to ASCIIDOC</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_4_0_feature_add_2017_04_13">v0.4.0 - feature add - 2017-04-13</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added application to generate OS dependent execution scripts if run from an executable jar (with all dependencies) as <code>Gen_ExecJarScripts</code></p>
-</li>
-<li>
-<p>added methods to use iterables to add CLI options to application</p>
-</li>
-<li>
-<p>added methods to use arrays to add CLI options to application</p>
-</li>
-<li>
-<p>changed Windows parameters in executable-script.stg function <code>arguments(target)</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>from <code>%1 %2 %3 %4 %5 %6 %7 %8 %9</code> to <code>%*</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_8_bug_fixes_2017_04_05">v0.3.8 - bug fixes - 2017-04-05</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added a test option method to CLI parser</p>
-</li>
-<li>
-<p>testing help/version options now in ExecS_Application application execution (so that it can be rerun)</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_7_maintenance_2017_04_04">v0.3.7 - maintenance - 2017-04-04</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>changes in configure.sh</p>
-<div class="ulist">
-<ul>
-<li>
-<p>moved line ending conversion into single function, now only called on Cygwin (not needed anywhere else)</p>
-</li>
-<li>
-<p>tested on MAC Darwin, Ubuntu 14 and Cygwin</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_6_bug_fixes_2016_03_04">v0.3.6 - bug fixes - 2016-03-04</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>changed all <code>/usr/bin/bash</code> to <code>/usr/bin/env bash</code></p>
-</li>
-<li>
-<p>chaned in <code>configure.sh</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>sed -i</code> now with backup pattern, didn&#8217;t work w/o on MAC OS</p>
-</li>
-<li>
-<p>fixed a <code>find -type&#8230;&#8203;</code> problem, on MAC find wants a directory before options</p>
-</li>
-<li>
-<p>added an <code>ls</code> mechanism for bin templates (but using the find one right now) - experimenting with MAC OS problems on find</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_5_bug_fixes_2016_03_03">v0.3.5 - bug fixes- 2016-03-03</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>fixed MAC problems in configure.sh</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>uname -o</code> doesn&#8217;t exist on MAC, added function using <code>uname -s</code> from <a href="https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux#3466183" class="bare">https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux#3466183</a></p>
-</li>
-<li>
-<p>problem with find on bin templates, changed call null test from != "" to -n $</p>
-</li>
-<li>
-<p>problem with the <code>sed -i</code> on MAC, changed using the ignore addition, now <code>sed -i''</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_4_some_changes_2016_03_01">v0.3.4 - some changes - 2016-03-01</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added print-stack-trace option</p>
-</li>
-<li>
-<p>removed old module/ settings, added bundle/pm settings</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_3_some_changes_2016_02_23">v0.3.3 - some changes - 2016-02-23</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added -v and --version options to Execs, version auto-generated with jdoc version</p>
-</li>
-<li>
-<p>added -h to help options (since this now does not impact executed applications anymore)</p>
-</li>
-<li>
-<p>added excluded Names from CF to help screen</p>
-</li>
-<li>
-<p>updated help screen</p>
-</li>
-<li>
-<p>pushed asciidoctor plugin to 1.5.3</p>
-</li>
-<li>
-<p>added quiet option</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_2_release_edits_2016_02_03">v0.3.2 - release edits - 2016-02-03</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>only minor edits for a maven release</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_1_some_changes_2016_02_03">v0.3.1 - some changes - 2016-02-03</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added Verbose option</p>
-</li>
-<li>
-<p>added setDescriptionLong to options to enable changing long description after instantiation</p>
-</li>
-<li>
-<p>added optional short option constructor to all application options</p>
-</li>
-<li>
-<p>AO_Id no longer uses <code>-i</code> as default</p>
-</li>
-<li>
-<p>added option test to ExecS_CliParser - throws exception for re-added short/long options</p>
-</li>
-<li>
-<p>added an array for excluded package/class names and added check in CF.searchJar for it</p>
-</li>
-<li>
-<p>not published on Maven</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_3_0_major_changes_2015_09_28">v0.3.0 - major changes - 2015-09-28</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>changed scripting behavior and related Java classes</p>
-<div class="ulist">
-<ul>
-<li>
-<p>renamed <code>gen-run-script.sh</code> to <code>configure.sh</code></p>
-</li>
-<li>
-<p>fixed directory tests</p>
-</li>
-<li>
-<p>moved rebase.sh into configure.sh</p>
-</li>
-<li>
-<p>added CLI parser with -c/h/r options</p>
-</li>
-<li>
-<p>added bin-templates and clean-up as methods with bin-templates as variable</p>
-</li>
-<li>
-<p>added template-dir option to Gen_RunSh</p>
-</li>
-<li>
-<p>removed Gen_RebaseSh.java</p>
-</li>
-<li>
-<p>renamed Gen_RunSh.java to Gen_ConfigureSh.java</p>
-</li>
-<li>
-<p>renamed resource gen_runscripts to configure.sh</p>
-</li>
-<li>
-<p>removed resource rebase.sh</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_2_0_major_changes_2015_08_27">v0.2.0 - major changes - 2015-08-27</h3>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Complete overhaul of everything
-* the executable service is not an executable application
-* fixed problems in all generators (automated generation now works)
-* ExecS can now identify Gen_RunScript application and push class map
-* ExecS does now only do ExecS help handling and delegates all arguments to an application
-* removed FigletShutdown, this class is now in skb-base
-* completely new Option implementation
-	<strong> application option interface that uses default, property, CLI and potentially other value sources with generic typing and provides documentation methods
-	</strong> the interface already implements fully-automated CLI behavior, application help arguments and application version arguments
-	<strong> abstract implementation of that interface
-	</strong> set of standard option implementations (from the old CLI arguments)
-* change in the CLI Parser
-	<strong> renamed ExecS_Cli to ExecS_CliParser
-	</strong> parser now can take standard options (defined by Apache Commons CLI) and the application option
-	** parser does not set options outside, instead one can get the parsed command line for processing
-* added some JavaDoc, but this is work-in-progress (except for overview.html)</p>
+<p>Current release is <a href="https://search.maven.org/#artifactdetails|de.vandermeer|execs|0.4.0|jar">0.4.0</a>.
+All releases are on <a href="https://search.maven.org/#search|gav|1|g%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22">Maven Central</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_problem">The Problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of <code>static void main()</code> methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_this_solution">This Solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Define an interface with all required functionality to run a program (here called application).
+Then implement a class that finds implementation of that interface and that provides a single <code>static void main()</code> method to execute each of them.
+Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
+Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.</p>
+</div>
+<div class="paragraph">
+<p>Developing an application now means to implement classes implementing the executable application interface.
+If additional functionality is required a class extending the executor.
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_provided_functionality">Provided Functionality</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_application_execution">Application Execution</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Interface for an executable application,</p>
+</li>
+<li>
+<p>An application executor with search and list, search, and help functionality,</p>
+</li>
+<li>
+<p>A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),</p>
+</li>
+<li>
+<p>A generator for scripts for all registered (static) or found (dynamic) executable applications,</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally this package defines required resources:
+* A bash script for running a generator when installing an application (including rebase if application is moved),
+* Property files with standard configurations,
+* String template files for flexible change of generator output.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_v0_1_0_minor_version_change_2015_08_13">v0.1.0 - minor version change - 2015-08-13</h3>
+<h3 id="_class_finder">Class Finder</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>edits on java files</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_8_minor_changes_2015_07_21">v0.0.8 - minor changes - 2015-07-21</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>changed classMap in ExecS to protected</p>
-<div class="ulist">
-<ul>
-<li>
-<p>allows sub-classes to clear the map when using auto-gen run script features</p>
-</li>
-</ul>
-</div>
+<p>A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),</p>
 </li>
 <li>
-<p>removed deprecated classes and options</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_7_feature_add_2015_07_12">v0.0.7 - feature add - 2015-07-12</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added execs.autogenerate.registered to Gen_RunScripts</p>
+<p>A package filter for the class finder to speedup the search,</p>
 </li>
 <li>
-<p>removed default class map in Gen_RunScripts</p>
-</li>
-<li>
-<p>added getScriptName() to ExecutableService for customization of run script generation</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_6_feature_add_2015_07_01">v0.0.6 - feature add - 2015-07-01</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added factory for CLI option generation</p>
-<div class="ulist">
-<ul>
-<li>
-<p>changed StandardOptions to use factory rather than instantiate locally</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>added Gen_RunScripts to generate run scripts for Executable services</p>
-</li>
-<li>
-<p>added "stg-file" option to standard options</p>
-</li>
-<li>
-<p>fixed bug in ExecS_Cli not accepting ExecS_CliOption but only StandardOptions</p>
-</li>
-<li>
-<p>marked some StandardOptions as deprecated since they are rather specific, to be removed in next release</p>
-<div class="ulist">
-<ul>
-<li>
-<p>all ZK_ options</p>
-</li>
-<li>
-<p>all WS_ options</p>
-</li>
-<li>
-<p>DO_RECONNECT</p>
-</li>
-<li>
-<p>all EVENT_ options</p>
-</li>
-<li>
-<p>ASCII_DOCTOR</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>added shell scripts for script generation</p>
-<div class="ulist">
-<ul>
-<li>
-<p>gen-run-script.sh to generate run scripts</p>
-</li>
-<li>
-<p>rebase.sh to rebase existing scripts</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>refactored and changed the ClassFinder</p>
-<div class="ulist">
-<ul>
-<li>
-<p>now in package cf with separated classes for different functionality</p>
-</li>
-<li>
-<p>deprecated the old ClassFinder class, to be removed in next release</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>changed printouts for ExecS</p>
-<div class="ulist">
-<ul>
-<li>
-<p>added an STG for all major printouts (usage, lists)</p>
-</li>
-<li>
-<p>moved all printouts to STG</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>added services to generate shell scripts</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Gen_RunSh - to generate a shell script that uses Gen_RunScripts to generate run scripts</p>
-</li>
-<li>
-<p>Gen_RebaseSh - to generate a shell script that can rebase run scripts</p>
-</li>
-</ul>
-</div>
+<p>A jar filter for the class finder to speedup the search.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_v0_0_5_feature_add_2015_06_23">v0.0.5 - feature add - 2015-06-23</h3>
+<h3 id="_application_options_and_cli_parser">Application Options and CLI Parser</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>renamed classes</p>
+<p>An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation</p>
 </li>
 <li>
-<p>rewrite of service executor, removed CLI and wrote internal CLI</p>
+<p>An abstract (yet fully features) implementation of the application option interface</p>
 </li>
 <li>
-<p>changed CLI to use Apache Common CLI 1.3.1</p>
+<p>A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.</p>
 </li>
 <li>
-<p>added CLI option interface and moved options into Standard Enum implementation of the interface</p>
+<p>A set of pre-defined options for common use cases, e.g.:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>input and output directory</p>
 </li>
 <li>
-<p>added tests</p>
+<p>input and output file</p>
 </li>
 <li>
-<p>experimental: added logging for CLI, might remove that and use strin return instead</p>
+<p>identifier</p>
 </li>
 <li>
-<p>added FigletShutdown :)</p>
+<p>property file</p>
+</li>
+<li>
+<p>server mode (flag for interactive or background mode)</p>
+</li>
+<li>
+<p>STG file (for string template files)</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_v0_0_4_maintenance_2015_06_19">v0.0.4 - maintenance - 2015-06-19</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>clean up, test file rename</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_3_feature_add_2015_06_18">v0.0.3 - feature add - 2015-06-18</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>moved to maven</p>
-</li>
-<li>
-<p>moved into own repo at Github</p>
-</li>
-<li>
-<p>added simple CLI parser</p>
-</li>
-<li>
-<p>added standard options</p>
-</li>
-<li>
-<p>added getCLI() and getName() with default implementations to executable</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_2_feature_add_2014_06_25">v0.0.2 - feature add - 2014-06-25</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>added CLI interface using Apache Common CLI</p>
-</li>
-<li>
-<p>externalized use of jar and package filters (via CLI)</p>
-</li>
-<li>
-<p>changed internal behavior for new CLI</p>
-</li>
-<li>
-<p>sub-classes can now overwrite the jar/package filters</p>
-</li>
-<li>
-<p>changed help/list screen print outs</p>
-</li>
-<li>
-<p>added test to not show named executables</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v0_0_1_initial_release_2014_06_10">v0.0.1 - initial release - 2014-06-10</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>initial release</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-25 16:47:10 BST
+Last updated 2017-04-25 15:34:48 IST
 </div>
 </div>
 </body>
