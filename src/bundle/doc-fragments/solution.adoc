@@ -1,0 +1,12 @@
+== This Solution
+Define an interface with all required functionality to run a program (here called application).
+Then implement a class that finds implementation of that interface and that provides a single `static void main()` method to execute each of them.
+Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
+Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.
+
+Developing an application now means to implement classes implementing the executable application interface.
+If additional functionality is required a class extending the executor.
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.
+
+

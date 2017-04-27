@@ -1,0 +1,33 @@
+== Provided Functionality
+
+=== Application Execution
+* Interface for an executable application,
+* An application executor with search and list, search, and help functionality,
+* A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),
+* A generator for scripts for all registered (static) or found (dynamic) executable applications,
+
+Additionally this package defines required resources:
+* A bash script for running a generator when installing an application (including rebase if application is moved),
+* Property files with standard configurations,
+* String template files for flexible change of generator output.
+
+
+=== Class Finder
+* A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),
+* A package filter for the class finder to speedup the search,
+* A jar filter for the class finder to speedup the search.
+
+
+=== Application Options and CLI Parser
+* An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation
+* An abstract (yet fully features) implementation of the application option interface
+* A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.
+* A set of pre-defined options for common use cases, e.g.:
+	** input and output directory
+	** input and output file
+	** identifier
+	** property file
+	** server mode (flag for interactive or background mode)
+	** STG file (for string template files)
+
+

@@ -1,0 +1,11 @@
+include::main/asciidoc/overview-start.adoc[]
+
+include::bundle/doc-fragments/problem.adoc[]
+
+include::bundle/doc-fragments/solution.adoc[]
+
+include::bundle/doc-fragments/functionality.adoc[]
+
+include::bundle/doc-fragments/resources.adoc[]
+
+

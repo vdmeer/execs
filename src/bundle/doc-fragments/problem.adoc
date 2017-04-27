@@ -1,0 +1,8 @@
+== The Problem
+When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of `static void main()` methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
+
+

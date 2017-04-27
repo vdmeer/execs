@@ -1,0 +1,26 @@
+
+[%autowidth, frame=none, grid=none, cols="a,a,a,a,a"]
+|===
+
+|[link=https://search.maven.org/#search\|gav\|1\|g%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22]
+image::https://img.shields.io/maven-central/v/de.vandermeer/execs.svg[Maven Central]
+|[link=https://github.com/vdmeer/execs]
+image::https://img.shields.io/github/tag/vdmeer/execs.svg[GitHub Tags]
+|image::https://img.shields.io/badge/license-Apache_2.0-blue.svg[License]
+|image::https://img.shields.io/badge/java-Java_{java}+-blue.svg[License]
+|image::https://img.shields.io/github/issues/vdmeer/execs.svg[test]
+
+|===
+
+
+//|[link=http://www.vandermeer.de/projects/skb/java/execs/]
+//image::https://img.shields.io/website/http/www.vandermeer.de/projects/skb/java/execs/index.html.svg[Website]
+
+
+//[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-lang3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-lang3/)
+
+
+//[![License](https://img.shields.io/badge/license-Apache2-blue.svg)]
+
+
+

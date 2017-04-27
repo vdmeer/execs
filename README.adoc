@@ -1,0 +1,119 @@
+
+:release-version: 0.5.0-SNAPSHOT
+:java: 8
+= SKB Execute Service
+v{release-version}
+:page-layout: base
+:toc: preamble
+
+
+
+[%autowidth, frame=none, grid=none, cols="a,a,a,a,a"]
+|===
+
+|[link=https://search.maven.org/#search\|gav\|1\|g%3A%22de.vandermeer%22%20AND%20a%3A%22execs%22]
+image::https://img.shields.io/maven-central/v/de.vandermeer/execs.svg[Maven Central]
+|[link=https://github.com/vdmeer/execs]
+image::https://img.shields.io/github/tag/vdmeer/execs.svg[GitHub Tags]
+|image::https://img.shields.io/badge/license-Apache_2.0-blue.svg[License]
+|image::https://img.shields.io/badge/java-Java_{java}+-blue.svg[License]
+|image::https://img.shields.io/github/issues/vdmeer/execs.svg[test]
+
+|===
+
+
+//|[link=http://www.vandermeer.de/projects/skb/java/execs/]
+//image::https://img.shields.io/website/http/www.vandermeer.de/projects/skb/java/execs/index.html.svg[Website]
+
+
+//[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-lang3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-lang3/)
+
+
+//[![License](https://img.shields.io/badge/license-Apache2-blue.svg)]
+
+
+
+A simple set of classes to execute programs from the command line with automated generation of run scripts and flexible application option handling.
+
+
+== Resources
+
+The current version of ExecS is *{release-version}*.
+
+ExecS has its own home page with full documentation, including a user guide.
+The source code is hosted on Github, along with issue and feedback managements.
+Distributions are published on Maven (for JAR artifacts).
+
+[role="table table-striped", frame=topbot, grid=rows, cols="1,5"]
+|===
+
+|Home page
+|http://www.vandermeer.de/projects/skb/java/execs[site], 
+http://www.vandermeer.de/projects/skb/java/execs/user-guide.html[user-guide], 
+http://www.vandermeer.de/projects/skb/java/execs/apidocs[JAVA API Doc]
+
+|Source (Github)
+|https://github.com/vdmeer/execs/tree/master[source], 
+https://github.com/vdmeer/execs/issues[issues]
+
+|JARs (Maven)
+|https://search.maven.org/#artifactdetails\|de.vandermeer\|execs\|{release-version}\|jar[v{release-version}], 
+https://search.maven.org/#search\|gav\|1\|g%3A%22de.vandermeer%22%20AND%20a%3A%execs%22[all releases]
+
+|===
+
+
+== The Problem
+When writing applications that consist of a number of programs that can be executed from the command line
+one will have a lot of `static void main()` methods.
+Over time, it can be very hard to remember where they all are, and it is also tedious to write run scripts to start them from the command line.
+The problem gets worse when code is re-factored.
+Furthermore, handling options (external configuration parameters, such as via command line arguments) can involve default settings, CLI parameters, property files, other configuration files, database, etc.
+
+
+== This Solution
+Define an interface with all required functionality to run a program (here called application).
+Then implement a class that finds implementation of that interface and that provides a single `static void main()` method to execute each of them.
+Combine that with a command line parser and a class finder (to search for implementations of the interface in all jars or classes in the class path, at runtime).
+Finally, add some tools that automate the generation of run scripts for the most common operating systems: Windows, UNIX, and the hybrid Cygwin.
+To solve the last problem (application option handling), define an integrated model that deals with default values, CLI parameters and other sources.
+
+Developing an application now means to implement classes implementing the executable application interface.
+If additional functionality is required a class extending the executor.
+Finally providing the necessary configuration information for the generators and an initialization script for the initial configuration of the application.
+
+
+== Provided Functionality
+
+=== Application Execution
+* Interface for an executable application,
+* An application executor with search and list, search, and help functionality,
+* A generator for a script (batch file or bash script) to run the application executor (including all required information such as class path),
+* A generator for scripts for all registered (static) or found (dynamic) executable applications,
+
+Additionally this package defines required resources:
+* A bash script for running a generator when installing an application (including rebase if application is moved),
+* Property files with standard configurations,
+* String template files for flexible change of generator output.
+
+
+=== Class Finder
+* A class finder that searches for implementations of the executable application interface in all jars and class files in the class path (at runtime),
+* A package filter for the class finder to speedup the search,
+* A jar filter for the class finder to speedup the search.
+
+
+=== Application Options and CLI Parser
+* An interface defining a flexible Application Option interface that can deal with types (generic), default values, CLI values, property values, and short/long descriptions to generate help screens and documentation
+* An abstract (yet fully features) implementation of the application option interface
+* A CLI parser (base on Apache Commons CLI) that can be used simply with the original options (from Apache Commons) or with application options.
+* A set of pre-defined options for common use cases, e.g.:
+	** input and output directory
+	** input and output file
+	** identifier
+	** property file
+	** server mode (flag for interactive or background mode)
+	** STG file (for string template files)
+
+
+

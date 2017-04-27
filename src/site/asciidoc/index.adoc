@@ -1,0 +1,8 @@
+== Introduction
+
+A simple set of classes to execute programs from the command line with automated generation of run scripts.
+
+
+include::{basedir}/bundle/doc-fragments/resources.adoc[leveloffset=+1]
+
+
