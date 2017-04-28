@@ -26,11 +26,14 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
 
+import de.vandermeer.skb.interfaces.application.ApoBaseC;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 import de.vandermeer.skb.interfaces.application.Apo_TypedC;
 import de.vandermeer.skb.interfaces.application.App_CliParser;
+import de.vandermeer.skb.interfaces.application.CliParseException;
 
 /**
  * The default CLI parser using Apache cli.
@@ -50,6 +53,12 @@ public class DefaultCliParser implements App_CliParser {
 	/** Set of options already added, used. */
 	protected final Set<String> usedOptions;
 
+	/** Number of CLI arguments with short option. */
+	protected int numberShort = 0;
+
+	/** Number of CLI arguments with long option. */
+	protected int numberLong = 0;
+
 	/**
 	 * Creates a new parser.
 	 */
@@ -60,12 +69,127 @@ public class DefaultCliParser implements App_CliParser {
 	}
 
 	@Override
+	public App_CliParser addOption(Object option) throws IllegalStateException {
+		if(option==null){
+			return this;
+		}
+		if(ClassUtils.isAssignable(option.getClass(), Apo_SimpleC.class)){
+			this.addOption((Apo_SimpleC)option);
+		}
+		if(ClassUtils.isAssignable(option.getClass(), Apo_TypedC.class)){
+			this.addOption((Apo_TypedC<?>)option);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a new option to the parser.
+	 * @param option the option to be added, ignored if `null`
+	 * <T> type, simple option
+	 * @return self to allow chaining
+	 * @throws IllegalStateException if the option is already in use
+	 */
+	protected <T extends Apo_SimpleC> App_CliParser addOption(T option) throws IllegalStateException {
+		if(option==null){
+			return this;
+		}
+		Validate.validState(
+				!this.getAddedOptions().contains(option.getCliShort()),
+				"DefaultCliParser: short option <" + option.getCliShort() + "> already in use"
+		);
+		Validate.validState(
+				!this.getAddedOptions().contains(option.getCliLong()),
+				"DefaultCliParser: long option <" + option.getCliLong() + "> already in use"
+		);
+
+		Option.Builder builder = (option.getCliShort()==null)?Option.builder():Option.builder(option.getCliShort().toString());
+		builder.longOpt(option.getCliLong());
+		builder.required(option.cliIsRequired());
+
+		this.simpleOptions.put(option, builder.build());
+		if(option.getCliShort()!=null){
+			this.usedOptions.add(option.getCliShort().toString());
+		}
+		this.usedOptions.add(option.getCliLong());
+
+		if(option.getCliShort()!=null){
+			this.numberShort++;
+		}
+		if(option.getCliLong()!=null){
+			this.numberLong++;
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a new option to the parser.
+	 * @param option the option to be added, ignored if `null`
+	 * <T> type, typed option
+	 * @return self to allow chaining
+	 * @throws IllegalStateException if the option is already in use
+	 */
+	protected <T extends Apo_TypedC<?>> App_CliParser addOption(T option) throws IllegalStateException {
+		if(option==null){
+			return this;
+		}
+		Validate.validState(
+				!this.getAddedOptions().contains(option.getCliShort()),
+				"DefaultCliParser: short option <" + option.getCliShort() + "> already in use"
+		);
+		Validate.validState(
+				!this.getAddedOptions().contains(option.getCliLong()),
+				"DefaultCliParser: long option <" + option.getCliLong() + "> already in use"
+		);
+
+		Option.Builder builder = (option.getCliShort()==null)?Option.builder():Option.builder(option.getCliShort().toString());
+		builder.longOpt(option.getCliLong());
+		builder.hasArg().argName(option.getCliArgumentName());
+		builder.optionalArg(option.cliArgIsOptional());
+		builder.required(option.cliIsRequired());
+
+		this.typedOptions.put(option, builder.build());
+		if(option.getCliShort()!=null){
+			this.usedOptions.add(option.getCliShort().toString());
+		}
+		this.usedOptions.add(option.getCliLong());
+
+		if(option.getCliShort()!=null){
+			this.numberShort++;
+		}
+		if(option.getCliLong()!=null){
+			this.numberLong++;
+		}
+
+		return this;
+	}
+
+	@Override
 	public Set<String> getAddedOptions() {
 		return this.usedOptions;
 	}
 
 	@Override
-	public void parse(String[] args) {
+	public Set<Apo_SimpleC> getSimpleOptions() {
+		return this.simpleOptions.keySet();
+	}
+
+	@Override
+	public Set<Apo_TypedC<?>> getTypedOptions() {
+		return this.typedOptions.keySet();
+	}
+
+	@Override
+	public int numberLong() {
+		return this.numberLong;
+	}
+
+	@Override
+	public int numberShort() {
+		return this.numberShort;
+	}
+
+	@Override
+	public void parse(String[] args) throws IllegalStateException, CliParseException {
 		try{
 			CommandLineParser parser = new DefaultParser();
 			Options options = new Options();
@@ -92,75 +216,11 @@ public class DefaultCliParser implements App_CliParser {
 	}
 
 	@Override
-	public void usage(String appName) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public <T extends Apo_SimpleC> App_CliParser addOption(T option) throws IllegalStateException {
-		if(option==null){
-			return this;
-		}
-		Validate.validState(
-				!this.getAddedOptions().contains(option.getCliShort()),
-				"DefaultCliParser: short option <" + option.getCliShort() + "> already in use"
-		);
-		Validate.validState(
-				!this.getAddedOptions().contains(option.getCliLong()),
-				"DefaultCliParser: long option <" + option.getCliLong() + "> already in use"
-		);
-
-		Option.Builder builder = (option.getCliShort()==null)?Option.builder():Option.builder(option.getCliShort().toString());
-		builder.longOpt(option.getCliLong());
-		builder.required(option.cliIsRequired());
-
-		this.simpleOptions.put(option, builder.build());
-		if(option.getCliShort()!=null){
-			this.usedOptions.add(option.getCliShort().toString());
-		}
-		this.usedOptions.add(option.getCliLong());
-
-		return this;
-	}
-
-	@Override
-	public <T extends Apo_TypedC<?>> App_CliParser addOption(T option) throws IllegalStateException {
-		if(option==null){
-			return this;
-		}
-		Validate.validState(
-				!this.getAddedOptions().contains(option.getCliShort()),
-				"DefaultCliParser: short option <" + option.getCliShort() + "> already in use"
-		);
-		Validate.validState(
-				!this.getAddedOptions().contains(option.getCliLong()),
-				"DefaultCliParser: long option <" + option.getCliLong() + "> already in use"
-		);
-
-		Option.Builder builder = (option.getCliShort()==null)?Option.builder():Option.builder(option.getCliShort().toString());
-		builder.longOpt(option.getCliLong());
-		builder.hasArg().argName(option.getCliArgumentName());
-		builder.optionalArg(option.cliArgIsOptional());
-		builder.required(option.cliIsRequired());
-
-		this.typedOptions.put(option, builder.build());
-		if(option.getCliShort()!=null){
-			this.usedOptions.add(option.getCliShort().toString());
-		}
-		this.usedOptions.add(option.getCliLong());
-
-		return this;
-	}
-
-	@Override
-	public Set<Apo_SimpleC> getSimpleOptions() {
-		return this.simpleOptions.keySet();
-	}
-
-	@Override
-	public Set<Apo_TypedC<?>> getTypedOptions() {
-		return this.typedOptions.keySet();
+	public Set<ApoBaseC> getAllOptions() {
+		Set<ApoBaseC> ret = new HashSet<>();
+		ret.addAll(this.getSimpleOptions());
+		ret.addAll(this.getTypedOptions());
+		return ret;
 	}
 
 }

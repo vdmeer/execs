@@ -40,17 +40,17 @@ public class AbstractSimpleC extends AbstractApoBaseC implements Apo_SimpleC {
 		this.validate();
 	}
 
-	@Override
-	public String toString(){
-		StrBuilder ret = new StrBuilder();
-
-		ret.append("cli short : ").append(this.getCliShort()).appendNewLine();
-		ret.append("cli long  : ").append(this.getCliLong()).appendNewLine();
-		ret.append("cli sh/lo : ").append(this.getCliShortLong()).appendNewLine();
-		ret.append("required  : ").append(this.cliIsRequired()).appendNewLine();
-		ret.append("descr     : ").append(this.getDescription()).appendNewLine();
-		ret.append("descr long: ").append(this.getLongDescription()).appendNewLine();
-
-		return ret.toString();
-	}
+//	@Override
+//	public String toString(){
+//		StrBuilder ret = new StrBuilder();
+//
+//		ret.append("cli short : ").append(this.getCliShort()).appendNewLine();
+//		ret.append("cli long  : ").append(this.getCliLong()).appendNewLine();
+//		ret.append("cli sh/lo : ").append(this.getCliShortLong()).appendNewLine();
+//		ret.append("required  : ").append(this.cliIsRequired()).appendNewLine();
+//		ret.append("descr     : ").append(this.getDescription()).appendNewLine();
+////		ret.append("descr long: ").append(this.getLongDescription()).appendNewLine();
+//
+//		return ret.toString();
+//	}
 }

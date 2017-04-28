@@ -22,6 +22,7 @@ import org.apache.commons.lang3.Validate;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
 import de.vandermeer.execs.options.simple.AO_Version_New;
+import de.vandermeer.execs.options.typed.AO_Columns;
 import de.vandermeer.execs.options.typed.AO_HelpTyped;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 import de.vandermeer.skb.interfaces.application.Apo_TypedC;
@@ -73,6 +74,8 @@ public abstract class AbstractAppliction implements IsApplication {
 	/** A simple version object, null if not required. */
 	protected final Apo_SimpleC aoVersion;
 
+	protected final AO_Columns aoColumns = new AO_Columns();
+
 	/**
 	 * Creates a new application.
 	 * @param cli the CLI parser to use
@@ -84,6 +87,8 @@ public abstract class AbstractAppliction implements IsApplication {
 		this.cli = cli;
 
 		this.environmentOptions = new HashSet<>();
+		this.addOption(this.aoColumns);
+
 		this.propertyOptions = new HashSet<>();
 
 		if(useHelp==HELP_SIMPLE_LONG){
@@ -111,7 +116,7 @@ public abstract class AbstractAppliction implements IsApplication {
 			this.aoVersion = new AO_Version_New(null);
 		}
 		else if(useVersion==VERSION_SHORTLONG){
-			this.aoVersion = new AO_Version_New('h');
+			this.aoVersion = new AO_Version_New('v');
 		}
 		else{
 			this.aoVersion = null;
@@ -147,4 +152,10 @@ public abstract class AbstractAppliction implements IsApplication {
 	public App_CliParser getCliParser() {
 		return this.cli;
 	}
+
+	@Override
+	public int getConsoleWidth(){
+		return this.aoColumns.getValue();
+	}
+
 }

@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.vandermeer.execs.DefaultCliParser;
 import de.vandermeer.execs.options.AbstractTypedC;
+import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_TypedStatics {
 
@@ -63,7 +64,7 @@ public class Test_TypedStatics {
 		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
 	}
 
-	public static void test_CliParse(AbstractTypedC<?> ao){
+	public static void test_CliParse(AbstractTypedC<?> ao) throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
@@ -73,7 +74,7 @@ public class Test_TypedStatics {
 		assertEquals("foo", ao.getValue());
 	}
 
-	public static void test_CliParseShort(AbstractTypedC<?> ao){
+	public static void test_CliParseShort(AbstractTypedC<?> ao) throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		cli.addOption(ao);
 		assertFalse(ao.inCli());

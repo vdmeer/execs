@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.vandermeer.execs.DefaultCliParser;
 import de.vandermeer.execs.options.AbstractSimpleC;
+import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_SimpleStatics {
 
@@ -66,7 +67,7 @@ public class Test_SimpleStatics {
 		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
 	}
 
-	public static void test_CliParse(AbstractSimpleC ao){
+	public static void test_CliParse(AbstractSimpleC ao) throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
@@ -74,7 +75,7 @@ public class Test_SimpleStatics {
 		assertTrue(ao.inCli());
 	}
 
-	public static void test_CliParseShort(AbstractSimpleC ao){
+	public static void test_CliParseShort(AbstractSimpleC ao) throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		cli.addOption(ao);
 		assertFalse(ao.inCli());

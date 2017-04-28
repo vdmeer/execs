@@ -17,6 +17,8 @@ package de.vandermeer.execs.options.simple;
 
 import org.junit.Test;
 
+import de.vandermeer.skb.interfaces.application.CliParseException;
+
 public class Test_AO_Quiet {
 
 	@Test
@@ -40,12 +42,12 @@ public class Test_AO_Quiet {
 	}
 
 	@Test
-	public void test_CliParse(){
+	public void test_CliParse() throws IllegalStateException, CliParseException{
 		Test_SimpleStatics.test_CliParse(new AO_Quiet_New(null));
 	}
 
 	@Test
-	public void test_CliParseS(){
+	public void test_CliParseS() throws IllegalStateException, CliParseException{
 		Test_SimpleStatics.test_CliParseShort(new AO_Quiet_New('q'));
 	}
 

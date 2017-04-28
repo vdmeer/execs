@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import de.vandermeer.execs.DefaultCliParser;
+import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_AO_HelpTyped {
 
@@ -46,12 +47,12 @@ public class Test_AO_HelpTyped {
 	}
 
 	@Test
-	public void test_CliParse(){
+	public void test_CliParse() throws IllegalStateException, CliParseException{
 		Test_TypedStatics.test_CliParse(new AO_HelpTyped(null));
 	}
 
 	@Test
-	public void test_CliParse_Noarg(){
+	public void test_CliParse_Noarg() throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		AO_HelpTyped ao = new AO_HelpTyped(null);
 		cli.addOption(ao);
@@ -63,12 +64,12 @@ public class Test_AO_HelpTyped {
 	}
 
 	@Test
-	public void test_CliParseShort(){
+	public void test_CliParseShort() throws IllegalStateException, CliParseException{
 		Test_TypedStatics.test_CliParseShort(new AO_HelpTyped('h'));
 	}
 
 	@Test
-	public void test_CliParseS_NoArg(){
+	public void test_CliParseS_NoArg() throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
 		AO_HelpTyped ao = new AO_HelpTyped('h');
 		cli.addOption(ao);

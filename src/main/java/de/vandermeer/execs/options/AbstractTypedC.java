@@ -57,7 +57,7 @@ public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_
 		this.argDescr = argDescr;
 		this.argIsOptional = argIsOptional;
 
-		this.validate();
+		Apo_TypedC.super.validate();
 	}
 
 	@Override

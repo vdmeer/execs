@@ -17,6 +17,8 @@ package de.vandermeer.execs.options.typed;
 
 import org.junit.Test;
 
+import de.vandermeer.skb.interfaces.application.CliParseException;
+
 public class Test_AO_ID {
 
 	AO_ID_New getAo(Character cliShort){
@@ -44,12 +46,12 @@ public class Test_AO_ID {
 	}
 
 	@Test
-	public void test_CliParse(){
+	public void test_CliParse() throws IllegalStateException, CliParseException{
 		Test_TypedStatics.test_CliParse(getAo(null));
 	}
 
 	@Test
-	public void test_CliParseShort(){
+	public void test_CliParseShort() throws IllegalStateException, CliParseException{
 		Test_TypedStatics.test_CliParseShort(getAo('d'));
 	}
 }
