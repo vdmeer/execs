@@ -30,7 +30,6 @@ public class Test_SimpleStatics {
 
 	public static void test_Constructor(AbstractSimpleC ao, boolean isRequired, String cliLong){
 		assertNull(ao.getLongDescription());
-		ao.setLongDescription("");
 		assertNull(ao.getLongDescription());
 
 		assertTrue(ao.getCliShort()==null);
@@ -38,9 +37,6 @@ public class Test_SimpleStatics {
 		assertEquals(cliLong, ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
-
-		ao.setLongDescription("long description");
-		assertFalse(StringUtils.isBlank(ao.getLongDescription()));
 	}
 
 	public static void test_ConstructorShort(AbstractSimpleC ao, boolean isRequired, String cliLong, Character cliShort){
@@ -49,7 +45,7 @@ public class Test_SimpleStatics {
 		assertEquals(cliShort.toString(), ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
-		assertTrue(StringUtils.isBlank(ao.getLongDescription()));
+		assertNull(ao.getLongDescription());
 	}
 
 	public static void test_Cli(AbstractSimpleC ao){

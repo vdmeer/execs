@@ -27,17 +27,20 @@ import de.vandermeer.execs.options.AbstractTypedC_String;
 public class AO_HelpTyped extends AbstractTypedC_String {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * @param isRequired flag for option being a required option
 	 * @param argDescr a short argument description
 	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_HelpTyped(Character cliShort) {
+	public AO_HelpTyped(Character cliShort, Object longDescription) {
 		super(
+				"Help",
 				cliShort, "help", false,
 				"OPTION", true, "an optional CLI argument to get specific help for",
-				"prints a help screen with usage information or specific help for an option"
+				"prints a help screen with usage information or specific help for an option",
+				longDescription
 //				"Without argument, help will print a usage and help screen with all CLI arguments and further information for the application. With an argument, help will print specific help information for the given CLI argument if applicable to the application."
 		);
 	}

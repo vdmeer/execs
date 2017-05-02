@@ -29,12 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 public class AbstractTypedP_String extends AbstractTypedP<String> {
 
 	/**
-	 * Creates a new option
-	 * @param propertyKey the property key
-	 * @param description a short description for the option
+	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
+	 * @param propertyKey the property key, must not be blank
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedP_String(String propertyKey, String description) {
-		super(propertyKey, description);
+	protected AbstractTypedP_String(String displayName, String propertyKey, String description, Object longDescription) {
+		super(displayName, propertyKey, description, longDescription);
 	}
 
 	@Override

@@ -29,6 +29,7 @@ public class AbstractTypedCE_String extends AbstractTypedCE<String> {
 
 	/**
 	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
@@ -36,10 +37,11 @@ public class AbstractTypedCE_String extends AbstractTypedCE<String> {
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
 	 * @param environmentKey a key for the option in the environment, must not be blank
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedCE_String(Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description) {
-		super(cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, environmentKey, description);
+	protected AbstractTypedCE_String(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description, Object longDescription) {
+		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, environmentKey, description, longDescription);
 	}
 
 	@Override

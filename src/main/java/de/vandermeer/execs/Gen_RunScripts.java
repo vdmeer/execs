@@ -30,11 +30,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import de.vandermeer.execs.options.typed.AO_ApplicationDir_New;
+import de.vandermeer.execs.options.typed.AO_ApplicationDir;
 import de.vandermeer.execs.options.typed.AO_ClassmapFilename_CP;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename_New;
-import de.vandermeer.execs.options.typed.AO_StgFilename_New;
-import de.vandermeer.execs.options.typed.AO_Target_New;
+import de.vandermeer.execs.options.typed.AO_StgFilename;
+import de.vandermeer.execs.options.typed.AO_Target;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
@@ -77,16 +77,16 @@ public class Gen_RunScripts extends AbstractAppliction implements IsApplication 
 	protected final AO_PropertyFilename_New optionPropFile;
 
 	/** The application option for the target. */
-	protected final AO_Target_New optionTarget;
+	protected final AO_Target optionTarget;
 
 	/** The application option for the STG file. */
-	protected final AO_StgFilename_New optionStgFile;
+	protected final AO_StgFilename optionStgFile;
 
 	/** The application option for the class map file. */
 	protected final AO_ClassmapFilename_CP optionClassMapFile;
 
 	/** The application option for the application home directory. */
-	protected final AO_ApplicationDir_New optionAppHome;
+	protected final AO_ApplicationDir optionAppHome;
 
 	/** Properties for configuration options. */
 	protected Properties configuration;
@@ -115,25 +115,37 @@ public class Gen_RunScripts extends AbstractAppliction implements IsApplication 
 	public Gen_RunScripts() {
 		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
 
-		this.optionPropFile = new AO_PropertyFilename_New(null, false, "a propery file", " sets the filename for a configuration property file");
-		this.optionPropFile.setLongDescription("File name of a property file with specific configuration options to generate run scripts.");
+		this.optionPropFile = new AO_PropertyFilename_New(
+				null, false,
+				"a propery file", " sets the filename for a configuration property file",
+				"File name of a property file with specific configuration options to generate run scripts."
+		);
 		this.optionPropFile.setDefaultValue("de/vandermeer/execs/configuration.properties");
 		this.addOption(this.optionPropFile);
 
-		this.optionTarget = new AO_Target_New(null, true, "the target, valid targets are: bat, s, cyg", "specifies the target operating system for run scripts");
-		this.optionTarget.setLongDescription("The target defines if the script is generated for bat (Windows batch file), sh (UNIX bash script) or cyg (Cygwin bash script).");
+		this.optionTarget = new AO_Target(
+				null, true,
+				"the target, valid targets are: bat, s, cyg", "specifies the target operating system for run scripts",
+				"The target defines if the script is generated for bat (Windows batch file), sh (UNIX bash script) or cyg (Cygwin bash script)."
+		);
 		this.addOption(this.optionTarget);
 
-		this.optionStgFile = new AO_StgFilename_New(null, false, "a plain text file, in STG syntax, with all required methods", "specifies a string template (stg) file for generting run scripts");
-		this.optionStgFile.setLongDescription("The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation.");
+		this.optionStgFile = new AO_StgFilename(
+				null, false,
+				"a plain text file, in STG syntax, with all required methods", "specifies a string template (stg) file for generting run scripts",
+				"The STG (String Template Group) file must define a large set of templates for the generation of run scripts. Details are in the JavaDoc of the application implementation."
+		);
 		this.optionStgFile.setDefaultValue("de/vandermeer/execs/executable-script.stg");
 		this.addOption(this.optionStgFile);
 
 		this.optionClassMapFile = new AO_ClassmapFilename_CP(null, PROP_EXECS_CLASSMAP);
 		this.addOption(this.optionClassMapFile);
 
-		this.optionAppHome = new AO_ApplicationDir_New(null, true, "a directory name, will be created if not exists", "application home directory specific to a given target format");
-		this.optionAppHome.setLongDescription("The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path.");
+		this.optionAppHome = new AO_ApplicationDir(
+				null, true,
+				"a directory name, will be created if not exists", "application home directory specific to a given target format",
+				"The application home directory will be used as the absolute path in which the script is started in. All other paths are calculated from this absolute path."
+		);
 		this.addOption(this.optionAppHome);
 	}
 

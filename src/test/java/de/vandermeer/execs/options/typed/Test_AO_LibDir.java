@@ -21,8 +21,8 @@ import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_AO_LibDir {
 
-	AO_LibDir_New getAo(Character cliShort){
-		return new AO_LibDir_New(cliShort, false, "my-arg", "short description");
+	AO_LibDir getAo(Character cliShort){
+		return new AO_LibDir(cliShort, false, "my-arg", "short description", null);
 	}
 
 	@Test

@@ -13,32 +13,36 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.options.simple;
+package de.vandermeer.execs.options.typed;
 
-import de.vandermeer.execs.options.AbstractSimpleC;
+import de.vandermeer.execs.options.AbstractTypedC_String;
 
 /**
- * Simple CLI option `version`.
+ * Typed CLI option `template-dir`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Version_New extends AbstractSimpleC {
+public class AO_TemplateDir extends AbstractTypedC_String {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
+	 * @param isRequired flag for option being a required option
+	 * @param argDescr a short argument description
+	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Version_New(Character cliShort) {
+	public AO_TemplateDir(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
 		super(
-				cliShort,
-				"version",
-				false,
-				"application version"
+				"Template Directory",
+				cliShort, "template-dir", isRequired,
+				"DIR", false, argDescr,
+				description,
+				longDescription
 		);
 	}
 
 }
-
-//"Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored)."
+//"specifies a directory with templates for an application"

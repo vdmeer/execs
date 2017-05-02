@@ -26,11 +26,13 @@ public class AbstractTypedE_String extends AbstractTypedE<String> {
 
 	/**
 	 * Creates a new option
+	 * @param displayName the display name of the option, must not be blank
 	 * @param environmentKey the environment key
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedE_String(String environmentKey, String description) {
-		super(environmentKey, description);
+	protected AbstractTypedE_String(String displayName, String environmentKey, String description, Object longDescription) {
+		super(displayName, environmentKey, description, longDescription);
 
 		this.environmentValue = System.getenv(this.getEnvironmentKey());
 	}

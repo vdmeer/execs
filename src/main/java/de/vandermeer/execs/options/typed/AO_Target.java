@@ -18,28 +18,30 @@ package de.vandermeer.execs.options.typed;
 import de.vandermeer.execs.options.AbstractTypedC_String;
 
 /**
- * Typed CLI option `stg-file`.
+ * Typed CLI option `target`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_StgFilename_New extends AbstractTypedC_String {
+public class AO_Target extends AbstractTypedC_String {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * @param isRequired flag for option being a required option
 	 * @param argDescr a short argument description
 	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_StgFilename_New(Character cliShort, boolean isRequired, String argDescr, String description) {
+	public AO_Target(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
 		super(
-				cliShort, "stg-file", isRequired,
-				"FILE", false, argDescr,
-				description
+				"Target",
+				cliShort, "target", isRequired,
+				"TARGET", false, argDescr,
+				description,
+				longDescription
 		);
-//		"specifies a string template (STG) file"
 	}
 
 }

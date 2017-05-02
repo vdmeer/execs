@@ -28,33 +28,33 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_Constructor(){
-		Test_TypedStatics.test_Constructor(new AO_HelpTyped(null), "help", false, "OPTION");
+		Test_TypedStatics.test_Constructor(new AO_HelpTyped(null, null), "help", false, "OPTION");
 	}
 
 	@Test
 	public void test_ConstructorShort(){
-		Test_TypedStatics.test_ConstructorShort(new AO_HelpTyped('h'), 'h', "help", false, "OPTION");
+		Test_TypedStatics.test_ConstructorShort(new AO_HelpTyped('h', null), 'h', "help", false, "OPTION");
 	}
 
 	@Test
 	public void test_Cli(){
-		Test_TypedStatics.test_Cli(new AO_HelpTyped(null));
+		Test_TypedStatics.test_Cli(new AO_HelpTyped(null, null));
 	}
 
 	@Test
 	public void test_CliShort(){
-		Test_TypedStatics.test_CliShort(new AO_HelpTyped('h'));
+		Test_TypedStatics.test_CliShort(new AO_HelpTyped('h', null));
 	}
 
 	@Test
 	public void test_CliParse() throws IllegalStateException, CliParseException{
-		Test_TypedStatics.test_CliParse(new AO_HelpTyped(null));
+		Test_TypedStatics.test_CliParse(new AO_HelpTyped(null, null));
 	}
 
 	@Test
 	public void test_CliParse_Noarg() throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
-		AO_HelpTyped ao = new AO_HelpTyped(null);
+		AO_HelpTyped ao = new AO_HelpTyped(null, null);
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--help"});
@@ -65,13 +65,13 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_CliParseShort() throws IllegalStateException, CliParseException{
-		Test_TypedStatics.test_CliParseShort(new AO_HelpTyped('h'));
+		Test_TypedStatics.test_CliParseShort(new AO_HelpTyped('h', null));
 	}
 
 	@Test
 	public void test_CliParseS_NoArg() throws IllegalStateException, CliParseException{
 		DefaultCliParser cli = new DefaultCliParser();
-		AO_HelpTyped ao = new AO_HelpTyped('h');
+		AO_HelpTyped ao = new AO_HelpTyped('h', null);
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-h"});

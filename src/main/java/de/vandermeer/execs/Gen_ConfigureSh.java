@@ -25,9 +25,9 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.execs.options.typed.AO_LibDir_New;
+import de.vandermeer.execs.options.typed.AO_LibDir;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename_New;
-import de.vandermeer.execs.options.typed.AO_TemplateDir_New;
+import de.vandermeer.execs.options.typed.AO_TemplateDir;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 
 /**
@@ -49,10 +49,10 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
 	/** The application option for the library directory. */
-	protected AO_LibDir_New optionLibDir;
+	protected AO_LibDir optionLibDir;
 
 	/** The application option for the template directory. */
-	protected AO_TemplateDir_New optionTemplateDir;
+	protected AO_TemplateDir optionTemplateDir;
 
 	/** The application option for the property file. */
 	protected AO_PropertyFilename_New optionPropFile;
@@ -63,16 +63,25 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	public Gen_ConfigureSh(){
 		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
 
-		this.optionLibDir = new AO_LibDir_New(null, false, "directory with jar files, must exist", "specifies a directory with required jar files");
-		this.optionLibDir.setLongDescription("The library home needs to point to a directory with all jar files required to run an ExecS.");
+		this.optionLibDir = new AO_LibDir(
+				null, false, "directory with jar files, must exist",
+				"specifies a directory with required jar files",
+				"The library home needs to point to a directory with all jar files required to run an ExecS."
+		);
 		this.addOption(optionLibDir);
 
-		this.optionTemplateDir = new AO_TemplateDir_New(null, false, "template directory, must exist", "specifies a directory with templates for an application");
-		this.optionLibDir.setLongDescription("The template directory needs to point to a directory with templates for scripts.");
+		this.optionTemplateDir = new AO_TemplateDir(
+				null, false,
+				"template directory, must exist", "specifies a directory with templates for an application",
+				"The template directory needs to point to a directory with templates for scripts."
+		);
 		this.addOption(this.optionTemplateDir);
 
-		this.optionPropFile = new AO_PropertyFilename_New(null, true, "filename of an existing property file", "filename for a property file with configuration information");
-		this.optionPropFile.setLongDescription("A file name that is added to the run script for reading class map properties from.");
+		this.optionPropFile = new AO_PropertyFilename_New(
+				null, true,
+				"filename of an existing property file", "filename for a property file with configuration information",
+				"A file name that is added to the run script for reading class map properties from."
+		);
 		this.addOption(this.optionPropFile);
 	}
 

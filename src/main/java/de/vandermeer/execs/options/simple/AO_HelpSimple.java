@@ -27,15 +27,18 @@ import de.vandermeer.execs.options.AbstractSimpleC;
 public class AO_HelpSimple extends AbstractSimpleC {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
+	 * ]@param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_HelpSimple(Character cliShort) {
+	public AO_HelpSimple(Character cliShort, Object longDescription) {
 		super(
+				"Help",
 				cliShort,
 				"help",
 				false,
-				"prints a help screen with usage information"
+				"prints a help screen with usage information",
+				longDescription
 		);
 	}
 

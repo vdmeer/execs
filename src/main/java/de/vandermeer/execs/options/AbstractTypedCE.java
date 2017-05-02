@@ -1,3 +1,4 @@
+
 /* Copyright 2017 Sven van der Meer <vdmeer.sven@mykolab.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +38,7 @@ public abstract class AbstractTypedCE<T> extends AbstractTypedC<T> implements Ap
 
 	/**
 	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
@@ -44,10 +46,11 @@ public abstract class AbstractTypedCE<T> extends AbstractTypedC<T> implements Ap
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
 	 * @param environmentKey a key for the option in the environment, must not be blank
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedCE(Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description) {
-		super(cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description);
+	protected AbstractTypedCE(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description, Object longDescription) {
+		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description, longDescription);
 		this.environmentKey = environmentKey;
 	}
 

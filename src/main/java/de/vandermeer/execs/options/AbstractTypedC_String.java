@@ -29,16 +29,18 @@ public class AbstractTypedC_String extends AbstractTypedC<String> {
 
 	/**
 	 * Creates a new option.
+	 * @param displayName he display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
 	 * @param argName the name of the argument, must not be blank
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedC_String(Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String description){
-		super(cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description);
+	protected AbstractTypedC_String(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String description, Object longDescription){
+		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description, longDescription);
 	}
 
 	@Override

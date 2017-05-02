@@ -40,13 +40,15 @@ public abstract class AbstractApoBaseC extends AbstractApoBase implements ApoBas
 
 	/**
 	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseC(Character cliShort, String cliLong, boolean isRequired, String description) {
-		super(description);
+	protected AbstractApoBaseC(String displayName, Character cliShort, String cliLong, boolean isRequired, String description, Object longDescription) {
+		super(displayName, description, longDescription);
 		this.cliShort = cliShort;
 		this.cliLong = cliLong;
 		this.isRequired = isRequired;

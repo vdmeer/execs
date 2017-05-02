@@ -13,32 +13,35 @@
  * limitations under the License.
  */
 
-package de.vandermeer.execs.options.typed;
+package de.vandermeer.execs.options.simple;
 
-import de.vandermeer.execs.options.AbstractTypedC_String;
+import de.vandermeer.execs.options.AbstractSimpleC;
 
 /**
- * Typed CLI option `id`.
+ * Simple CLI option `version`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_ID_New extends AbstractTypedC_String {
+public class AO_Version extends AbstractSimpleC {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
-	 * @param isRequired flag for option being a required option
-	 * @param argDescr a short argument description
-	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_ID_New(Character cliShort, boolean isRequired, String argDescr, String description) {
+	public AO_Version(Character cliShort, Object longDescription) {
 		super(
-				cliShort, "id", isRequired,
-				"ID", false, argDescr,
-				description
+				"Help",
+				cliShort,
+				"version",
+				false,
+				"application version",
+				longDescription
 		);
 	}
 
 }
+
+//"Provides version and possibly related information about the application. The argument must be the first argument in a command line (otherwise it will be ignored)."

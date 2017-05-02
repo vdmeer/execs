@@ -27,17 +27,20 @@ import de.vandermeer.execs.options.AbstractTypedC_String;
 public class AO_PropertyFilename_New extends AbstractTypedC_String {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * @param isRequired flag for option being a required option
 	 * @param argDescr a short argument description
 	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_PropertyFilename_New(Character cliShort, boolean isRequired, String argDescr, String description) {
+	public AO_PropertyFilename_New(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
 		super(
+				"Property File",
 				cliShort, "property-file", isRequired,
 				"FILE", false, argDescr,
-				description
+				description,
+				longDescription
 		);
 	}
 

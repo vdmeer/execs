@@ -23,31 +23,31 @@ public class Test_AO_Version {
 
 	@Test
 	public void test_Constructor(){
-		Test_SimpleStatics.test_Constructor(new AO_Version_New(null), false, "version");
+		Test_SimpleStatics.test_Constructor(new AO_Version(null, null), false, "version");
 	}
 
 	@Test
 	public void test_ConstructorShort(){
-		Test_SimpleStatics.test_ConstructorShort(new AO_Version_New('v'), false, "version", 'v');
+		Test_SimpleStatics.test_ConstructorShort(new AO_Version('v', null), false, "version", 'v');
 	}
 
 	@Test
 	public void test_Cli(){
-		Test_SimpleStatics.test_Cli(new AO_Version_New(null));
+		Test_SimpleStatics.test_Cli(new AO_Version(null, null));
 	}
 
 	@Test
 	public void test_CliShort(){
-		Test_SimpleStatics.test_CliShort(new AO_Version_New('v'));
+		Test_SimpleStatics.test_CliShort(new AO_Version('v', null));
 	}
 
 	@Test
 	public void test_CliParse() throws IllegalStateException, CliParseException{
-		Test_SimpleStatics.test_CliParse(new AO_Version_New(null));
+		Test_SimpleStatics.test_CliParse(new AO_Version(null, null));
 	}
 
 	@Test
 	public void test_CliParseS() throws IllegalStateException, CliParseException{
-		Test_SimpleStatics.test_CliParseShort(new AO_Version_New('v'));
+		Test_SimpleStatics.test_CliParseShort(new AO_Version('v', null));
 	}
 }

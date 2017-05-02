@@ -34,11 +34,13 @@ public abstract class AbstractTypedP<T> extends AbstractApoBaseP implements Apo_
 
 	/**
 	 * Creates a new option
+	 * @param displayName the display name of the option, must not be blank
 	 * @param propertyKey the property key
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedP(String propertyKey, String description) {
-		super(propertyKey, description);
+	protected AbstractTypedP(String displayName, String propertyKey, String description, Object longDescription) {
+		super(displayName, propertyKey, description, longDescription);
 
 		this.validate();
 	}

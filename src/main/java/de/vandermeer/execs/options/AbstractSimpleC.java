@@ -15,8 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.lang3.text.StrBuilder;
-
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 
 /**
@@ -30,13 +28,15 @@ public class AbstractSimpleC extends AbstractApoBaseC implements Apo_SimpleC {
 
 	/**
 	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AbstractSimpleC(Character cliShort, String cliLong, boolean isRequired, String description){
-		super(cliShort, cliLong, isRequired, description);
+	public AbstractSimpleC(String displayName, Character cliShort, String cliLong, boolean isRequired, String description, Object longDescription){
+		super(displayName, cliShort, cliLong, isRequired, description, longDescription);
 		this.validate();
 	}
 

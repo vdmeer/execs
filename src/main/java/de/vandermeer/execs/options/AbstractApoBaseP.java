@@ -34,11 +34,13 @@ public abstract class AbstractApoBaseP extends AbstractApoBase implements ApoBas
 
 	/**
 	 * Creates a new option
-	 * @param propertyKey the property key
-	 * @param description a short description for the option
+	 * @param displayName the display name of the option, must not be blank
+	 * @param propertyKey the property key, must not be blank
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseP(String propertyKey, String description) {
-		super(description);
+	protected AbstractApoBaseP(String displayName, String propertyKey, String description, Object longDescription) {
+		super(displayName, description, longDescription);
 		this.propertyKey = propertyKey;
 	}
 

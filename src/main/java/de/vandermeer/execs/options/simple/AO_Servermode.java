@@ -1,3 +1,4 @@
+
 /* Copyright 2017 Sven van der Meer <vdmeer.sven@mykolab.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,28 +19,28 @@ package de.vandermeer.execs.options.simple;
 import de.vandermeer.execs.options.AbstractSimpleC;
 
 /**
- * Simple CLI option `verbose`.
+ * Simple CLI option `srv-mode`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Verbose_New extends AbstractSimpleC {
+public class AO_Servermode extends AbstractSimpleC {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Verbose_New(Character cliShort) {
+	public AO_Servermode(Character cliShort, Object longDescription) {
 		super(
+				"Server Mode",
 				cliShort,
-				"verbose",
+				"srv-mode",
 				false,
-				"verbose mode for application"
+				"tells a server to run in background mode",
+				longDescription
 		);
 	}
 
 }
-
-
-//"Sets an application verbose mode, meaning the application will printout extended progress messages."

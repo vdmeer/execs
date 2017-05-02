@@ -21,8 +21,8 @@ import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_AO_FileOut {
 
-	AO_FileOut_New getAo(Character cliShort){
-		return new AO_FileOut_New(cliShort, true, "my-arg", "short description");
+	AO_FileOut getAo(Character cliShort){
+		return new AO_FileOut(cliShort, true, "my-arg", "short description", null);
 	}
 
 	@Test

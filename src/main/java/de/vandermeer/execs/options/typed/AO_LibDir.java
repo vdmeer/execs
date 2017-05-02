@@ -18,27 +18,31 @@ package de.vandermeer.execs.options.typed;
 import de.vandermeer.execs.options.AbstractTypedC_String;
 
 /**
- * Typed CLI option `input-file`.
+ * Typed CLI option `lib-dir`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_FileIn_New extends AbstractTypedC_String {
+public class AO_LibDir extends AbstractTypedC_String {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * @param isRequired flag for option being a required option
 	 * @param argDescr a short argument description
 	 * @param description as short option description
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_FileIn_New(Character cliShort, boolean isRequired, String argDescr, String description) {
+	public AO_LibDir(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
 		super(
-				cliShort, "input-file", isRequired,
-				"FILE", false, argDescr,
-				description
+				"Lbrary Directory",
+				cliShort, "lib-dir", isRequired,
+				"DIR", false, argDescr,
+				description,
+				longDescription
 		);
 	}
 
 }
+//"specifies a directory with required jar files"

@@ -23,31 +23,31 @@ public class Test_AO_Verbose {
 
 	@Test
 	public void test_Constructor(){
-		Test_SimpleStatics.test_Constructor(new AO_Verbose_New(null), false, "verbose");
+		Test_SimpleStatics.test_Constructor(new AO_Verbose(null, null), false, "verbose");
 	}
 
 	@Test
 	public void test_ConstructorShort(){
-		Test_SimpleStatics.test_ConstructorShort(new AO_Verbose_New('b'), false, "verbose", 'b');
+		Test_SimpleStatics.test_ConstructorShort(new AO_Verbose('b', null), false, "verbose", 'b');
 	}
 
 	@Test
 	public void test_Cli(){
-		Test_SimpleStatics.test_Cli(new AO_Verbose_New(null));
+		Test_SimpleStatics.test_Cli(new AO_Verbose(null, null));
 	}
 
 	@Test
 	public void test_CliShort(){
-		Test_SimpleStatics.test_CliShort(new AO_Verbose_New('b'));
+		Test_SimpleStatics.test_CliShort(new AO_Verbose('b', null));
 	}
 
 	@Test
 	public void test_CliParse() throws IllegalStateException, CliParseException{
-		Test_SimpleStatics.test_CliParse(new AO_Verbose_New(null));
+		Test_SimpleStatics.test_CliParse(new AO_Verbose(null, null));
 	}
 
 	@Test
 	public void test_CliParseS() throws IllegalStateException, CliParseException{
-		Test_SimpleStatics.test_CliParseShort(new AO_Verbose_New('b'));
+		Test_SimpleStatics.test_CliParseShort(new AO_Verbose('b', null));
 	}
 }

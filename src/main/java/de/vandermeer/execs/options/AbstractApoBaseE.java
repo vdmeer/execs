@@ -34,11 +34,13 @@ public abstract class AbstractApoBaseE extends AbstractApoBase implements ApoBas
 
 	/**
 	 * Creates a new option
-	 * @param environmentKey the environment key
-	 * @param description a short description for the option
+	 * @param displayName the display name of the option, must not be blank
+	 * @param environmentKey the environment key, must not be blank
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseE(String environmentKey, String description) {
-		super(description);
+	protected AbstractApoBaseE(String displayName, String environmentKey, String description, Object longDescription) {
+		super(displayName, description, longDescription);
 		this.environmentKey = environmentKey;
 	}
 

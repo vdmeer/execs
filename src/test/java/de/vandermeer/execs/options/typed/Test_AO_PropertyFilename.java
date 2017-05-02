@@ -22,7 +22,7 @@ import de.vandermeer.skb.interfaces.application.CliParseException;
 public class Test_AO_PropertyFilename {
 
 	AO_PropertyFilename_New getAo(Character cliShort){
-		return new AO_PropertyFilename_New(cliShort, false, "my-arg", "short description");
+		return new AO_PropertyFilename_New(cliShort, false, "my-arg", "short description", null);
 	}
 
 	@Test

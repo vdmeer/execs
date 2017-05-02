@@ -43,16 +43,18 @@ public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_
 
 	/**
 	 * Creates a new option.
+	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
 	 * @param isRequired flag for CLI option being required or not
 	 * @param argName the name of the argument, must not be blank
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
-	 * @param description a short description for the option
+	 * @param description a short description for the option, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedC(Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String description){
-		super(cliShort, cliLong, isRequired, description);
+	protected AbstractTypedC(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String description, Object longDescription){
+		super(displayName, cliShort, cliLong, isRequired, description, longDescription);
 		this.argName = argName;
 		this.argDescr = argDescr;
 		this.argIsOptional = argIsOptional;

@@ -21,8 +21,8 @@ import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_AO_TemplateDir {
 
-	AO_TemplateDir_New getAo(Character cliShort){
-		return new AO_TemplateDir_New(cliShort, false, "my-arg", "short description");
+	AO_TemplateDir getAo(Character cliShort){
+		return new AO_TemplateDir(cliShort, false, "my-arg", "short description", null);
 	}
 
 	@Test

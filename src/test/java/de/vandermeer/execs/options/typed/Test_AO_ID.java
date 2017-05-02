@@ -21,8 +21,8 @@ import de.vandermeer.skb.interfaces.application.CliParseException;
 
 public class Test_AO_ID {
 
-	AO_ID_New getAo(Character cliShort){
-		return new AO_ID_New(cliShort, false, "my-arg", "short description");
+	AO_ID getAo(Character cliShort){
+		return new AO_ID(cliShort, false, "my-arg", "short description", null);
 	}
 
 	@Test

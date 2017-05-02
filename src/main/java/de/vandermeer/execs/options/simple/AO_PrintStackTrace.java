@@ -18,24 +18,27 @@ package de.vandermeer.execs.options.simple;
 import de.vandermeer.execs.options.AbstractSimpleC;
 
 /**
- * Simple CLI option `srv-mode`.
+ * Simple CLI option `print-stack-trace`.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Servermode_New extends AbstractSimpleC {
+public class AO_PrintStackTrace extends AbstractSimpleC {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Servermode_New(Character cliShort) {
+	public AO_PrintStackTrace(Character cliShort, Object longDescription) {
 		super(
+				"Print Stacktrace",
 				cliShort,
-				"srv-mode",
+				"print-stack-trace",
 				false,
-				"tells a server to run in background mode"
+				"sets a flag to print the stack trace of exceptions",
+				longDescription
 		);
 	}
 

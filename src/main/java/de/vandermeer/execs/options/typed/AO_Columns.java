@@ -28,9 +28,13 @@ public class AO_Columns extends AbstractTypedE<Integer> {
 
 	/**
 	 * Creates the new option.
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Columns() {
-		super("COLUMNS", "sets the columns (console width) for the application");
+	public AO_Columns(Object longDescription) {
+		super(
+				"Columns", "COLUMNS", "sets the columns (console width) for the application",
+				longDescription
+		);
 		this.setDefaultValue(80);
 		String cols = System.getenv("COLUMNS");
 		if(cols!=null){

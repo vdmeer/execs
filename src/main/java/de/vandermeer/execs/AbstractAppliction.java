@@ -18,10 +18,13 @@ package de.vandermeer.execs;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.stringtemplate.v4.ST;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
-import de.vandermeer.execs.options.simple.AO_Version_New;
+import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.execs.options.typed.AO_Columns;
 import de.vandermeer.execs.options.typed.AO_HelpTyped;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
@@ -74,7 +77,7 @@ public abstract class AbstractAppliction implements IsApplication {
 	/** A simple version object, null if not required. */
 	protected final Apo_SimpleC aoVersion;
 
-	protected final AO_Columns aoColumns = new AO_Columns();
+	protected final AO_Columns aoColumns = new AO_Columns(null);
 
 	/**
 	 * Creates a new application.
@@ -92,19 +95,19 @@ public abstract class AbstractAppliction implements IsApplication {
 		this.propertyOptions = new HashSet<>();
 
 		if(useHelp==HELP_SIMPLE_LONG){
-			this.aoSimpleHelp = new AO_HelpSimple(null);
+			this.aoSimpleHelp = new AO_HelpSimple(null, null);
 			this.aoTypedHelp = null;
 		}
 		else if(useHelp==HELP_SIMPLE_SHORTLONG){
-			this.aoSimpleHelp = new AO_HelpSimple('h');
+			this.aoSimpleHelp = new AO_HelpSimple('h', null);
 			this.aoTypedHelp = null;
 		}
 		else if(useHelp==HELP_TYPED_LONG){
-			this.aoTypedHelp = new AO_HelpTyped(null);
+			this.aoTypedHelp = new AO_HelpTyped(null, null);
 			this.aoSimpleHelp = null;
 		}
 		else if(useHelp==HELP_TYPED_SHORTLONG){
-			this.aoTypedHelp = new AO_HelpTyped('h');
+			this.aoTypedHelp = new AO_HelpTyped('h', null);
 			this.aoSimpleHelp = null;
 		}
 		else{
@@ -113,10 +116,10 @@ public abstract class AbstractAppliction implements IsApplication {
 		}
 
 		if(useVersion==VERSION_LONG){
-			this.aoVersion = new AO_Version_New(null);
+			this.aoVersion = new AO_Version(null, null);
 		}
 		else if(useVersion==VERSION_SHORTLONG){
-			this.aoVersion = new AO_Version_New('v');
+			this.aoVersion = new AO_Version('v', null);
 		}
 		else{
 			this.aoVersion = null;
@@ -156,6 +159,28 @@ public abstract class AbstractAppliction implements IsApplication {
 	@Override
 	public int getConsoleWidth(){
 		return this.aoColumns.getValue();
+	}
+
+	@Override
+	public String longDescriptionString(Object longDescription) {
+		if(longDescription==null){
+			return null;
+		}
+		String ret = null;
+		if(ClassUtils.isAssignable(longDescription.getClass(), String.class)){
+			ret = (String)longDescription;
+		}
+		else if(ClassUtils.isAssignable(longDescription.getClass(), ST.class)){
+			ret = ((ST)longDescription).render();
+		}
+		else{
+			ret = longDescription.toString();
+		}
+
+		if(StringUtils.isBlank(ret)){
+			return null;
+		}
+		return ret;
 	}
 
 }

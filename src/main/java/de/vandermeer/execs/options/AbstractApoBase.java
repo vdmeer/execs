@@ -15,9 +15,6 @@
 
 package de.vandermeer.execs.options;
 
-import org.apache.commons.lang3.StringUtils;
-import org.stringtemplate.v4.ST;
-
 import de.vandermeer.skb.interfaces.application.ApoBase;
 
 /**
@@ -29,12 +26,25 @@ import de.vandermeer.skb.interfaces.application.ApoBase;
  */
 public abstract class AbstractApoBase implements ApoBase {
 
+	/** Simple, 1-line description. */
 	protected final String descr;
 
-	protected String longDescr;
+	/** Long description. */
+	protected Object longDescr;
 
-	protected AbstractApoBase(String description){
+	/** Display name of the option. */
+	protected final String displayName;
+
+	/**
+	 * Creates a new base object.
+	 * @param displayName the option display name, must not be blank
+	 * @param description the option short description, should be 1 line, must not be blank
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
+	 */
+	protected AbstractApoBase(String displayName, String description, Object longDescription){
 		this.descr = description;
+		this.displayName = displayName;
+		this.longDescr = longDescription;
 	}
 
 	@Override
@@ -43,23 +53,13 @@ public abstract class AbstractApoBase implements ApoBase {
 	}
 
 	@Override
-	public void setLongDescription(String description){
-		if(!StringUtils.isBlank(description)){
-			this.longDescr = description;
-		}
-	}
-
-	@Override
-	public void setLongDescription(ST description){
-		if(description==null){
-			return;
-		}
-		this.setLongDescription(description.render());
-	}
-
-	@Override
-	public String getLongDescription() {
+	public Object getLongDescription() {
 		return this.longDescr;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return this.displayName;
 	}
 
 }

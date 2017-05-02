@@ -17,6 +17,7 @@ package de.vandermeer.execs.options.typed;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +34,7 @@ public class Test_TypedStatics {
 		assertEquals(cliLong, ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
-		assertTrue(StringUtils.isBlank(ao.getLongDescription()));
+		assertNull(ao.getLongDescription());
 		assertEquals(argName, ao.getCliArgumentName());
 		assertFalse(StringUtils.isBlank(ao.getCliArgumentDescription()));
 	}
@@ -44,7 +45,7 @@ public class Test_TypedStatics {
 		assertEquals(cliShort.toString(), ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
-		assertTrue(StringUtils.isBlank(ao.getLongDescription()));
+		assertNull(ao.getLongDescription());
 		assertEquals(argName, ao.getCliArgumentName());
 		assertFalse(StringUtils.isBlank(ao.getCliArgumentDescription()));
 	}
