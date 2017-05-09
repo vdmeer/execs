@@ -172,6 +172,15 @@ public abstract class AbstractAppliction implements IsApplication {
 		return this.warningSet;
 	}
 
+	/**
+	 * Prints errors using the message console.
+	 */
+	protected void printErrors(){
+		if(this.errorSet.hasErrors()){
+			MessageConsole.conError(this.errorSet.render());
+		}
+	}
+
 	@Override
 	public void setErrno(int errorNumber) {
 		this.errNo = errorNumber;
@@ -197,14 +206,5 @@ public abstract class AbstractAppliction implements IsApplication {
 			return null;
 		}
 		return ret;
-	}
-
-	/**
-	 * Prints errors using the message console.
-	 */
-	protected void printErrors(){
-		if(this.errorSet.hasErrors()){
-			MessageConsole.conError(this.errorSet.render());
-		}
 	}
 }

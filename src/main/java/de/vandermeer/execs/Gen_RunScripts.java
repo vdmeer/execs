@@ -67,24 +67,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
-//	/** A property key for the script name of the generic run script, without file extension. */
-//	public final static String PROP_RUN_SCRIPT_NAME = "run.script.name";
-
-//	/** A property key for the class name of the ExexS executor to be used, must be a fully qualified class name. */
-//	public final static String PROP_RUN_CLASS = "run.script.class";
-
-//	/** A property key for the JAVA class path. */
-//	public final static String PROP_JAVA_CP = "java.classpath";
-
-//	/** The string all java properties for running the JVM must start with. */
-//	public final static String PROP_JAVAPROP_START = "java.property.";
-
-//	/** A property key to set auto-script generation for registered executable applications. */
-//	public final static String PROP_EXECS_CLASSMAP = "execs.classmap";
-
-//	/** A property key to set class map for executable applications. */
-//	public final static String PROP_EXECS_AUTOGEN_REGISTERED = "execs.autogenerate.registered";
-
 	/** The application option for the property file. */
 	protected final AO_PropertyFilename optionPropFile;
 
@@ -173,113 +155,20 @@ public class Gen_RunScripts extends AbstractAppliction {
 		this.addOption(this.optionAppHome);
 
 		this.propRunClass = GenAop.RUN_CLASS();
+		this.addOption(this.propRunClass);
+
 		this.propJavaCP = GenAop.JAVA_CP();
+		this.addOption(this.propJavaCP);
+
 		this.propRunScriptname = GenAop.RUN_SCRIPT_NAME();
+		this.addOption(this.propRunScriptname);
+
 		this.propJvmOptions = GenAop.JVM_RUNTIME_OPTIONS();
+		this.addOption(this.propJvmOptions);
+
 		this.propAutogen = GenAop.AUTOGEN_REGISTERED();
-	}
-
-//	@Override
-//	public void appHelpScreen(){
-//		IsApplication.super.appHelpScreen();
-//
-//		System.out.println("Property file keys:");
-//		System.out.println(" - " + PROP_RUN_CLASS + " - the class name for executing applications");
-//		System.out.println(" - " + PROP_RUN_SCRIPT_NAME + " - the script name for running the main application executor");
-//		System.out.println(" - " + PROP_JAVA_CP + " - JAVA classpath, comma separates list, {APPLICATION_HOME} will be added to all entries");
-//		System.out.println(" - " + PROP_JAVAPROP_START + " - start of a particular JAVA runtime property");
-//		System.out.println("      + any key with the start should have the form of key:value and will be translated to -Dkey:value");
-//		System.out.println("      + for example: 'java.property.encoding = file.encoding:UTF-8' will be translated to -Dfile.encoding:UTF-8");
-//		System.out.println("      + {APPLICATION_HOME} will be added to all entries");
-//		System.out.println(" - " + PROP_EXECS_CLASSMAP + " - class map file with mappings from class to executable name");
-//		System.out.println(" - " + PROP_EXECS_AUTOGEN_REGISTERED + " - flag to auto generate all registered applications");
-//
-//		System.out.println();
-//	}
-
-	@Override
-	public void runApplication() {
-		if(this.errNo!=0){
-			this.printErrors();
-			return;
-		}
-
-		// initialize if possible (errNo==0)
-		this.initConfiguration();
-		this.initApplicationDir();
-		this.initTargetAndStg();
-		this.initClassmap();
-		this.initOutputDir();
-
-		if(this.errNo==0){
-			HashMap<String, Boolean> targetMap = new HashMap<>();
-			targetMap.put(target, true);
-			String fnExtension = this.stg.getInstanceOf("fnExtension").add("target", targetMap).render();
-			String targetFileSep = this.stg.getInstanceOf("pathSeparator").add("target", targetMap).render();
-
-			//build main run script
-			String outFN = this.outputDir + File.separator + this.propRunScriptname.getValue() + fnExtension;
-			System.out.println(" --> generating main run script - " + outFN);
-			ST targetRunST = this.stg.getInstanceOf("generateRun");
-			targetRunST.add("target", targetMap);
-			targetRunST.add("class", this.propRunClass.getValue());
-			targetRunST.add("applicationHome", this.applicationDir);
-
-			if(this.propJavaCP.getValue()!=null){
-				String[] cp = StringUtils.split(this.propJavaCP.getValue(), " , ");
-				ST classpath = this.stg.getInstanceOf("classpath");
-				classpath.add("target", targetMap);
-				for(String s : cp){
-					classpath.add("classpath", StringUtils.replace(s, "/", targetFileSep));
-				}
-				targetRunST.add("classPath", classpath.render());
-			}
-
-			if(this.propJvmOptions.getValue()!=null){
-				for(String value : StringUtils.split(this.propJvmOptions.getValue(), " , ")){
-					String[] kv = StringUtils.split(value, ":");
-					HashMap<String, String> javaProperties = new HashMap<>();
-					javaProperties.put("key", kv[0]);
-					ST execHomeVar = this.stg.getInstanceOf("execHomeVar");
-					javaProperties.put("val", StringUtils.replace(kv[1], "{APPLICATION_HOME}", execHomeVar.add("target", targetMap).render()));
-					targetRunST.add("javaProperties", javaProperties);
-				}
-			}
-			this.writeFile(outFN, targetRunST);
-
-			//build all scripts for classmap, if set
-			if(this.classMap!=null){
-				for(Object key : this.classMap.keySet()){
-					outFN = this.outputDir + File.separator + this.classMap.get(key) + fnExtension;
-					System.out.println(" --> generating script from class map - " + outFN);
-
-					ST targetExecST = this.generateScript(key.toString(), targetMap);
-					this.writeFile(outFN, targetExecST);
-				}
-			}
-
-			//build scripts for all registered applications using the specified run class
-			if(this.propAutogen.getValue()){
-				if(this.execClassMap!=null){
-					for(String s : execClassMap.keySet()){
-						outFN = this.outputDir + File.separator + s + fnExtension;
-						System.out.println(" --> generating script from auto-gen-reg - " + outFN);
-						ST targetExecST = this.generateScript(execClassMap.get(s).getName(), targetMap);
-						this.writeFile(outFN, targetExecST);
-					}
-				}
-			}
-
-			//build a generic header that can be used outside this class for generating other scripts
-			ST headerST = this.stg.getInstanceOf("header");
-			headerST.add("target", targetMap);
-			headerST.add("applicationHome", this.applicationDir);
-			this.writeFile(this.outputDir + File.separator + "_header", headerST);
-		}
-
-		if(this.errorSet.hasErrors()){
-			System.err.println(this.errorSet.render());
-		}
+		this.propAutogen.setDefaultValue(false);
+		this.addOption(this.propAutogen);
 	}
 
 	/**
@@ -345,8 +234,8 @@ public class Gen_RunScripts extends AbstractAppliction {
 
 		String fileName = this.optionClassMapFile.getValue();
 		if(StringUtils.isBlank(fileName)){
-			this.errorSet.addError(Templates_InputFile.FN_BLANK.getError(this.getAppName(), "property"));
-			this.errNo = Templates_InputFile.FN_BLANK.getCode();
+//			this.errorSet.addError(Templates_InputFile.FN_BLANK.getError(this.getAppName(), "property"));
+//			this.errNo = Templates_InputFile.FN_BLANK.getCode();
 			return;
 		}
 
@@ -563,6 +452,100 @@ public class Gen_RunScripts extends AbstractAppliction {
 	}
 
 	/**
+	 * Prints errors using the message console.
+	 */
+	protected void printErrors(){
+		if(this.errorSet.hasErrors()){
+			MessageConsole.conError(this.errorSet.render());
+		}
+	}
+
+	@Override
+	public void runApplication() {
+		if(this.errNo!=0){
+			this.printErrors();
+			return;
+		}
+
+		// initialize if possible (errNo==0)
+		this.initConfiguration();
+		this.initApplicationDir();
+		this.initTargetAndStg();
+		this.initClassmap();
+		this.initOutputDir();
+
+		if(this.errNo==0){
+			HashMap<String, Boolean> targetMap = new HashMap<>();
+			targetMap.put(target, true);
+			String fnExtension = this.stg.getInstanceOf("fnExtension").add("target", targetMap).render();
+			String targetFileSep = this.stg.getInstanceOf("pathSeparator").add("target", targetMap).render();
+
+			//build main run script
+			String outFN = this.outputDir + File.separator + this.propRunScriptname.getValue() + fnExtension;
+			System.out.println(" --> generating main run script - " + outFN);
+			ST targetRunST = this.stg.getInstanceOf("generateRun");
+			targetRunST.add("target", targetMap);
+			targetRunST.add("class", this.propRunClass.getValue());
+			targetRunST.add("applicationHome", this.applicationDir);
+
+			if(this.propJavaCP.getValue()!=null){
+				String[] cp = StringUtils.split(this.propJavaCP.getValue(), " , ");
+				ST classpath = this.stg.getInstanceOf("classpath");
+				classpath.add("target", targetMap);
+				for(String s : cp){
+					classpath.add("classpath", StringUtils.replace(s, "/", targetFileSep));
+				}
+				targetRunST.add("classPath", classpath.render());
+			}
+
+			if(this.propJvmOptions.getValue()!=null){
+				for(String value : StringUtils.split(this.propJvmOptions.getValue(), " , ")){
+					String[] kv = StringUtils.split(value, ":");
+					HashMap<String, String> javaProperties = new HashMap<>();
+					javaProperties.put("key", kv[0]);
+					ST execHomeVar = this.stg.getInstanceOf("execHomeVar");
+					javaProperties.put("val", StringUtils.replace(kv[1], "{APPLICATION_HOME}", execHomeVar.add("target", targetMap).render()));
+					targetRunST.add("javaProperties", javaProperties);
+				}
+			}
+			this.writeFile(outFN, targetRunST);
+
+			//build all scripts for classmap, if set
+			if(this.classMap!=null){
+				for(Object key : this.classMap.keySet()){
+					outFN = this.outputDir + File.separator + this.classMap.get(key) + fnExtension;
+					System.out.println(" --> generating script from class map - " + outFN);
+
+					ST targetExecST = this.generateScript(key.toString(), targetMap);
+					this.writeFile(outFN, targetExecST);
+				}
+			}
+
+			//build scripts for all registered applications using the specified run class
+			if(this.propAutogen.getValue()){
+				if(this.execClassMap!=null){
+					for(String s : execClassMap.keySet()){
+						outFN = this.outputDir + File.separator + s + fnExtension;
+						System.out.println(" --> generating script from auto-gen-reg - " + outFN);
+						ST targetExecST = this.generateScript(execClassMap.get(s).getName(), targetMap);
+						this.writeFile(outFN, targetExecST);
+					}
+				}
+			}
+
+			//build a generic header that can be used outside this class for generating other scripts
+			ST headerST = this.stg.getInstanceOf("header");
+			headerST.add("target", targetMap);
+			headerST.add("applicationHome", this.applicationDir);
+			this.writeFile(this.outputDir + File.separator + "_header", headerST);
+		}
+
+		if(this.errorSet.hasErrors()){
+			System.err.println(this.errorSet.render());
+		}
+	}
+
+	/**
 	 * Hook for a calling ExecS instance to set its class map for the script generator
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
@@ -588,14 +571,5 @@ public class Gen_RunScripts extends AbstractAppliction {
 			return -1;
 		}
 		return 0;
-	}
-
-	/**
-	 * Prints errors using the message console.
-	 */
-	protected void printErrors(){
-		if(this.errorSet.hasErrors()){
-			MessageConsole.conError(this.errorSet.render());
-		}
 	}
 }

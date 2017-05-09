@@ -65,6 +65,56 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 	}
 
 	@Override
+	public String getAppDescription() {
+		return "Generates scripts (OS specific) for running S2V applications from the JAR with all dependencies";
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public String getAppName() {
+		return APP_NAME;
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
+	}
+
+	/**
+	 * Tests if the class is run from an executable JAR.
+	 * @return true if run from an executable JAR (JAR with Main-Class in manifest), false otherwise with errors printed
+	 */
+	protected boolean inExecJar(){
+		Class<Gen_ExecJarScripts> clazz = Gen_ExecJarScripts.class;
+		String className = clazz.getSimpleName() + ".class";
+		String classPath = clazz.getResource(className).toString();
+		if (!classPath.startsWith("jar")) {
+			System.err.println(this.getAppName() + ": not started in a jar, cannot proceed");
+			return false;
+		}
+
+		String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
+		Manifest manifest;
+		try {
+			manifest = new Manifest(new URL(manifestPath).openStream());
+		}
+		catch (IOException ex) {
+			System.err.println(this.getAppName() + ": exception while retrieving manifest: " + ex.getMessage());
+			return false;
+		}
+		Attributes attr = manifest.getMainAttributes();
+		if(StringUtils.isBlank(attr.getValue("Main-Class"))){
+			System.err.println(this.getAppName() + ": no main class in manifest, probably not an executable JAR, cannot continue");
+			return false;
+		}
+		return true;
+	}
+
+	@Override
 	public void runApplication() {
 		if(this.errNo!=0){
 			this.printErrors();
@@ -143,56 +193,6 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 		if(this.errorSet.hasErrors()){
 			System.err.println(this.errorSet.render());
 		}
-	}
-
-	@Override
-	public String getAppDescription() {
-		return "Generates scripts (OS specific) for running S2V applications from the JAR with all dependencies";
-	}
-
-	@Override
-	public String getAppDisplayName(){
-		return APP_DISPLAY_NAME;
-	}
-
-	@Override
-	public String getAppName() {
-		return APP_NAME;
-	}
-
-	@Override
-	public String getAppVersion() {
-		return APP_VERSION;
-	}
-
-	/**
-	 * Tests if the class is run from an executable JAR.
-	 * @return true if run from an executable JAR (JAR with Main-Class in manifest), false otherwise with errors printed
-	 */
-	protected boolean inExecJar(){
-		Class<Gen_ExecJarScripts> clazz = Gen_ExecJarScripts.class;
-		String className = clazz.getSimpleName() + ".class";
-		String classPath = clazz.getResource(className).toString();
-		if (!classPath.startsWith("jar")) {
-			System.err.println(this.getAppName() + ": not started in a jar, cannot proceed");
-			return false;
-		}
-
-		String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
-		Manifest manifest;
-		try {
-			manifest = new Manifest(new URL(manifestPath).openStream());
-		}
-		catch (IOException ex) {
-			System.err.println(this.getAppName() + ": exception while retrieving manifest: " + ex.getMessage());
-			return false;
-		}
-		Attributes attr = manifest.getMainAttributes();
-		if(StringUtils.isBlank(attr.getValue("Main-Class"))){
-			System.err.println(this.getAppName() + ": no main class in manifest, probably not an executable JAR, cannot continue");
-			return false;
-		}
-		return true;
 	}
 
 	/**

@@ -27,6 +27,16 @@ import de.vandermeer.execs.options.Option_TypedP_String;
  */
 public interface GenAop {
 
+	static Option_TypedP_Boolean AUTOGEN_REGISTERED(){
+		return new Option_TypedP_Boolean(
+				"AUTOGEN_REGISTERED",
+				"execs.autogenerate.registered",
+				false,
+				"flag for auto-script generation for registered executable applications",
+				"A property key to set auto-script generation for registered executable applications."
+		);
+	}
+
 	static Option_TypedP_String JAVA_CP(){
 		return new Option_TypedP_String(
 				"JAVA_CP",
@@ -37,13 +47,13 @@ public interface GenAop {
 		);
 	}
 
-	static Option_TypedP_String RUN_SCRIPT_NAME(){
+	static Option_TypedP_String JVM_RUNTIME_OPTIONS(){
 		return new Option_TypedP_String(
-				"RUN_SCRIPT_NAME",
-				"run.script.name",
-				true,
-				"the script name of the generic run script, without file extension",
-				"A property key for the script name of the generic run script, without file extension."
+				"JVM_RUNTIME_OPTIONS",
+				"jvm.runtime",
+				false,
+				"JVM runtime options",
+				"JVM runtime options as comma-separated list in the form of 'key:value'. Each entry of the list will be translated to '-Dkey:value'. For example 'file.encoding:UTF-8' will be translated to '-Dfile.encoding:UTF-8'. {APPLICATION_HOME} will be translated for target platform."
 		);
 	}
 
@@ -57,34 +67,13 @@ public interface GenAop {
 		);
 	}
 
-//PROP_JAVAPROP_START
-	static Option_TypedP_String JVM_RUNTIME_OPTIONS(){
+	static Option_TypedP_String RUN_SCRIPT_NAME(){
 		return new Option_TypedP_String(
-				"JVM_RUNTIME_OPTIONS",
-				"jvm.runtime",
-				false,
-				"JVM runtime options",
-				"JVM runtime options as comma-separated list in the form of 'key:value'. Each entry of the list will be translated to '-Dkey:value'. For example 'file.encoding:UTF-8' will be translated to '-Dfile.encoding:UTF-8'. {APPLICATION_HOME} will be translated for target platform."
-		);
-	}
-
-//	static Option_TypedP_Boolean EXECS_CLASSMAP(){
-//		return new Option_TypedP_Boolean(
-//				"EXECS_CLASSMAP",
-//				"execs.classmap",
-//				false,
-//				"class map for executable applications",
-//				"A property key to set class map for executable applications."
-//		);
-//	}
-
-	static Option_TypedP_Boolean AUTOGEN_REGISTERED(){
-		return new Option_TypedP_Boolean(
-				"AUTOGEN_REGISTERED",
-				"execs.autogenerate.registered",
-				false,
-				"flag for auto-script generation for registered executable applications",
-				"A property key to set auto-script generation for registered executable applications."
+				"RUN_SCRIPT_NAME",
+				"run.script.name",
+				true,
+				"the script name of the generic run script, without file extension",
+				"A property key for the script name of the generic run script, without file extension."
 		);
 	}
 }

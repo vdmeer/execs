@@ -96,62 +96,6 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 	}
 
 	@Override
-	public void runApplication() {
-		if(this.errNo!=0){
-			this.printErrors();
-			return;
-		}
-
-		String propFile = this.optionPropFile.getValue();
-		Properties configuration = this.loadProperties(propFile);
-		if(configuration==null){
-			this.printErrors();
-			return;
-		}
-		else{
-			this.getPropertyParser().parse(configuration);
-		}
-
-		if(this.errNo==0){
-			String filename = "/de/vandermeer/execs/bin/configure.sh";
-			try {
-				InputStream inStream = getClass().getResourceAsStream(filename);
-				BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
-				String line;
-				while((line=input.readLine())!=null){
-					if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
-						System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
-					}
-					else if(StringUtils.startsWith(line, "PROP_FILE=")){
-						System.out.println("PROP_FILE=" + propFile);
-					}
-					else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
-						System.out.println("EXECS_CLASS=" + this.propRunClass.getValue());
-					}
-					else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
-						System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
-					}
-					else{
-						System.out.println(line);
-					}
-				}
-			}
-			catch(NullPointerException ne){
-//				this.errorSet.addError("{}: exception while reading shell script from resource <{}>: {}", this.getAppName(), filename, ne);
-//				this.errNo = -32;
-				//TODO
-			}
-			catch (IOException e) {
-//				this.errorSet.addError("{}: IO exception while reading shell script: {}", this.getAppName(), e.getMessage());
-//				this.errNo = -33;
-				//TODO
-			}
-		}
-
-		this.printErrors();
-	}
-
-	@Override
 	public String getAppDescription() {
 		return "Generates configuration shell script for an application.";
 	}
@@ -208,6 +152,62 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 //			}
 		}
 		return null;
+	}
+
+	@Override
+	public void runApplication() {
+		if(this.errNo!=0){
+			this.printErrors();
+			return;
+		}
+
+		String propFile = this.optionPropFile.getValue();
+		Properties configuration = this.loadProperties(propFile);
+		if(configuration==null){
+			this.printErrors();
+			return;
+		}
+		else{
+			this.getPropertyParser().parse(configuration);
+		}
+
+		if(this.errNo==0){
+			String filename = "/de/vandermeer/execs/bin/configure.sh";
+			try {
+				InputStream inStream = getClass().getResourceAsStream(filename);
+				BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
+				String line;
+				while((line=input.readLine())!=null){
+					if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
+						System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
+					}
+					else if(StringUtils.startsWith(line, "PROP_FILE=")){
+						System.out.println("PROP_FILE=" + propFile);
+					}
+					else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
+						System.out.println("EXECS_CLASS=" + this.propRunClass.getValue());
+					}
+					else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
+						System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
+					}
+					else{
+						System.out.println(line);
+					}
+				}
+			}
+			catch(NullPointerException ne){
+//				this.errorSet.addError("{}: exception while reading shell script from resource <{}>: {}", this.getAppName(), filename, ne);
+//				this.errNo = -32;
+				//TODO
+			}
+			catch (IOException e) {
+//				this.errorSet.addError("{}: IO exception while reading shell script: {}", this.getAppName(), e.getMessage());
+//				this.errNo = -33;
+				//TODO
+			}
+		}
+
+		this.printErrors();
 	}
 
 }
