@@ -15,24 +15,22 @@
 
 package de.vandermeer.execs;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.stringtemplate.v4.ST;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
-import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.execs.options.typed.AO_Columns;
-import de.vandermeer.execs.options.typed.AO_HelpTyped;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 import de.vandermeer.skb.interfaces.application.Apo_TypedC;
-import de.vandermeer.skb.interfaces.application.Apo_TypedE;
-import de.vandermeer.skb.interfaces.application.Apo_TypedP;
 import de.vandermeer.skb.interfaces.application.App_CliParser;
+import de.vandermeer.skb.interfaces.application.App_EnvironmentParser;
+import de.vandermeer.skb.interfaces.application.App_PropertyParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
+import de.vandermeer.skb.interfaces.messagesets.IsErrorSet_IsError;
+import de.vandermeer.skb.interfaces.messagesets.IsInfoSet_FT;
+import de.vandermeer.skb.interfaces.messagesets.IsWarningSet_FT;
 
 /**
  * Abstract implementation of an application.
@@ -43,126 +41,124 @@ import de.vandermeer.skb.interfaces.application.IsApplication;
  */
 public abstract class AbstractAppliction implements IsApplication {
 
-	public final static int NO_HELP					= 0;
-
-	public final static int HELP_SIMPLE_LONG 		= 1;
-
-	public final static int HELP_SIMPLE_SHORTLONG	= 2;
-
-	public final static int HELP_TYPED_LONG			= 3;
-
-	public final static int HELP_TYPED_SHORTLONG	= 4;
-
-	public final static int NO_VERSION			= 0;
-
-	public final static int VERSION_LONG		= 1;
-
-	public final static int VERSION_SHORTLONG	= 2;
+	/** Application name. */
+	protected final transient String appName;
 
 	/** Application CLI parser. */
-	protected final App_CliParser cli;
+	protected final transient App_CliParser cliParser;
 
-	/** All environment options of the application. */
-	protected final Set<Apo_TypedE<?>> environmentOptions;
+	/** Application Environment parser. */
+	protected final transient App_EnvironmentParser envParser;
 
-	/** All property options of the application. */
-	protected final Set<Apo_TypedP<?>> propertyOptions;
+	/** Application Property parser. */
+	protected final transient App_PropertyParser propParser;
 
 	/** A simple help object, null if not required. */
-	protected final Apo_SimpleC aoSimpleHelp;
+	protected final transient Apo_SimpleC optionSimpleHelp;
 
 	/** A typed help object, null if not required. */
-	protected final Apo_TypedC<String> aoTypedHelp;
+	protected final transient Apo_TypedC<String> optionTypedHelp;
 
 	/** A simple version object, null if not required. */
-	protected final Apo_SimpleC aoVersion;
+	protected final transient Apo_SimpleC optionVersion;
 
-	protected final AO_Columns aoColumns = new AO_Columns(null);
+	/** Option for getting column (console width). */
+	protected final transient AO_Columns optionColumns = new AO_Columns(null);
+
+	/** Local set of errors, collected during execution printed at the end. */
+	protected final transient IsErrorSet_IsError errorSet = IsErrorSet_IsError.create();
+
+	/** Local set of warnings, collected during execution printed at the end. */
+	protected final transient IsWarningSet_FT warningSet = IsWarningSet_FT.create();
+
+	/** Local set of information, collected during execution printed at the end. */
+	protected final transient IsInfoSet_FT informationSet = IsInfoSet_FT.create();
+
+	/** Error number, holds the number of the last error, 0 if none occurred. */
+	protected transient int errNo;
 
 	/**
-	 * Creates a new application.
-	 * @param cli the CLI parser to use
-	 * @param useHelp an integer requesting a help option
-	 * @param useVersion an integer requesting a version option
+	 * Creates a new abstract application.
+	 * @param appName the application name, must not be blank
+	 * @param simpleHelp an optional simple help, null of not required
+	 * @param typedHelp an optional typed help, null if not required, if used with simpleHelp only typedHelp will be added
+	 * @param version an optional version, null if not required
 	 */
-	protected AbstractAppliction(App_CliParser cli, int useHelp, int useVersion){
-		Validate.validState(cli!=null, "ExecS: CLI parser cannot be null");
-		this.cli = cli;
-
-		this.environmentOptions = new HashSet<>();
-		this.addOption(this.aoColumns);
-
-		this.propertyOptions = new HashSet<>();
-
-		if(useHelp==HELP_SIMPLE_LONG){
-			this.aoSimpleHelp = new AO_HelpSimple(null, null);
-			this.aoTypedHelp = null;
-		}
-		else if(useHelp==HELP_SIMPLE_SHORTLONG){
-			this.aoSimpleHelp = new AO_HelpSimple('h', null);
-			this.aoTypedHelp = null;
-		}
-		else if(useHelp==HELP_TYPED_LONG){
-			this.aoTypedHelp = new AO_HelpTyped(null, null);
-			this.aoSimpleHelp = null;
-		}
-		else if(useHelp==HELP_TYPED_SHORTLONG){
-			this.aoTypedHelp = new AO_HelpTyped('h', null);
-			this.aoSimpleHelp = null;
-		}
-		else{
-			this.aoSimpleHelp = null;
-			this.aoTypedHelp = null;
-		}
-
-		if(useVersion==VERSION_LONG){
-			this.aoVersion = new AO_Version(null, null);
-		}
-		else if(useVersion==VERSION_SHORTLONG){
-			this.aoVersion = new AO_Version('v', null);
-		}
-		else{
-			this.aoVersion = null;
-		}
+	protected AbstractAppliction(final String appName, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
+		this(appName, null, null, null, simpleHelp, typedHelp, version);
 	}
 
-	@Override
-	public Set<Apo_TypedE<?>> getEnvironmentOptions() {
-		return this.environmentOptions;
-	}
+	/**
+	 * Creates a new abstract application.
+	 * @param appName the application name, must not be blank
+	 * @param cliParser the command line parser, null if default should be used
+	 * @param envParser the environment parser, null if default should be used
+	 * @param propParser the property parser, null if default should be used
+	 * @param simpleHelp an optional simple help, null of not required
+	 * @param typedHelp an optional typed help, null if not required, if used with simpleHelp only typedHelp will be added
+	 * @param version an optional version, null if not required
+	 */
+	protected AbstractAppliction(final String appName, final App_CliParser cliParser, final App_EnvironmentParser envParser, final App_PropertyParser propParser, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
+		Validate.notBlank(appName);
+		this.appName = appName;
 
-	@Override
-	public Set<Apo_TypedP<?>> getPropertyOptions() {
-		return this.propertyOptions;
+		this.cliParser = (cliParser==null)?new DefaultCliParser(appName):cliParser;
+		this.envParser = (envParser==null)?new DefaultEnvironmentParser(appName):envParser;
+		this.propParser = (propParser==null)?new DefaultPropertyParser(appName):propParser;
+
+		this.addOption(this.optionColumns);
+		this.optionSimpleHelp = (typedHelp!=null)?null:simpleHelp;
+		this.optionTypedHelp = typedHelp;
+		this.optionVersion = version;
 	}
 
 	@Override
 	public Apo_SimpleC cliSimpleHelpOption(){
-		return this.aoSimpleHelp;
+		return this.optionSimpleHelp;
 	}
 
 	@Override
 	public Apo_TypedC<String> cliTypedHelpOption(){
-		return this.aoTypedHelp;
+		return this.optionTypedHelp;
 	}
 
 	@Override
 	public Apo_SimpleC cliVersionOption(){
-		return this.aoVersion;
+		return this.optionVersion;
 	}
 
 	@Override
 	public App_CliParser getCliParser() {
-		return this.cli;
+		return this.cliParser;
 	}
 
 	@Override
 	public int getConsoleWidth(){
-		return this.aoColumns.getValue();
+		return this.optionColumns.getValue();
 	}
 
 	@Override
-	public String longDescriptionString(Object longDescription) {
+	public int getErrNo() {
+		return this.errNo;
+	}
+
+	@Override
+	public IsErrorSet_IsError getErrorSet() {
+		return this.errorSet;
+	}
+
+	@Override
+	public IsInfoSet_FT getInfoSet() {
+		return this.informationSet;
+	}
+
+	@Override
+	public IsWarningSet_FT getWarningSet() {
+		return this.warningSet;
+	}
+
+	@Override
+	public String translateLongDescription(final Object longDescription) {
 		if(longDescription==null){
 			return null;
 		}
@@ -181,6 +177,26 @@ public abstract class AbstractAppliction implements IsApplication {
 			return null;
 		}
 		return ret;
+	}
+
+	@Override
+	public void setErrno(int errorNumber) {
+		this.errNo = errorNumber;
+	}
+
+	@Override
+	public App_EnvironmentParser getEnvironmentParser() {
+		return this.envParser;
+	}
+
+	@Override
+	public App_PropertyParser getPropertyParser() {
+		return this.propParser;
+	}
+
+	@Override
+	public String getAppName() {
+		return this.appName;
 	}
 
 }

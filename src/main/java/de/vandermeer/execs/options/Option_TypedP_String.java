@@ -15,52 +15,39 @@
 
 package de.vandermeer.execs.options;
 
-import de.vandermeer.skb.interfaces.application.Apo_TypedE;
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_PropertiesOptions;
 
 /**
- * Abstract implementation of a typed environment option.
+ * Abstract implementation of a property option of type string.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AbstractTypedE<T> extends AbstractApoBaseE implements Apo_TypedE<T> {
-
-	/** The value set from a environment. */
-	protected T environmentValue;
-
-	/** The value set as default. */
-	protected T defaultValue;
+public class Option_TypedP_String extends Abstract_TypedP<String> {
 
 	/**
 	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
-	 * @param environmentKey the environment key
+	 * @param propertyKey the property key, must not be blank
+	 * @param propertyIsRequired flag for property option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedE(String displayName, String environmentKey, String description, Object longDescription) {
-		super(displayName, environmentKey, description, longDescription);
-
-		this.validate();
+	public Option_TypedP_String(final String displayName, final String propertyKey, final boolean propertyIsRequired, final String description, final Object longDescription) {
+		super(displayName, propertyKey, propertyIsRequired, description, longDescription);
 	}
 
 	@Override
-	public T getDefaultValue() {
-		return this.defaultValue;
-	}
-
-	/**
-	 * Set the default value.
-	 * @param value new default value, not checked
-	 */
-	public void setDefaultValue(T value) {
-		this.defaultValue = value;
-	}
-
-	@Override
-	public T getEnvironmentValue() {
-		return this.environmentValue;
+	public IsError setPropertyValue(String value) {
+		if(!this.propertyIsRequired() && value==null){
+			return Templates_PropertiesOptions.VALUE_REQUIRED_BLANK.getError(this.displayName, this.propertyKey);
+		}
+		if(value!=null){
+			this.propertyValue = value;
+		}
+		return null;
 	}
 
 }

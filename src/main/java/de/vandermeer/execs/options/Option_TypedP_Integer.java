@@ -15,36 +15,42 @@
 
 package de.vandermeer.execs.options;
 
-import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_PropertiesOptions;
 
 /**
- * Abstract implementation of a property option of type string.
+ * Abstract implementation of a property option of type integer.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AbstractTypedP_String extends AbstractTypedP<String> {
+public class Option_TypedP_Integer extends Abstract_TypedP<Integer> {
 
 	/**
 	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
-	 * @param propertyKey the property key, must not be blank
+	 * @param propertyKey the property key
+	 * @param propertyIsRequired flag for property option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedP_String(String displayName, String propertyKey, String description, Object longDescription) {
-		super(displayName, propertyKey, description, longDescription);
+	public Option_TypedP_Integer(final String displayName, final String propertyKey, final boolean propertyIsRequired, final String description, final Object longDescription) {
+		super(displayName, propertyKey, propertyIsRequired, description, longDescription);
 	}
 
 	@Override
-	public void setPropertyValue(Properties properties) throws IllegalStateException {
-		String value = properties.getProperty(this.getPropertyKey());
-		if(!StringUtils.isBlank(value)){
-			this.propertyValue = value;
+	public IsError setPropertyValue(String value) {
+		if(!this.propertyIsRequired() && value==null){
+			return Templates_PropertiesOptions.VALUE_REQUIRED_BLANK.getError(this.displayName, this.propertyKey);
 		}
+		try{
+			this.propertyValue = Integer.valueOf(value);
+		}
+		catch(NumberFormatException nfex){
+			return Templates_PropertiesOptions.ERROR_2_INT.getError(this.displayName, this.propertyKey, value);
+		}
+		return null;
 	}
 
 }

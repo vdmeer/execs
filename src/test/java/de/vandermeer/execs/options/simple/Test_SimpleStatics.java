@@ -23,12 +23,11 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang3.StringUtils;
 
 import de.vandermeer.execs.DefaultCliParser;
-import de.vandermeer.execs.options.AbstractSimpleC;
-import de.vandermeer.skb.interfaces.application.CliParseException;
+import de.vandermeer.execs.options.Option_SimpleC;
 
 public class Test_SimpleStatics {
 
-	public static void test_Constructor(AbstractSimpleC ao, boolean isRequired, String cliLong){
+	public static void test_Constructor(Option_SimpleC ao, boolean isRequired, String cliLong){
 		assertNull(ao.getLongDescription());
 		assertNull(ao.getLongDescription());
 
@@ -39,7 +38,7 @@ public class Test_SimpleStatics {
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 	}
 
-	public static void test_ConstructorShort(AbstractSimpleC ao, boolean isRequired, String cliLong, Character cliShort){
+	public static void test_ConstructorShort(Option_SimpleC ao, boolean isRequired, String cliLong, Character cliShort){
 		assertTrue(ao.getCliShort().equals(cliShort));
 		assertTrue(ao.getCliLong().equals(cliLong));
 		assertEquals(cliShort.toString(), ao.getCliShortLong());
@@ -48,31 +47,31 @@ public class Test_SimpleStatics {
 		assertNull(ao.getLongDescription());
 	}
 
-	public static void test_Cli(AbstractSimpleC ao){
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_Cli(Option_SimpleC ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertEquals(1, cli.getAddedOptions().size());
 		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
 	}
 
-	public static void test_CliShort(AbstractSimpleC ao){
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliShort(Option_SimpleC ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertEquals(2, cli.getAddedOptions().size());
 		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
 		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
 	}
 
-	public static void test_CliParse(AbstractSimpleC ao) throws IllegalStateException, CliParseException{
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliParse(Option_SimpleC ao) {
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--" + ao.getCliLong()});
 		assertTrue(ao.inCli());
 	}
 
-	public static void test_CliParseShort(AbstractSimpleC ao) throws IllegalStateException, CliParseException{
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliParseShort(Option_SimpleC ao) {
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-" + ao.getCliShort()});

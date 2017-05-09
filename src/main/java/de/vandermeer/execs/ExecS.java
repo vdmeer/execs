@@ -34,6 +34,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 import de.vandermeer.execs.cf.CF;
 import de.vandermeer.skb.interfaces.application.IsApplication;
+import de.vandermeer.skb.interfaces.messagesets.IsErrorSet_FT;
 
 /**
  * The application executor.
@@ -43,29 +44,61 @@ import de.vandermeer.skb.interfaces.application.IsApplication;
  * @since      v0.0.1
  */
 public class ExecS {
-	/** Name of the application for help/usage and printouts. */
-	String appName = "execs";
-
-	/** Filter for jar files to be considered during search, this can speed up search process. */
-	List<String> jarFilter = null;
-
-	/** Filter for package names, this can speed up search process. */
-	String packageFilter = null;
-
-	/**
-	 * Map of pre-registered applications.
-	 * Use {@link #addApplication(String, Class)} to add your own applications.
-	 */
-	protected final TreeMap<String, Class<? extends IsApplication>> classmap;
 
 	/** Application version, should be same as the version in the class JavaDoc. */
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
+	/** The short CLI option for help defined as `-h`. */
+	public final static String CLI_HELP_SHORT = "-h";
+
+	/** The long CLI option for help defined as `--help`. */
+	public final static String CLI_HELP_LONG = "--help";
+
+	/** The short CLI option for version defined as `-v`. */
+	public final static String CLI_VERSION_SHORT = "-v";
+
+	/** The long CLI option for version defined as `--version`. */
+	public final static String CLI_VERSION_LONG = "--version";
+
+	/** The short CLI option for list defined as `-l`. */
+	public final static String CLI_LIST_SHORT = "-l";
+
+	/** The long CLI option for list defined as `--list`. */
+	public final static String CLI_LIST_LONG = "--list";
+
+	/**
+	 * Public main to start the application executor.
+	 * @param args command line arguments
+	 */
+	public static void main(String[] args) {
+		final ExecS run = new ExecS();
+		run.execute(args);
+		System.exit(run.getErrNo());
+	}
+
+	/** Name of the application for help/usage and printouts. */
+	protected transient String appName = "execs";
+
+	/** Filter for jar files to be considered during search, this can speed up search process. */
+	protected transient List<String> jarFilter;
+
+	/** Filter for package names, this can speed up search process. */
+	protected transient String packageFilter;
+
+	/** Map of registered applications. */
+	protected final transient TreeMap<String, Class<? extends IsApplication>> classmap;
+
 	/** Set of all classes filled during runtime search */
-	final TreeSet<String> classNames;
+	protected final transient TreeSet<String> classNames;
 
 	/** Local ST Group for printouts. */
-	final STGroupFile stg;
+	protected final transient STGroupFile stg = new STGroupFile("de/vandermeer/execs/execs.stg");
+
+	/** Local set of errors, collected during execution printed at the end. */
+	protected final transient IsErrorSet_FT errorSet = IsErrorSet_FT.create();
+
+	/** Error number, holds the number of the last error, 0 if none occurred. */
+	protected transient int errNo;
 
 	/**
 	 * Standard constructor as used via direct command line execution.
@@ -87,8 +120,150 @@ public class ExecS {
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
 		this.addApplication(Gen_ConfigureSh.APP_NAME, Gen_ConfigureSh.class);
 		this.addApplication(Gen_ExecJarScripts.APP_NAME, Gen_ExecJarScripts.class);
+	}
 
-		this.stg = new STGroupFile("de/vandermeer/execs/execs.stg");
+	/**
+	 * Adds a set of application at runtime, as in all found applications that can be executed.
+	 * @param set a set of applications
+	 */
+	protected final void addAllApplications(Set<Class<?>> set){
+		for(Class<?> cls:set){
+			if(!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())){
+				if(!this.classmap.containsValue(cls)){
+					this.classNames.add(cls.getName());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds a new application at runtime, with name (shortcut to start) and related class.
+	 * @param name a unique name for the application
+	 * @param clazz the class of the application for instantiation
+	 */
+	protected final void addApplication(String name, Class<? extends IsApplication> clazz){
+		this.classmap.put(name, clazz);
+	}
+
+	/**
+	 * Main method.
+	 * @param args command line arguments
+	 * @return 0 on success, -1 on error with message on STDERR
+	 */
+	public final int execute(String[] args){
+		final String arguments = StringUtils.join(args, ' ');
+		final StrTokenizer tokens = new StrTokenizer(arguments);
+
+		String arg = tokens.nextToken();
+		this.errNo = 0;
+
+		if(arg==null || CLI_HELP_SHORT.equals(arg) || CLI_HELP_LONG.equals(arg)){
+			//help: no arguments or -h or --help -> print usage and exit(1)
+			this.printUsage();
+			this.errNo = 1;
+		}
+		else if(CLI_VERSION_SHORT.equals(arg) || CLI_VERSION_LONG.equals(arg)){
+			System.out.println(this.appName + " - " + ExecS.APP_VERSION);
+			System.out.println();
+			this.errNo = 1;
+		}
+		else if(CLI_LIST_SHORT.equals(arg) || CLI_LIST_LONG.equals(arg)){
+			//list: if -l or --list -> trigger search and exit(1)
+			CF cf = new CF()
+				.setJarFilter((ArrayUtils.contains(args, "-j"))?this.jarFilter:null)
+				.setPkgFilter((ArrayUtils.contains(args, "-p"))?this.packageFilter:null);
+			this.addAllApplications(cf.getSubclasses(IsApplication.class));
+			this.printList();
+			this.errNo = 1;
+		}
+		else{
+			Object svc = null;
+			if(this.classmap.containsKey(arg)){
+				try{
+					svc = this.classmap.get(arg).newInstance();
+				}
+				catch(IllegalAccessException | InstantiationException iex){
+					this.errorSet.addError("{}:  tried to execute <{}> by registered name -> exception: {}", this.appName, args[0], iex.getMessage());
+//					iex.printStackTrace();
+					this.errNo = -1;
+				}
+			}
+			else{
+				try{
+					Class<?> c = Class.forName(arg);
+					svc = c.newInstance();
+				}
+				catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
+					this.errorSet.addError("{}:  tried to execute <{}> as class name -> exception: {}", this.appName, args[0], ex.getMessage());
+//					ex.printStackTrace();
+					this.errNo = -2;
+				}
+			}
+
+			if(this.errNo==0){
+				this.executeApplication(svc, args, arg);
+			}
+			else{
+				System.err.println(this.errorSet.render());
+				System.err.println();
+				System.err.println(this.appName + ": no application could be started and nothing else could be done, try '-h' or '--help' for help");
+				System.err.println();
+			}
+		}
+
+		return this.errNo;
+	}
+
+	/**
+	 * Executes an application.
+	 * @param svc the application, must not be null
+	 * @param args original command line arguments
+	 * @param orig the original name or class for the application for error messages
+	 * @return 0 on success, other than zero on failure (including failure of the executed application)
+	 */
+	protected void executeApplication(Object svc, String[] args, String orig){
+		this.errNo = 0;
+		if(svc!=null && (svc instanceof IsApplication)){
+			if(svc instanceof Gen_RunScripts){
+				//hook for GenRunScripts to get current class map - registered applications
+				((Gen_RunScripts)svc).setClassMap(this.classmap);
+			}
+			if(svc instanceof Gen_ExecJarScripts){
+				//hook for Gen_ExecJarScripts to get current class map - registered applications
+				((Gen_ExecJarScripts)svc).setClassMap(this.classmap);
+			}
+			((IsApplication)svc).executeApplication(ArrayUtils.remove(args, 0));
+			this.errNo = ((IsApplication)svc).getErrNo();
+		}
+		else if(svc==null){
+			this.errorSet.addError("{}: could not create object for class or application name <{}>", this.appName, orig);
+			this.errNo = -10;
+		}
+		else if(!(svc instanceof IsApplication)){
+			this.errorSet.addError("{}: given class or application name <{}> is not instance of <{}>", this.appName, orig, IsApplication.class.getName());
+			this.errNo = -11;
+		}
+		else{
+			this.errorSet.addError("{}: unexpected error processing for class or application name <{}>", this.appName, orig);
+			this.errNo = -12;
+		}
+	}
+
+	/**
+	 * Returns the set application name for the executor.
+	 * This name is used for print outs only.
+	 * @return set application name
+	 */
+	public final String getAppName(){
+		return this.appName;
+	}
+
+	/**
+	 * Returns the number of the last error, 0 if none occurred.
+	 * @return last error number
+	 */
+	public int getErrNo(){
+		return this.errNo;
 	}
 
 	/**
@@ -97,6 +272,38 @@ public class ExecS {
 	 */
 	public Set<String> getRegisteredApplications(){
 		return this.classmap.keySet();
+	}
+
+	/**
+	 * Prints a list of pre-registered and found applications.
+	 */
+	protected final void printList(){
+		final ST list = this.stg.getInstanceOf("list");
+		list.add("appName", this.appName);
+		if(this.classmap.size()>0){
+			List<Map<String, String>> l = new ArrayList<>();
+			for(String key : this.classmap.keySet()){
+				Map<String, String> m = new HashMap<>();
+				m.put("key", key);
+				m.put("val", this.classmap.get(key).getName());
+				l.add(m);
+			}
+			list.add("classMap", l);
+		}
+		list.add("className", this.classNames);
+		System.out.println(list.render());
+	}
+
+	/**
+	 * Prints usage information to standard out.
+	 */
+	protected final void printUsage(){
+		final ST usage = this.stg.getInstanceOf("usage");
+		usage.add("appName", this.appName);
+		usage.add("packageFilter", this.packageFilter);
+		usage.add("jarFilter", this.jarFilter);
+		usage.add("excludedNames", new TreeSet<>(Arrays.asList(new CF().excludedNames)));
+		System.out.println(usage.render());
 	}
 
 	/**
@@ -122,176 +329,4 @@ public class ExecS {
 	protected final void setPackageFiler(String filter){
 		this.packageFilter = filter;
 	}
-
-	/**
-	 * Adds a new application at runtime, with name (shortcut to start) and related class.
-	 * @param name a unique name for the application
-	 * @param clazz the class of the application for instantiation
-	 */
-	protected final void addApplication(String name, Class<? extends IsApplication> clazz){
-		this.classmap.put(name, clazz);
-	}
-
-	/**
-	 * Adds a set of application at runtime, as in all found applications that can be executed.
-	 * @param set a set of applications
-	 */
-	protected final void addAllApplications(Set<Class<?>> set){
-		for(Class<?> cls:set){
-			if(!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())){
-				if(!this.classmap.containsValue(cls)){
-					this.classNames.add(cls.getName());
-				}
-			}
-		}
-	}
-
-	/**
-	 * Main method.
-	 * @param args command line arguments
-	 * @return 0 on success, -1 on error with message on STDERR
-	 */
-	public final int execute(String[] args){
-		String arguments = StringUtils.join(args, ' ');
-		StrTokenizer tokens = new StrTokenizer(arguments);
-
-		String arg = tokens.nextToken();
-		int ret = 0;
-
-		if(arg==null || "-?".equals(arg) || "-h".equals(arg) || "--help".equals(arg)){
-			//First help: no arguments or -? or --help -> print usage and exit(0)
-			this.printUsage();
-			return 0;
-		}
-		else if("-v".equals(arg) || "--version".equals(arg)){
-			System.out.println(this.appName + " - " + ExecS.APP_VERSION);
-			System.out.println();
-		}
-		else if("-l".equals(arg) || "--list".equals(arg)){
-			//Second list: if -l or --list -> trigger search and exit(0)
-			CF cf = new CF()
-				.setJarFilter((ArrayUtils.contains(args, "-j"))?this.jarFilter:null)
-				.setPkgFilter((ArrayUtils.contains(args, "-p"))?this.packageFilter:null);
-			this.addAllApplications(cf.getSubclasses(IsApplication.class));
-			this.printList();
-			return 0;
-		}
-		else{
-			Object svc = null;
-			if(this.classmap.containsKey(arg)){
-				try{
-					svc = this.classmap.get(arg).newInstance();
-				}
-				catch(IllegalAccessException | InstantiationException iex){
-					System.err.println(this.appName + ": tried to execute <" + args[0] + "> by registered name -> exception: " + iex.getMessage());
-//					iex.printStackTrace();
-					ret = -99;
-				}
-			}
-			else{
-				try{
-					Class<?> c = Class.forName(arg);
-					svc = c.newInstance();
-				}
-				catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
-					System.err.println(this.appName + ": tried to execute <" + args[0] + "> as class name -> exception: " + ex.getMessage());
-//					ex.printStackTrace();
-					ret = -99;
-				}
-			}
-			ret = this.executeApplication(svc, args, arg);
-		}
-
-		if(ret==-99){
-			//now we are in trouble, nothing we could do worked, so print that and quit
-			System.err.println(this.appName + ": no application could be started and nothing else could be done, try '-?' or '--help' for help");
-			System.err.println();
-		}
-		return ret;
-	}
-
-	/**
-	 * Executes an application.
-	 * @param svc the application, must not be null
-	 * @param args original command line arguments
-	 * @param orig the original name or class for the application for error messages
-	 * @return 0 on success, other than zero on failure (including failure of the executed application)
-	 */
-	protected int executeApplication(Object svc, String[] args, String orig){
-		if(svc!=null && (svc instanceof IsApplication)){
-			if(svc instanceof Gen_RunScripts){
-				//hook for GenRunScripts to get current class map - registered applications
-				((Gen_RunScripts)svc).setClassMap(this.classmap);
-			}
-			if(svc instanceof Gen_ExecJarScripts){
-				//hook for Gen_ExecJarScripts to get current class map - registered applications
-				((Gen_ExecJarScripts)svc).setClassMap(this.classmap);
-			}
-			return ((IsApplication)svc).executeApplication(ArrayUtils.remove(args, 0));
-		}
-		else if(svc==null){
-			System.err.println("could not create object for class or application name <" + orig + ">");
-			return -1;
-		}
-		else if(!(svc instanceof IsApplication)){
-			System.err.println("given class or application name <" + orig + "> is not instance of " + IsApplication.class.getName());
-			return -2;
-		}
-		else{
-			System.err.println("unexpected error processing for class or application name <" + orig + ">");
-			return -3;
-		}
-	}
-
-	/**
-	 * Prints a list of pre-registered and found applications.
-	 */
-	protected final void printList(){
-		ST list = this.stg.getInstanceOf("list");
-		list.add("appName", this.appName);
-		if(this.classmap.size()>0){
-			List<Map<String, String>> l = new ArrayList<>();
-			for(String key : this.classmap.keySet()){
-				Map<String, String> m = new HashMap<>();
-				m.put("key", key);
-				m.put("val", this.classmap.get(key).getName());
-				l.add(m);
-			}
-			list.add("classMap", l);
-		}
-		list.add("className", this.classNames);
-		System.out.println(list.render());
-	}
-
-	/**
-	 * Prints usage information to standard out.
-	 */
-	protected final void printUsage(){
-		ST usage = this.stg.getInstanceOf("usage");
-		usage.add("appName", this.appName);
-		usage.add("packageFilter", this.packageFilter);
-		usage.add("jarFilter", this.jarFilter);
-		usage.add("excludedNames", new TreeSet<>(Arrays.asList(new CF().excludedNames)));
-		System.out.println(usage.render());
-	}
-
-	/**
-	 * Returns the set application name for the executor.
-	 * This name is used for print outs only.
-	 * @return set application name
-	 */
-	public final String getAppName(){
-		return this.appName;
-	}
-
-	/**
-	 * Public main to start the application executor.
-	 * @param args command line arguments
-	 */
-	public static void main(String[] args) {
-		ExecS run = new ExecS();
-		int ret = run.execute(args);
-		System.exit(ret);
-	}
-
 }

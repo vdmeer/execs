@@ -63,31 +63,6 @@ public class CF_Locator {
 	}
 
 	/**
-	 * Sets a jar filter.
-	 * @param jarFilter new filter, use null or empty list to not filter. The list will be copied locally.
-	 * @return self to allow for chaining
-	 */
-	public CF_Locator setJarFilter(List<String> jarFilter){
-		this.jarFilter.clear();
-		if(jarFilter!=null){
-			this.jarFilter.addAll(jarFilter);
-		}
-		this.needsReRun = true;
-		return this;
-	}
-
-	/**
-	 * Sets a package filter.
-	 * @param pkgFilter new package filter, set to null to not filter
-	 * @return self to allow for chaining
-	 */
-	public CF_Locator setPkgFilter(String pkgFilter){
-		this.pkgFilter = pkgFilter;
-		this.needsReRun = true;
-		return this;
-	}
-
-	/**
 	 * Runs the locator and collects all locations using the filters if set.
 	 * The method can be called multiple times and will only result in a new map if any of the filters have been changed.
 	 * If no filter has been changed, the current map will be returned.
@@ -209,6 +184,31 @@ public class CF_Locator {
 				catch(URISyntaxException ignore){continue;}
 			}
 		}
+	}
+
+	/**
+	 * Sets a jar filter.
+	 * @param jarFilter new filter, use null or empty list to not filter. The list will be copied locally.
+	 * @return self to allow for chaining
+	 */
+	public CF_Locator setJarFilter(List<String> jarFilter){
+		this.jarFilter.clear();
+		if(jarFilter!=null){
+			this.jarFilter.addAll(jarFilter);
+		}
+		this.needsReRun = true;
+		return this;
+	}
+
+	/**
+	 * Sets a package filter.
+	 * @param pkgFilter new package filter, set to null to not filter
+	 * @return self to allow for chaining
+	 */
+	public CF_Locator setPkgFilter(String pkgFilter){
+		this.pkgFilter = pkgFilter;
+		this.needsReRun = true;
+		return this;
 	}
 
 }

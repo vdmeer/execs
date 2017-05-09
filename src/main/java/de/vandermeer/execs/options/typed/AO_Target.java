@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.typed;
 
-import de.vandermeer.execs.options.AbstractTypedC_String;
+import de.vandermeer.execs.options.Option_TypedC_String;
 
 /**
  * Typed CLI option `target`.
@@ -24,7 +24,7 @@ import de.vandermeer.execs.options.AbstractTypedC_String;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Target extends AbstractTypedC_String {
+public class AO_Target extends Option_TypedC_String {
 
 	/**
 	 * Creates a new option.
@@ -34,7 +34,7 @@ public class AO_Target extends AbstractTypedC_String {
 	 * @param description as short option description
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Target(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
+	public AO_Target(final Character cliShort, final boolean isRequired, final String argDescr, final String description, final Object longDescription) {
 		super(
 				"Target",
 				cliShort, "target", isRequired,

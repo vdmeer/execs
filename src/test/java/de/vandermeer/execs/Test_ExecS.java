@@ -40,30 +40,28 @@ public class Test_ExecS {
 	@Test
 	public void testCliHelp(){
 		ExecS execs = new ExecS();
-		int run = execs.execute(new String[]{"-?"});
-		assertEquals(0, run);
-		run = execs.execute(new String[]{"-h"});
-		assertEquals(0, run);
+		int run = execs.execute(new String[]{"-h"});
+		assertEquals(1, run);
 		run = execs.execute(new String[]{"--help"});
-		assertEquals(0, run);
+		assertEquals(1, run);
 	}
 
 	@Test
 	public void testCliVersion(){
 		ExecS execs = new ExecS();
 		int run = execs.execute(new String[]{"-v"});
-		assertEquals(0, run);
+		assertEquals(1, run);
 		run = execs.execute(new String[]{"--version"});
-		assertEquals(0, run);
+		assertEquals(1, run);
 	}
 
 	@Test
 	public void testCliList(){
 		ExecS execs = new ExecS();
 		int run = execs.execute(new String[]{"-l"});
-		assertEquals(0, run);
+		assertEquals(1, run);
 		run = execs.execute(new String[]{"--list"});
-		assertEquals(0, run);
+		assertEquals(1, run);
 	}
 
 }

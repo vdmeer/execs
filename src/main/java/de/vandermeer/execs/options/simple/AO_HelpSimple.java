@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.simple;
 
-import de.vandermeer.execs.options.AbstractSimpleC;
+import de.vandermeer.execs.options.Option_SimpleC;
 
 /**
  * Simple CLI option `help`.
@@ -24,14 +24,14 @@ import de.vandermeer.execs.options.AbstractSimpleC;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_HelpSimple extends AbstractSimpleC {
+public class AO_HelpSimple extends Option_SimpleC {
 
 	/**
 	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * ]@param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_HelpSimple(Character cliShort, Object longDescription) {
+	public AO_HelpSimple(final Character cliShort, final Object longDescription) {
 		super(
 				"Help",
 				cliShort,

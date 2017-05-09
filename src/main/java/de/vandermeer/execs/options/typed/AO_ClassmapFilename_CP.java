@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.typed;
 
-import de.vandermeer.execs.options.AbstractTypedCP_String;
+import de.vandermeer.execs.options.Option_TypedCP_String;
 
 /**
  * Typed CLI / property option `classmap-file`.
@@ -24,19 +24,23 @@ import de.vandermeer.execs.options.AbstractTypedCP_String;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_ClassmapFilename_CP extends AbstractTypedCP_String {
+public class AO_ClassmapFilename_CP extends Option_TypedCP_String {
 
 	/**
 	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
-	 * @param propertyKey the property key for the option, must not be blank
 	 */
-	public AO_ClassmapFilename_CP(Character cliShort, String propertyKey) {
+	public AO_ClassmapFilename_CP(final Character cliShort) {
 		super(
 				"Classmap Filename",
-				cliShort, "classmap-file", false,
-				"FILE", false, "a filename, file must exist as plain text file using propery syntax",
-				propertyKey,
+				cliShort,
+				"classmap-file",
+				false,
+				"FILE",
+				false,
+				"a filename, file must exist as plain text file using propery syntax",
+				"execs.classmap",
+				false,
 				"a property file with class names (executable applications) mapped to script names",
 				"The class map file contains mappings from a class name to a script name. This mapping is used to generate run scripts for applications that are not registered with an executor, or if automated generation (for registered applications) is not required or wanted."
 		);

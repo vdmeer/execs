@@ -24,43 +24,38 @@ import de.vandermeer.skb.interfaces.application.Apo_TypedCP;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractTypedCP<T> extends AbstractTypedC<T> implements Apo_TypedCP<T> {
+public abstract class Abstract_TypedCP<T> extends Abstract_TypedC<T> implements Apo_TypedCP<T> {
 
 	/** Flag for option found in properties. */
-	protected boolean inProps = false;
+	protected transient boolean isInProps;
 
 	/** The property key. */
-	protected final String propertyKey;
+	protected final transient String propertyKey;
+
+	/** Flag for required property options. */
+	protected final transient Boolean propertyIsRequired;
 
 	/** The value set from a property. */
-	protected T propertyValue;
+	protected transient T propertyValue;
 
 	/**
 	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
-	 * @param isRequired flag for CLI option being required or not
+	 * @param cliIsRequired flag for CLI option being required or not
 	 * @param argName the name of the argument, must not be blank
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
 	 * @param propertyKey a key for the option in properties, must not be blank
+	 * @param propertyIsRequired flag for property option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedCP(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String propertyKey, String description, Object longDescription) {
-		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description, longDescription);
+	protected Abstract_TypedCP(final String displayName, final Character cliShort, final String cliLong, final boolean cliIsRequired, final String argName, final boolean argIsOptional, final String argDescr, final String propertyKey, final boolean propertyIsRequired, final String description, final Object longDescription) {
+		super(displayName, cliShort, cliLong, cliIsRequired, argName, argIsOptional, argDescr, description, longDescription);
 		this.propertyKey = propertyKey;
-	}
-
-	@Override
-	public void validate() throws IllegalStateException {
-		Apo_TypedCP.super.validate();
-	}
-
-	@Override
-	public boolean inProperties() {
-		return this.inProps;
+		this.propertyIsRequired = propertyIsRequired;
 	}
 
 	@Override
@@ -71,6 +66,26 @@ public abstract class AbstractTypedCP<T> extends AbstractTypedC<T> implements Ap
 	@Override
 	public T getPropertyValue() {
 		return this.propertyValue;
+	}
+
+	@Override
+	public boolean inProperties() {
+		return this.isInProps;
+	}
+
+	@Override
+	public void validate() throws IllegalStateException {
+		Apo_TypedCP.super.validate();
+	}
+
+	@Override
+	public boolean propertyIsRequired() {
+		return this.propertyIsRequired;
+	}
+
+	@Override
+	public void setInProperties(boolean inProp){
+		this.isInProps = inProp;
 	}
 
 }

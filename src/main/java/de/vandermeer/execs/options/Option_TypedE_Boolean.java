@@ -15,58 +15,40 @@
 
 package de.vandermeer.execs.options;
 
-import de.vandermeer.skb.interfaces.application.ApoBaseE;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_EnvironmentOptions;
 
 /**
- * Base for an environment option.
+ * Abstract implementation of a environment option of type boolean.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractApoBaseE extends AbstractApoBase implements ApoBaseE {
-
-	/** Flag for option found in environment. */
-	protected transient boolean isInEnv;
-
-	/** The environment key. */
-	protected final transient String environmentKey;
-
-	/** Flag for required environment options. */
-	protected final transient Boolean environmentIsRequired;
+public class Option_TypedE_Boolean extends Abstract_TypedE<Boolean> {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
 	 * @param environmentKey the environment key, must not be blank
 	 * @param environmentIsRequired flag for environment option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseE(final String displayName, final String environmentKey, final boolean environmentIsRequired, final String description, final Object longDescription) {
-		super(displayName, description, longDescription);
-		this.environmentKey = environmentKey;
-		this.environmentIsRequired = environmentIsRequired;
+	public Option_TypedE_Boolean(final String displayName, final String environmentKey, final boolean environmentIsRequired, final String description, final Object longDescription) {
+		super(displayName, environmentKey, environmentIsRequired, description, longDescription);
 	}
 
 	@Override
-	public String getEnvironmentKey() {
-		return this.environmentKey;
-	}
-
-	@Override
-	public boolean inEnvironment() {
-		return this.isInEnv;
-	}
-
-	@Override
-	public boolean environmentIsRequired() {
-		return this.environmentIsRequired;
-	}
-
-	@Override
-	public void setInEnvironment(boolean inEnv){
-		this.isInEnv = inEnv;
+	public IsError setEnvironmentValue(final String value) {
+		if(StringUtils.isBlank(value)){
+			return Templates_EnvironmentOptions.VALUE_REQUIRED_BLANK.getError(this.getDisplayName(), this.getEnvironmentKey());
+		}
+		this.environmentValue = BooleanUtils.toBooleanObject(value);
+		return null;
 	}
 
 }

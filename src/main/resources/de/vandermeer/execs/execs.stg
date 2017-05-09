@@ -65,7 +65,7 @@ usage: <appName> [-l | --list] [-j] [-p]
    -j - activate a jar filter if set for the executor
    -p - activate a package filter if set for the executor
 
-usage: <appName> [-? | -h | --help]
+usage: <appName> [-h | --help]
    Prints this help screen.
 
 usage: <appName> [-v | --version]

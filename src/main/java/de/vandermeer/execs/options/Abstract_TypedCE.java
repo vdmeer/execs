@@ -25,43 +25,38 @@ import de.vandermeer.skb.interfaces.application.Apo_TypedCE;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractTypedCE<T> extends AbstractTypedC<T> implements Apo_TypedCE<T> {
+public abstract class Abstract_TypedCE<T> extends Abstract_TypedC<T> implements Apo_TypedCE<T> {
 
 	/** Flag for option found in environment. */
-	protected boolean inEnv = false;
+	protected transient boolean isInEnv;
 
 	/** The environment key. */
-	protected final String environmentKey;
+	protected final transient String environmentKey;
+
+	/** Flag for required environment options. */
+	protected final transient Boolean environmentIsRequired;
 
 	/** The value read from the environment. */
-	protected T environmentValue;
+	protected transient T environmentValue;
 
 	/**
 	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
-	 * @param isRequired flag for CLI option being required or not
+	 * @param cliIsRequired flag for CLI option being required or not
 	 * @param argName the name of the argument, must not be blank
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
 	 * @param environmentKey a key for the option in the environment, must not be blank
+	 * @param environmentIsRequired flag for environment option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedCE(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description, Object longDescription) {
-		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, description, longDescription);
+	protected Abstract_TypedCE(final String displayName, final Character cliShort, final String cliLong, final boolean cliIsRequired, final String argName, final boolean argIsOptional, final String argDescr, final String environmentKey, final boolean environmentIsRequired, final String description, final Object longDescription) {
+		super(displayName, cliShort, cliLong, cliIsRequired, argName, argIsOptional, argDescr, description, longDescription);
 		this.environmentKey = environmentKey;
-	}
-
-	@Override
-	public void validate() throws IllegalStateException {
-		Apo_TypedCE.super.validate();
-	}
-
-	@Override
-	public boolean inEnvironment() {
-		return this.inEnv;
+		this.environmentIsRequired = environmentIsRequired;
 	}
 
 	@Override
@@ -72,6 +67,26 @@ public abstract class AbstractTypedCE<T> extends AbstractTypedC<T> implements Ap
 	@Override
 	public T getEnvironmentValue() {
 		return this.environmentValue;
+	}
+
+	@Override
+	public boolean inEnvironment() {
+		return this.isInEnv;
+	}
+
+	@Override
+	public void validate() throws IllegalStateException {
+		Apo_TypedCE.super.validate();
+	}
+
+	@Override
+	public boolean environmentIsRequired() {
+		return this.environmentIsRequired;
+	}
+
+	@Override
+	public void setInEnvironment(boolean inEnv){
+		this.isInEnv = inEnv;
 	}
 
 }

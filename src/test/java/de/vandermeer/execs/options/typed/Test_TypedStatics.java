@@ -23,12 +23,11 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang3.StringUtils;
 
 import de.vandermeer.execs.DefaultCliParser;
-import de.vandermeer.execs.options.AbstractTypedC;
-import de.vandermeer.skb.interfaces.application.CliParseException;
+import de.vandermeer.execs.options.Abstract_TypedC;
 
 public class Test_TypedStatics {
 
-	public static void test_Constructor(AbstractTypedC<?> ao, String cliLong, boolean isRequired, String argName){
+	public static void test_Constructor(Abstract_TypedC<?> ao, String cliLong, boolean isRequired, String argName){
 		assertTrue(ao.getCliShort()==null);
 		assertTrue(ao.getCliLong().equals(cliLong));
 		assertEquals(cliLong, ao.getCliShortLong());
@@ -39,7 +38,7 @@ public class Test_TypedStatics {
 		assertFalse(StringUtils.isBlank(ao.getCliArgumentDescription()));
 	}
 
-	public static void test_ConstructorShort(AbstractTypedC<?> ao, Character cliShort, String cliLong, boolean isRequired, String argName){
+	public static void test_ConstructorShort(Abstract_TypedC<?> ao, Character cliShort, String cliLong, boolean isRequired, String argName){
 		assertTrue(ao.getCliShort().equals(cliShort));
 		assertTrue(ao.getCliLong().equals(cliLong));
 		assertEquals(cliShort.toString(), ao.getCliShortLong());
@@ -50,23 +49,23 @@ public class Test_TypedStatics {
 		assertFalse(StringUtils.isBlank(ao.getCliArgumentDescription()));
 	}
 
-	public static void test_Cli(AbstractTypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_Cli(Abstract_TypedC<?> ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertEquals(1, cli.getAddedOptions().size());
 		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
 	}
 
-	public static void test_CliShort(AbstractTypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliShort(Abstract_TypedC<?> ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertEquals(2, cli.getAddedOptions().size());
 		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
 		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
 	}
 
-	public static void test_CliParse(AbstractTypedC<?> ao) throws IllegalStateException, CliParseException{
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliParse(Abstract_TypedC<?> ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--" + ao.getCliLong(), "foo"});
@@ -75,8 +74,8 @@ public class Test_TypedStatics {
 		assertEquals("foo", ao.getValue());
 	}
 
-	public static void test_CliParseShort(AbstractTypedC<?> ao) throws IllegalStateException, CliParseException{
-		DefaultCliParser cli = new DefaultCliParser();
+	public static void test_CliParseShort(Abstract_TypedC<?> ao){
+		DefaultCliParser cli = new DefaultCliParser("test");
 		cli.addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-" + ao.getCliShort(), "foo"});

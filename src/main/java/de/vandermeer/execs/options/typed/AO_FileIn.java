@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.typed;
 
-import de.vandermeer.execs.options.AbstractTypedC_String;
+import de.vandermeer.execs.options.Option_TypedC_String;
 
 /**
  * Typed CLI option `input-file`.
@@ -24,7 +24,7 @@ import de.vandermeer.execs.options.AbstractTypedC_String;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_FileIn extends AbstractTypedC_String {
+public class AO_FileIn extends Option_TypedC_String {
 
 	/**
 	 * Creates a new option.
@@ -34,7 +34,7 @@ public class AO_FileIn extends AbstractTypedC_String {
 	 * @param description as short option description
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_FileIn(Character cliShort, boolean isRequired, String argDescr, String description, Object longDescription) {
+	public AO_FileIn(final Character cliShort, final boolean isRequired, final String argDescr, final String description, final Object longDescription) {
 		super(
 				"Input Filename",
 				cliShort, "input-file", isRequired,

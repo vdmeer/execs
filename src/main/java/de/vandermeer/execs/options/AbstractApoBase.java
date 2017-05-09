@@ -27,13 +27,13 @@ import de.vandermeer.skb.interfaces.application.ApoBase;
 public abstract class AbstractApoBase implements ApoBase {
 
 	/** Simple, 1-line description. */
-	protected final String descr;
+	protected final transient String descr;
 
 	/** Long description. */
-	protected Object longDescr;
+	protected final transient Object longDescr;
 
 	/** Display name of the option. */
-	protected final String displayName;
+	protected final transient String displayName;
 
 	/**
 	 * Creates a new base object.
@@ -41,7 +41,7 @@ public abstract class AbstractApoBase implements ApoBase {
 	 * @param description the option short description, should be 1 line, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBase(String displayName, String description, Object longDescription){
+	protected AbstractApoBase(final String displayName, final String description, final Object longDescription){
 		this.descr = description;
 		this.displayName = displayName;
 		this.longDescr = longDescription;
@@ -53,13 +53,13 @@ public abstract class AbstractApoBase implements ApoBase {
 	}
 
 	@Override
-	public Object getLongDescription() {
-		return this.longDescr;
+	public String getDisplayName() {
+		return this.displayName;
 	}
 
 	@Override
-	public String getDisplayName() {
-		return this.displayName;
+	public Object getLongDescription() {
+		return this.longDescr;
 	}
 
 }

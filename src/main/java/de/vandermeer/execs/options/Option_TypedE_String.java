@@ -15,51 +15,37 @@
 
 package de.vandermeer.execs.options;
 
-import de.vandermeer.skb.interfaces.application.Apo_TypedP;
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_EnvironmentOptions;
 
 /**
- * Abstract implementation of a typed property option.
+ * Abstract implementation of an environment option of type string.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractTypedP<T> extends AbstractApoBaseP implements Apo_TypedP<T> {
-
-	/** The value set from a property. */
-	protected T propertyValue;
-
-	/** The value set as default. */
-	protected T defaultValue;
+public class Option_TypedE_String extends Abstract_TypedE<String> {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
-	 * @param propertyKey the property key
+	 * @param environmentKey the environment key
+	 * @param environmentIsRequired flag for environment option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedP(String displayName, String propertyKey, String description, Object longDescription) {
-		super(displayName, propertyKey, description, longDescription);
-
-		this.validate();
+	public Option_TypedE_String(final String displayName, final String environmentKey, final boolean environmentIsRequired, final String description, final Object longDescription) {
+		super(displayName, environmentKey, environmentIsRequired, description, longDescription);
 	}
 
 	@Override
-	public T getDefaultValue() {
-		return this.defaultValue;
+	public IsError setEnvironmentValue(String value) {
+		if(!this.environmentIsRequired() && value==null){
+			return Templates_EnvironmentOptions.VALUE_REQUIRED_BLANK.getError(this.displayName, this.environmentKey);
+		}
+		this.environmentValue = value;
+		return null;
 	}
 
-	/**
-	 * Sets the default value.
-	 * @param value new default value, not checked
-	 */
-	public void setDefaultValue(T value) {
-		this.defaultValue = value;
-	}
-
-	@Override
-	public T getPropertyValue() {
-		return this.propertyValue;
-	}
 }

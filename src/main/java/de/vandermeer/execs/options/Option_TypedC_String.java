@@ -16,47 +16,47 @@
 package de.vandermeer.execs.options;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_CliOptions;
 
 /**
- * Abstract implementation of a CLI  environment option of type string.
+ * Abstract implementation of a CLI option of type string.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AbstractTypedCE_String extends AbstractTypedCE<String> {
+public class Option_TypedC_String extends Abstract_TypedC<String> {
 
 	/**
 	 * Creates a new option.
-	 * @param displayName the display name of the option, must not be blank
+	 * @param displayName he display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
-	 * @param isRequired flag for CLI option being required or not
+	 * @param cliIsRequired flag for CLI option being required or not
 	 * @param argName the name of the argument, must not be blank
 	 * @param argIsOptional flag for the argument being optional
 	 * @param argDescr a short argument description, must not be blank
-	 * @param environmentKey a key for the option in the environment, must not be blank
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedCE_String(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String environmentKey, String description, Object longDescription) {
-		super(displayName, cliShort, cliLong, isRequired, argName, argIsOptional, argDescr, environmentKey, description, longDescription);
+	public Option_TypedC_String(final String displayName, final Character cliShort, final String cliLong, final boolean cliIsRequired, final String argName, final boolean argIsOptional, final String argDescr, final String description, final Object longDescription){
+		super(displayName, cliShort, cliLong, cliIsRequired, argName, argIsOptional, argDescr, description, longDescription);
 	}
 
 	@Override
-	public void setCliValue(Object value) throws IllegalStateException {
-		if(!this.cliArgIsOptional()){
-			Validate.validState(value!=null, "AOP String: argument mandatory but trying to set null");
+	public IsError setCliValue(final Object value) {
+		if(!this.cliArgIsOptional() && value==null){
+			return Templates_CliOptions.MANDATORY_ARG_NULL.getError("CLI Option", this.getCliArgumentName(), this.getCliLong());
 		}
-		if(value==null && this.cliArgIsOptional()){
-			return;
+		if(value!=null){
+			final String ret = value.toString();
+			if(!StringUtils.isBlank(ret)){
+				this.cliValue = ret;
+			}
 		}
-		//at this stage we should know that value is not null
-		String ret = value.toString();
-		if(!StringUtils.isBlank(ret)){
-			this.cliValue = ret;
-		}
+		return null;
 	}
 
 }

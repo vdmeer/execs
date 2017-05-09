@@ -17,8 +17,6 @@ package de.vandermeer.execs.options.simple;
 
 import org.junit.Test;
 
-import de.vandermeer.skb.interfaces.application.CliParseException;
-
 public class Test_AO_Verbose {
 
 	@Test
@@ -42,12 +40,12 @@ public class Test_AO_Verbose {
 	}
 
 	@Test
-	public void test_CliParse() throws IllegalStateException, CliParseException{
+	public void test_CliParse() {
 		Test_SimpleStatics.test_CliParse(new AO_Verbose(null, null));
 	}
 
 	@Test
-	public void test_CliParseS() throws IllegalStateException, CliParseException{
+	public void test_CliParseS() {
 		Test_SimpleStatics.test_CliParseShort(new AO_Verbose('b', null));
 	}
 }

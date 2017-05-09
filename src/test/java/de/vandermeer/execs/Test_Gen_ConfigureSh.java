@@ -52,20 +52,28 @@ public class Test_Gen_ConfigureSh {
 		assertEquals(1, run);
 
 		run = execs.execute(new String[]{Gen_ConfigureSh.class.getName()});
-		assertEquals(-1, run);
+		assertEquals(-143, run);
 
 		run = execs.execute(new String[]{
 				Gen_ConfigureSh.class.getName(),
 				"--property-file", "prop",
 		});
-		assertEquals(-1, run);
+		assertEquals(-216, run);
 
 		run = execs.execute(new String[]{
 				Gen_ConfigureSh.class.getName(),
 				"--lib-dir", "lib",
 				"--property-file", "prop",
 		});
-		assertEquals(-1, run);
+		assertEquals(-216, run);
 	}
 
+	@Test
+	public void test_PropFile(){
+		Gen_ConfigureSh gen = new Gen_ConfigureSh();
+		gen.executeApplication(new String[]{
+				"--lib-dir", "lib",
+				"--property-file", "prop",
+		});
+	}
 }

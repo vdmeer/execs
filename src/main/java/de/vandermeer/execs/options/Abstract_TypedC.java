@@ -24,22 +24,22 @@ import de.vandermeer.skb.interfaces.application.Apo_TypedC;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_TypedC<T> {
+public abstract class Abstract_TypedC<T> extends AbstractApoBaseC implements Apo_TypedC<T> {
 
 	/** Name of the option argument. */
-	protected final String argName;
+	protected final transient String argName;
 
 	/** Short description of the option argument. */
-	protected final String argDescr;
+	protected final transient String argDescr;
 
 	/** Flag for the argument being optional. */
-	protected final Boolean argIsOptional;
+	protected final transient Boolean argIsOptional;
 
 	/** Value read from CLI. */
-	protected T cliValue;
+	protected transient T cliValue;
 
 	/** A default value. */
-	protected T defaultValue;
+	protected transient T defaultValue;
 
 	/**
 	 * Creates a new option.
@@ -53,7 +53,7 @@ public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractTypedC(String displayName, Character cliShort, String cliLong, boolean isRequired, String argName, boolean argIsOptional, String argDescr, String description, Object longDescription){
+	protected Abstract_TypedC(final String displayName, final Character cliShort, final String cliLong, final boolean isRequired, final String argName, final boolean argIsOptional, final String argDescr, final String description, final Object longDescription){
 		super(displayName, cliShort, cliLong, isRequired, description, longDescription);
 		this.argName = argName;
 		this.argDescr = argDescr;
@@ -63,22 +63,13 @@ public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_
 	}
 
 	@Override
-	public T getDefaultValue() {
-		return this.defaultValue;
-	}
-
-	public void setDefaultValue(T value) {
-		this.defaultValue = value;
-	}
-
-	@Override
 	public boolean cliArgIsOptional(){
 		return this.argIsOptional;
 	}
 
 	@Override
-	public T getCliValue() {
-		return this.cliValue;
+	public String getCliArgumentDescription() {
+		return this.argDescr;
 	}
 
 	@Override
@@ -87,8 +78,17 @@ public abstract class AbstractTypedC<T> extends AbstractApoBaseC implements Apo_
 	}
 
 	@Override
-	public String getCliArgumentDescription() {
-		return this.argDescr;
+	public T getCliValue() {
+		return this.cliValue;
+	}
+
+	@Override
+	public T getDefaultValue() {
+		return this.defaultValue;
+	}
+
+	public void setDefaultValue(final T value) {
+		this.defaultValue = value;
 	}
 
 }

@@ -29,7 +29,11 @@ import java.util.jar.Manifest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
+import de.vandermeer.execs.options.simple.AO_HelpSimple;
+import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.skb.interfaces.application.IsApplication;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_AppStart;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputFile;
 
 /**
  * Application to generate starts scripts when running ExecS from an executable JAR.
@@ -50,117 +54,112 @@ public class Gen_ExecJarScripts extends AbstractAppliction implements IsApplicat
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
 	/** Local class map, must be set by calling ExecS instance. */
-	Map<String, Class<? extends IsApplication>> execClassMap;
+	protected transient Map<String, Class<? extends IsApplication>> execClassMap;
 
 	/**
 	 * Creates a new application.
 	 */
 	public Gen_ExecJarScripts(){
-		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
+		super(APP_NAME, new AO_HelpSimple('h', null), null, new AO_Version('v', null));
 	}
 
 	@Override
-	public int executeApplication(String[] args) {
-		int ret = IsApplication.super.executeApplication(args);
-		if(ret!=0){
-			return ret;
-		}
+	public void executeApplication(String[] args) {
+		IsApplication.super.executeApplication(args);
+		String jarFn = null;
 
-		if(!this.inExecJar()){
-			return -1;
-		}
-
-		String jarFn;
-		try {
-			File file = new File(Gen_ExecJarScripts.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-			jarFn = file.toString();
-		}
-		catch (URISyntaxException ex) {
-			System.err.println(this.getAppName() + ": error retrieving JAR path - " + ex.getMessage());
-			return -2;
-		}
-
-		if(jarFn==null){
-			System.err.println(this.getAppName() + ": could not retrieve JAR path");
-			return -3;
-		}
-
-		if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
-			System.err.println(this.getAppName() + ": OS not supported, neither Unix nor Windows");
-			return -4;
-		}
-
-		ArrayList<String> cmds = new ArrayList<>();
-		if(this.execClassMap!=null){
-			for(String s : execClassMap.keySet()){
-				if(s.equals(Gen_ConfigureSh.APP_NAME)){
-					continue;
-				}
-				if(s.equals(Gen_RunScripts.APP_NAME)){
-					continue;
-				}
-				if(s.equals(APP_NAME)){
-					continue;
-				}
-				cmds.add(s);
+		if(this.errNo==0){
+			if(!this.inExecJar()){
+				this.errorSet.addError(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError(this.getAppName()));
+				this.errNo = Templates_AppStart.MUST_BE_IN_EXEC_JAR.getCode();
 			}
-		}
-
-		String dir = System.getProperty("user.dir");
-		for(String s : cmds){
-			if(SystemUtils.IS_OS_UNIX){
-				String fn = dir + "/" + s + ".sh";
-				File file = new File(fn);
-				List<String> lines = new ArrayList<>();
-				lines.add("#!/usr/bin/env bash");
-				lines.add("");
-				lines.add("java -jar " + jarFn + " " + s + " $*");
-				lines.add("");
-				if(!this.writeFile(file, lines)){
-					return -5;
+			else{
+				try {
+					File file = new File(Gen_ExecJarScripts.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+					jarFn = file.toString();
 				}
-			}
-			else if(SystemUtils.IS_OS_WINDOWS){
-				String fn = dir + "/" + s + ".bat";
-				File file = new File(fn);
-				List<String> lines = new ArrayList<>();
-				lines.add("@echo off");
-				lines.add("");
-				lines.add("java -jar " + jarFn + " " + s + " %*");
-				lines.add("");
-				if(!this.writeFile(file, lines)){
-					return -6;
+				catch (URISyntaxException ex) {
+					this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), ex.getMessage()));
+					this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
+				}
+
+				if(jarFn==null){
+					this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), "value was null"));
+					this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
+				}
+
+				if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
+					this.errorSet.addError(Templates_AppStart.OS_NOT_SUPPORTED.getError(this.getAppName(), "Unix nor Windows"));
+					this.errNo = Templates_AppStart.OS_NOT_SUPPORTED.getCode();
 				}
 			}
 		}
 
-		return 0;
+		if(this.errNo==0){
+			ArrayList<String> cmds = new ArrayList<>();
+			if(this.execClassMap!=null){
+				for(String s : execClassMap.keySet()){
+					if(s.equals(Gen_ConfigureSh.APP_NAME)){
+						continue;
+					}
+					if(s.equals(Gen_RunScripts.APP_NAME)){
+						continue;
+					}
+					if(s.equals(APP_NAME)){
+						continue;
+					}
+					cmds.add(s);
+				}
+			}
+
+			String dir = System.getProperty("user.dir");
+			for(String s : cmds){
+				if(SystemUtils.IS_OS_UNIX){
+					String filename = dir + "/" + s + ".sh";
+					File file = new File(filename);
+					List<String> lines = new ArrayList<>();
+					lines.add("#!/usr/bin/env bash");
+					lines.add("");
+					lines.add("java -jar " + jarFn + " " + s + " $*");
+					lines.add("");
+					this.writeFile(file, lines);
+				}
+				else if(SystemUtils.IS_OS_WINDOWS){
+					String filename = dir + "/" + s + ".bat";
+					File file = new File(filename);
+					List<String> lines = new ArrayList<>();
+					lines.add("@echo off");
+					lines.add("");
+					lines.add("java -jar " + jarFn + " " + s + " %*");
+					lines.add("");
+					this.writeFile(file, lines);
+				}
+			}
+		}
+
+		if(this.errorSet.hasErrors()){
+			System.err.println(this.errorSet.render());
+		}
 	}
 
-	/**
-	 * Writes the given lines to the given file, if possible.
-	 * @param file file to write to
-	 * @param lines lines to write to the file
-	 * @return true if lines where written to the file, false otherwise with errors printed
-	 */
-	public boolean writeFile(File file, List<String> lines){
-		if(file.exists()){
-			file.delete();
-		}
-		try {
-			FileWriter out = new FileWriter(file);
-			for(String s : lines){
-				out.write(s);
-				out.write(System.getProperty("line.separator"));
-			}
-			out.close();
-			file.setExecutable(true);
-		}
-		catch (IOException ex) {
-			System.err.println(this.getAppName() + ": IO exception while writing to file - " + file + " with message: " + ex.getMessage());
-			return false;
-		} 
-		return true;
+	@Override
+	public String getAppDescription() {
+		return "Generates scripts (OS specific) for running S2V applications from the JAR with all dependencies";
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public String getAppName() {
+		return APP_NAME;
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
 	}
 
 	/**
@@ -193,31 +192,35 @@ public class Gen_ExecJarScripts extends AbstractAppliction implements IsApplicat
 		return true;
 	}
 
-	@Override
-	public String getAppDescription() {
-		return "Generates scripts (OS specific) for running S2V applications from the JAR with all dependencies";
-	}
-
-	@Override
-	public String getAppDisplayName(){
-		return APP_DISPLAY_NAME;
-	}
-
-	@Override
-	public String getAppName() {
-		return APP_NAME;
-	}
-
-	@Override
-	public String getAppVersion() {
-		return APP_VERSION;
-	}
-
 	/**
 	 * Hook for a calling ExecS instance to set its class map for the script generator.
 	 * @param execClassMap calling executor class map to create run scripts from
 	 */
 	public void setClassMap(Map<String, Class<? extends IsApplication>> execClassMap){
 		this.execClassMap = execClassMap;
+	}
+
+	/**
+	 * Writes the given lines to the given file, if possible.
+	 * @param file file to write to
+	 * @param lines lines to write to the file
+	 */
+	public void writeFile(File file, List<String> lines){
+		if(file.exists()){
+			file.delete();
+		}
+		try {
+			FileWriter out = new FileWriter(file);
+			for(String s : lines){
+				out.write(s);
+				out.write(System.lineSeparator());
+			}
+			out.close();
+			file.setExecutable(true);
+		}
+		catch (IOException ex) {
+			this.errorSet.addError(Templates_OutputFile.IO_EXCEPTION_WRITING.getError(this.getAppName(), "script", file.toString(), ex.getMessage()));
+			this.errNo = Templates_OutputFile.IO_EXCEPTION_WRITING.getCode();
+		}
 	}
 }

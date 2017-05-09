@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.simple;
 
-import de.vandermeer.execs.options.AbstractSimpleC;
+import de.vandermeer.execs.options.Option_SimpleC;
 
 /**
  * Simple CLI option `quiet`.
@@ -24,20 +24,20 @@ import de.vandermeer.execs.options.AbstractSimpleC;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Quiet extends AbstractSimpleC {
+public class AO_Quiet extends Option_SimpleC {
 
 	/**
 	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
 	 * ]@param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Quiet(Character cliShort, Object longDescription) {
+	public AO_Quiet(final Character cliShort, final Object longDescription) {
 		super(
 				"Quiet",
 				cliShort,
 				"quiet",
 				false,
-				"puts the application in quiet mode, no progres or error messages will be printed",
+				"puts the application in quiet mode, no messages will be printed",
 				longDescription
 		);
 	}

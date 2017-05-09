@@ -27,46 +27,36 @@ import de.vandermeer.skb.interfaces.application.ApoBaseC;
 public abstract class AbstractApoBaseC extends AbstractApoBase implements ApoBaseC {
 
 	/** Flag for option being found in the CLI arguments. */
-	protected boolean inCli = false;
+	protected transient boolean isInCli;
 
 	/** The short CLI command. */
-	protected final Character cliShort;
+	protected final transient Character cliShort;
 
 	/** The long CLI command. */
-	protected final String cliLong;
+	protected final transient String cliLong;
 
 	/** Flag for required CLI options. */
-	protected final Boolean isRequired;
+	protected final transient Boolean cliIsRequired;
 
 	/**
 	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
 	 * @param cliShort the short CLI command, null if not required
 	 * @param cliLong the long CLI command, null if not required
-	 * @param isRequired flag for CLI option being required or not
+	 * @param cliIsRequired flag for CLI option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseC(String displayName, Character cliShort, String cliLong, boolean isRequired, String description, Object longDescription) {
+	protected AbstractApoBaseC(final String displayName, final Character cliShort, final String cliLong, final boolean cliIsRequired, final String description, final Object longDescription) {
 		super(displayName, description, longDescription);
 		this.cliShort = cliShort;
 		this.cliLong = cliLong;
-		this.isRequired = isRequired;
+		this.cliIsRequired = cliIsRequired;
 	}
 
 	@Override
-	public boolean inCli() {
-		return this.inCli;
-	}
-
-	@Override
-	public void setInCLi(boolean inCli) {
-		this.inCli = inCli;
-	}
-
-	@Override
-	public Character getCliShort() {
-		return cliShort;
+	public boolean cliIsRequired() {
+		return this.cliIsRequired;
 	}
 
 	@Override
@@ -75,8 +65,17 @@ public abstract class AbstractApoBaseC extends AbstractApoBase implements ApoBas
 	}
 
 	@Override
-	public boolean cliIsRequired() {
-		return this.isRequired;
+	public Character getCliShort() {
+		return cliShort;
 	}
 
+	@Override
+	public boolean inCli() {
+		return this.isInCli;
+	}
+
+	@Override
+	public void setInCLi(final boolean isInCli) {
+		this.isInCli = isInCli;
+	}
 }

@@ -15,58 +15,40 @@
 
 package de.vandermeer.execs.options;
 
-import de.vandermeer.skb.interfaces.application.ApoBaseP;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_PropertiesOptions;
 
 /**
- * Base for a property option.
+ * Abstract implementation of a property option of type boolean.
  *
  * @author     Sven van der Meer &lt;vdmeer.sven@mykolab.com&gt;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public abstract class AbstractApoBaseP extends AbstractApoBase implements ApoBaseP {
-
-	/** Flag for option found in properties. */
-	protected transient boolean isInProps;
-
-	/** The property key. */
-	protected final transient String propertyKey;
-
-	/** Flag for required property options. */
-	protected final transient Boolean propertyIsRequired;
+public class Option_TypedP_Boolean extends Abstract_TypedP<Boolean> {
 
 	/**
-	 * Creates a new option
+	 * Creates a new option.
 	 * @param displayName the display name of the option, must not be blank
 	 * @param propertyKey the property key, must not be blank
 	 * @param propertyIsRequired flag for property option being required or not
 	 * @param description a short description for the option, must not be blank
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	protected AbstractApoBaseP(final String displayName, final String propertyKey, final boolean propertyIsRequired, final String description, final Object longDescription) {
-		super(displayName, description, longDescription);
-		this.propertyKey = propertyKey;
-		this.propertyIsRequired = propertyIsRequired;
+	public Option_TypedP_Boolean(final String displayName, final String propertyKey, final boolean propertyIsRequired, final String description, final Object longDescription) {
+		super(displayName, propertyKey, propertyIsRequired, description, longDescription);
 	}
 
 	@Override
-	public String getPropertyKey() {
-		return this.propertyKey;
-	}
-
-	@Override
-	public boolean inProperties() {
-		return this.isInProps;
-	}
-
-	@Override
-	public boolean propertyIsRequired() {
-		return this.propertyIsRequired;
-	}
-
-	@Override
-	public void setInProperties(boolean inProp){
-		this.isInProps = inProp;
+	public IsError setPropertyValue(final String value) {
+		if(StringUtils.isBlank(value)){
+			return Templates_PropertiesOptions.VALUE_REQUIRED_BLANK.getError(this.getDisplayName(), this.getPropertyKey());
+		}
+		this.propertyValue = BooleanUtils.toBooleanObject(value);
+		return null;
 	}
 
 }

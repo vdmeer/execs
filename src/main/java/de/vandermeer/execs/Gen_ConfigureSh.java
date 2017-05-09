@@ -25,10 +25,15 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.vandermeer.execs.options.Option_TypedP_String;
+import de.vandermeer.execs.options.simple.AO_HelpSimple;
+import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.execs.options.typed.AO_LibDir;
-import de.vandermeer.execs.options.typed.AO_PropertyFilename_New;
+import de.vandermeer.execs.options.typed.AO_PropertyFilename;
 import de.vandermeer.execs.options.typed.AO_TemplateDir;
+import de.vandermeer.skb.interfaces.MessageConsole;
 import de.vandermeer.skb.interfaces.application.IsApplication;
+import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
 
 /**
  * Application to generate a configuration shell script.
@@ -49,19 +54,22 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	public final static String APP_VERSION = "v0.4.0 build 170413 (13-Apr-17) for Java 1.8";
 
 	/** The application option for the library directory. */
-	protected AO_LibDir optionLibDir;
+	protected final transient AO_LibDir optionLibDir;
 
 	/** The application option for the template directory. */
-	protected AO_TemplateDir optionTemplateDir;
+	protected final transient AO_TemplateDir optionTemplateDir;
 
 	/** The application option for the property file. */
-	protected AO_PropertyFilename_New optionPropFile;
+	protected final transient AO_PropertyFilename optionPropFile;
+
+	/** Property option for RUN_CLASS. */
+	protected final transient Option_TypedP_String propRunClass;
 
 	/**
 	 * Returns a new configure shell script generator.
 	 */
 	public Gen_ConfigureSh(){
-		super(new DefaultCliParser(), AbstractAppliction.HELP_SIMPLE_SHORTLONG, AbstractAppliction.VERSION_SHORTLONG);
+		super(APP_NAME, new AO_HelpSimple('h', null), null, new AO_Version('v', null));
 
 		this.optionLibDir = new AO_LibDir(
 				null, false, "directory with jar files, must exist",
@@ -77,67 +85,88 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 		);
 		this.addOption(this.optionTemplateDir);
 
-		this.optionPropFile = new AO_PropertyFilename_New(
+		this.optionPropFile = new AO_PropertyFilename(
 				null, true,
 				"filename of an existing property file", "filename for a property file with configuration information",
 				"A file name that is added to the run script for reading class map properties from."
 		);
 		this.addOption(this.optionPropFile);
+
+		this.propRunClass = GenAop.RUN_CLASS();
+		this.addOption(this.propRunClass);
 	}
 
 	@Override
-	public int executeApplication(String[] args) {
+	public void executeApplication(String[] args) {
 		// parse command line, exit with help screen if error
-		int ret = IsApplication.super.executeApplication(args);
-		if(ret!=0){
-			return ret;
+		IsApplication.super.executeApplication(args);
+		if(this.errNo!=0){
+			this.printErrors();
+			return;
 		}
-
-		String fn = "/de/vandermeer/execs/bin/configure.sh";
 
 		String propFile = this.optionPropFile.getValue();
 		Properties configuration = this.loadProperties(propFile);
 		if(configuration==null){
-			System.err.println(this.getAppName() + ": could not load configuration properties from file <" + propFile + ">, exiting");
-			return -1;
+			this.printErrors();
+			return;
 		}
-		if(configuration.get(Gen_RunScripts.PROP_RUN_CLASS)==null){
-			System.err.println(this.getAppName() + ": configuration does not contain key <" + Gen_RunScripts.PROP_RUN_CLASS + ">, exiting");
-			return -1;
+		else{
+			this.getPropertyParser().parse(configuration);
 		}
-		String execClass = configuration.get(Gen_RunScripts.PROP_RUN_CLASS).toString();
 
-		try {
-			InputStream in = getClass().getResourceAsStream(fn);
-			BufferedReader input = new BufferedReader(new InputStreamReader(in));
-			String line;
-			while((line=input.readLine())!=null){
-				if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
-					System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
-				}
-				else if(StringUtils.startsWith(line, "PROP_FILE=")){
-					System.out.println("PROP_FILE=" + propFile);
-				}
-				else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
-					System.out.println("EXECS_CLASS=" + execClass);
-				}
-				else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
-					System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
-				}
-				else{
-					System.out.println(line);
+		if(this.errNo==0){
+			String filename = "/de/vandermeer/execs/bin/configure.sh";
+			try {
+				InputStream inStream = getClass().getResourceAsStream(filename);
+				BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
+				String line;
+				while((line=input.readLine())!=null){
+					if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
+						System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
+					}
+					else if(StringUtils.startsWith(line, "PROP_FILE=")){
+						System.out.println("PROP_FILE=" + propFile);
+					}
+					else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
+						System.out.println("EXECS_CLASS=" + this.propRunClass.getValue());
+					}
+					else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
+						System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
+					}
+					else{
+						System.out.println(line);
+					}
 				}
 			}
+			catch(NullPointerException ne){
+//				this.errorSet.addError("{}: exception while reading shell script from resource <{}>: {}", this.getAppName(), filename, ne);
+//				this.errNo = -32;
+				//TODO
+			}
+			catch (IOException e) {
+//				this.errorSet.addError("{}: IO exception while reading shell script: {}", this.getAppName(), e.getMessage());
+//				this.errNo = -33;
+				//TODO
+			}
 		}
-		catch(NullPointerException ne){
-			System.err.println(this.getAppName() + ": exception while reading shell script from resource <" + fn + ">: " + ne.getMessage());
-			return -1;
-		}
-		catch (IOException e) {
-			System.err.println(this.getAppName() + ": IO exception while reading shell script: " + e.getMessage());
-			return -1;
-		}
-		return 0;
+
+		this.printErrors();
+	}
+
+	@Override
+	public String getAppDescription() {
+		return "Generates configuration shell script for an application.";
+	}
+
+	@Override
+	public String getAppDisplayName(){
+		return APP_DISPLAY_NAME;
+	}
+
+	@Override
+	public String getAppVersion() {
+		return APP_VERSION;
 	}
 
 	/**
@@ -146,13 +175,11 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	 * @return loaded properties, null if nothing could be loaded plus error messages to standard error if exceptions are caught
 	 */
 	protected final Properties loadProperties(String filename){
-		Properties ret = new Properties();
-
 		URL url = null;
-		File f = new File(filename.toString());
-		if(f.exists()){
+		File file = new File(filename);
+		if(file.exists()){
 			try{
-				url = f.toURI().toURL();
+				url = file.toURI().toURL();
 			}
 			catch(Exception ignore){}
 		}
@@ -165,35 +192,33 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 			}
 		}
 
-		try{
-			ret.load(url.openStream());
+		if(url==null){
+			this.errorSet.addError(Templates_InputFile.URL_NULL.getError(this.getAppName(), "property", filename));
+			this.errNo = Templates_InputFile.URL_NULL.getCode();
 		}
-		catch (IOException e){
-			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, IO exception\n--><" + e + ">");
+		else{
+			try{
+				Properties ret = new Properties();
+				ret.load(url.openStream());
+				return ret;
+			}
+			catch (IOException iox){
+				this.errorSet.addError(Templates_InputFile.IO_EXCEPTION_READING.getError(this.getAppName(), "property", filename, iox.getMessage()));
+				this.errNo = Templates_InputFile.IO_EXCEPTION_READING.getCode();
+			}
+//			catch (Exception ex){
+//				this.errorSet.addError(Templates_PropertiesGeneral.LOADING_FROM_FILE.getError(this.getAppName(), filename, ex));
+//			}
 		}
-		catch (Exception e){
-			System.err.println(this.getAppName() + ": cannot load property file <" + filename + ">, general exception\n--><" + e + ">");
+		return null;
+	}
+
+	/**
+	 * Prints errors using the message console.
+	 */
+	protected void printErrors(){
+		if(this.errorSet.hasErrors()){
+			MessageConsole.conError(this.errorSet.render());
 		}
-		return ret;
-	}
-
-	@Override
-	public String getAppName() {
-		return APP_NAME;
-	}
-
-	@Override
-	public String getAppDisplayName(){
-		return APP_DISPLAY_NAME;
-	}
-
-	@Override
-	public String getAppDescription() {
-		return "Generates configuration shell script for an application.";
-	}
-
-	@Override
-	public String getAppVersion() {
-		return APP_VERSION;
 	}
 }

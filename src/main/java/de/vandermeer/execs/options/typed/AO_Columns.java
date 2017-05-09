@@ -15,7 +15,7 @@
 
 package de.vandermeer.execs.options.typed;
 
-import de.vandermeer.execs.options.AbstractTypedE;
+import de.vandermeer.execs.options.Option_TypedE_Integer;
 
 /**
  * Environment option `COLUMNS` to set console columns (or width), default set to 80.
@@ -24,19 +24,20 @@ import de.vandermeer.execs.options.AbstractTypedE;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.5.0
  */
-public class AO_Columns extends AbstractTypedE<Integer> {
+public class AO_Columns extends Option_TypedE_Integer {
 
 	/**
 	 * Creates the new option.
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
-	public AO_Columns(Object longDescription) {
+	public AO_Columns(final Object longDescription) {
 		super(
-				"Columns", "COLUMNS", "sets the columns (console width) for the application",
+				"Columns", "COLUMNS", false,
+				"sets the columns (console width) for the application",
 				longDescription
 		);
 		this.setDefaultValue(80);
-		String cols = System.getenv("COLUMNS");
+		final String cols = System.getenv("COLUMNS");
 		if(cols!=null){
 			this.environmentValue = Integer.valueOf(cols);
 		}

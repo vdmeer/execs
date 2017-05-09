@@ -99,28 +99,6 @@ public class CF {
 	}
 
 	/**
-	 * Sets a jar filter.
-	 * @param jarFilter new filter, use null or empty list to not filter. The list will be copied locally.
-	 * @return self to allow for chaining
-	 */
-	public CF setJarFilter(List<String> jarFilter){
-		this.locator.setJarFilter(jarFilter);
-		this.needsReRun = true;
-		return this;
-	}
-
-	/**
-	 * Sets a package filter.
-	 * @param pkgFilter new package filter, set to null to not filter
-	 * @return self to allow for chaining
-	 */
-	public CF setPkgFilter(String pkgFilter){
-		this.locator.setPkgFilter(pkgFilter);
-		this.needsReRun = true;
-		return this;
-	}
-
-	/**
 	 * Returns a list of errors collected during a search.
 	 * The list will be reset by any new search.
 	 * @return list of collected errors
@@ -282,6 +260,28 @@ public class CF {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * Sets a jar filter.
+	 * @param jarFilter new filter, use null or empty list to not filter. The list will be copied locally.
+	 * @return self to allow for chaining
+	 */
+	public CF setJarFilter(List<String> jarFilter){
+		this.locator.setJarFilter(jarFilter);
+		this.needsReRun = true;
+		return this;
+	}
+
+	/**
+	 * Sets a package filter.
+	 * @param pkgFilter new package filter, set to null to not filter
+	 * @return self to allow for chaining
+	 */
+	public CF setPkgFilter(String pkgFilter){
+		this.locator.setPkgFilter(pkgFilter);
+		this.needsReRun = true;
+		return this;
 	}
 
 }
