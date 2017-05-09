@@ -24,8 +24,8 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import de.vandermeer.execs.DefaultCliParser;
-import de.vandermeer.execs.DefaultPropertyParser;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
+import de.vandermeer.skb.interfaces.application.ApoPropParser;
 
 public class Test_AO_ClassmapFilename_CP {
 
@@ -55,28 +55,28 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_Cli(){
-		DefaultCliParser cli = new DefaultCliParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser("app");
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
-		cli.addOption(ao);
-		assertEquals(1, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
+		cli.getOptions().addOption(ao);
+		assertEquals(1, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
 	}
 
 	@Test
 	public void test_CliS(){
-		DefaultCliParser cli = new DefaultCliParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser("app");
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP('o');
-		cli.addOption(ao);
-		assertEquals(2, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
-		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
+		cli.getOptions().addOption(ao);
+		assertEquals(2, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliShort().toString()));
 	}
 
 	@Test
 	public void test_CliParse(){
-		DefaultCliParser cli = new DefaultCliParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser("app");
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
-		cli.addOption(ao);
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--classmap-file", "fn"});
 		assertTrue(ao.inCli());
@@ -86,9 +86,9 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_CliParseS(){
-		DefaultCliParser cli = new DefaultCliParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser("app");
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP('o');
-		cli.addOption(ao);
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-o", "fn"});
 		assertTrue(ao.inCli());
@@ -98,18 +98,18 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_Property(){
-		DefaultPropertyParser prop = new DefaultPropertyParser("app");
+		ApoPropParser prop = ApoPropParser.create("app", true);
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
-		prop.addOption(ao);
+		prop.getOptions().addOption(ao);
 		assertEquals(1, prop.getOptions().size());
 		assertTrue(prop.getOptions().getKeys().contains(ao.getPropertyKey()));
 	}
 
 	@Test
 	public void test_PropertyParse(){
-		DefaultPropertyParser prop = new DefaultPropertyParser("app");
+		ApoPropParser prop = ApoPropParser.create("app", true);
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
-		prop.addOption(ao);
+		prop.getOptions().addOption(ao);
 		Properties args = new Properties();
 		args.setProperty(ao.getPropertyKey(), "test-me");
 		prop.parse(args);

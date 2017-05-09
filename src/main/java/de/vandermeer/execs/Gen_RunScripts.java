@@ -41,9 +41,9 @@ import de.vandermeer.execs.options.typed.AO_StgFilename;
 import de.vandermeer.execs.options.typed.AO_Target;
 import de.vandermeer.skb.interfaces.MessageConsole;
 import de.vandermeer.skb.interfaces.antlr.IsSTGroup;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_AppOptionsGeneral;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputDirectory;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputDirectory;
@@ -56,7 +56,7 @@ import de.vandermeer.skb.interfaces.messagesets.errors.Templates_Target;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_RunScripts extends AbstractAppliction implements IsApplication {
+public class Gen_RunScripts extends AbstractAppliction {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-run-scripts";
@@ -137,7 +137,7 @@ public class Gen_RunScripts extends AbstractAppliction implements IsApplication 
 	 * Returns a new generator with parameterized CLI object.
 	 */
 	public Gen_RunScripts() {
-		super(APP_NAME, new AO_HelpSimple('h', null), null, new AO_Version('v', null) );
+		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null) );
 
 		this.optionPropFile = new AO_PropertyFilename(
 				null, false,
@@ -198,9 +198,11 @@ public class Gen_RunScripts extends AbstractAppliction implements IsApplication 
 //	}
 
 	@Override
-	public void executeApplication(String[] args) {
-		// parse command line, exit with help screen if error
-		IsApplication.super.executeApplication(args);
+	public void runApplication() {
+		if(this.errNo!=0){
+			this.printErrors();
+			return;
+		}
 
 		// initialize if possible (errNo==0)
 		this.initConfiguration();

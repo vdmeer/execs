@@ -22,8 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.execs.DefaultCliParser;
 import de.vandermeer.execs.options.Abstract_TypedC;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 
 public class Test_TypedStatics {
 
@@ -50,23 +50,23 @@ public class Test_TypedStatics {
 	}
 
 	public static void test_Cli(Abstract_TypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
-		assertEquals(1, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
+		assertEquals(1, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
 	}
 
 	public static void test_CliShort(Abstract_TypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
-		assertEquals(2, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
-		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
+		assertEquals(2, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliShort().toString()));
 	}
 
 	public static void test_CliParse(Abstract_TypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--" + ao.getCliLong(), "foo"});
 		assertTrue(ao.inCli());
@@ -75,8 +75,8 @@ public class Test_TypedStatics {
 	}
 
 	public static void test_CliParseShort(Abstract_TypedC<?> ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-" + ao.getCliShort(), "foo"});
 		assertTrue(ao.inCli());

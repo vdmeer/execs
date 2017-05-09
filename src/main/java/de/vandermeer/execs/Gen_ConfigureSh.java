@@ -31,8 +31,7 @@ import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.execs.options.typed.AO_LibDir;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename;
 import de.vandermeer.execs.options.typed.AO_TemplateDir;
-import de.vandermeer.skb.interfaces.MessageConsole;
-import de.vandermeer.skb.interfaces.application.IsApplication;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
 
 /**
@@ -42,7 +41,7 @@ import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.0.6
  */
-public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication {
+public class Gen_ConfigureSh extends AbstractAppliction {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-configure";
@@ -69,7 +68,7 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	 * Returns a new configure shell script generator.
 	 */
 	public Gen_ConfigureSh(){
-		super(APP_NAME, new AO_HelpSimple('h', null), null, new AO_Version('v', null));
+		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
 
 		this.optionLibDir = new AO_LibDir(
 				null, false, "directory with jar files, must exist",
@@ -97,9 +96,7 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 	}
 
 	@Override
-	public void executeApplication(String[] args) {
-		// parse command line, exit with help screen if error
-		IsApplication.super.executeApplication(args);
+	public void runApplication() {
 		if(this.errNo!=0){
 			this.printErrors();
 			return;
@@ -213,12 +210,4 @@ public class Gen_ConfigureSh extends AbstractAppliction implements IsApplication
 		return null;
 	}
 
-	/**
-	 * Prints errors using the message console.
-	 */
-	protected void printErrors(){
-		if(this.errorSet.hasErrors()){
-			MessageConsole.conError(this.errorSet.render());
-		}
-	}
 }

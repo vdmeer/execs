@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.vandermeer.execs.DefaultCliParser;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 
 public class Test_AO_HelpTyped {
 
@@ -52,9 +52,9 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_CliParse_Noarg() {
-		DefaultCliParser cli = new DefaultCliParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
 		AO_HelpTyped ao = new AO_HelpTyped(null, null);
-		cli.addOption(ao);
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--help"});
 		assertTrue(ao.inCli());
@@ -69,9 +69,9 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_CliParseS_NoArg() {
-		DefaultCliParser cli = new DefaultCliParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
 		AO_HelpTyped ao = new AO_HelpTyped('h', null);
-		cli.addOption(ao);
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-h"});
 		assertTrue(ao.inCli());

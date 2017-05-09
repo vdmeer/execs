@@ -31,6 +31,7 @@ import org.apache.commons.lang3.SystemUtils;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
 import de.vandermeer.execs.options.simple.AO_Version;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_AppStart;
 import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputFile;
@@ -42,7 +43,7 @@ import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputFile;
  * @version    v0.4.0 build 170413 (13-Apr-17) for Java 1.8
  * @since      v0.4.0
  */
-public class Gen_ExecJarScripts extends AbstractAppliction implements IsApplication {
+public class Gen_ExecJarScripts extends AbstractAppliction {
 
 	/** Application name. */
 	public final static String APP_NAME = "gen-exec-jar-scripts";
@@ -60,38 +61,40 @@ public class Gen_ExecJarScripts extends AbstractAppliction implements IsApplicat
 	 * Creates a new application.
 	 */
 	public Gen_ExecJarScripts(){
-		super(APP_NAME, new AO_HelpSimple('h', null), null, new AO_Version('v', null));
+		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
 	}
 
 	@Override
-	public void executeApplication(String[] args) {
-		IsApplication.super.executeApplication(args);
+	public void runApplication() {
+		if(this.errNo!=0){
+			this.printErrors();
+			return;
+		}
+
 		String jarFn = null;
 
-		if(this.errNo==0){
-			if(!this.inExecJar()){
-				this.errorSet.addError(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError(this.getAppName()));
-				this.errNo = Templates_AppStart.MUST_BE_IN_EXEC_JAR.getCode();
+		if(!this.inExecJar()){
+			this.errorSet.addError(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError(this.getAppName()));
+			this.errNo = Templates_AppStart.MUST_BE_IN_EXEC_JAR.getCode();
+		}
+		else{
+			try {
+				File file = new File(Gen_ExecJarScripts.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+				jarFn = file.toString();
 			}
-			else{
-				try {
-					File file = new File(Gen_ExecJarScripts.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-					jarFn = file.toString();
-				}
-				catch (URISyntaxException ex) {
-					this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), ex.getMessage()));
-					this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
-				}
+			catch (URISyntaxException ex) {
+				this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), ex.getMessage()));
+				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
+			}
 
-				if(jarFn==null){
-					this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), "value was null"));
-					this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
-				}
+			if(jarFn==null){
+				this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), "value was null"));
+				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
+			}
 
-				if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
-					this.errorSet.addError(Templates_AppStart.OS_NOT_SUPPORTED.getError(this.getAppName(), "Unix nor Windows"));
-					this.errNo = Templates_AppStart.OS_NOT_SUPPORTED.getCode();
-				}
+			if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
+				this.errorSet.addError(Templates_AppStart.OS_NOT_SUPPORTED.getError(this.getAppName(), "Unix nor Windows"));
+				this.errNo = Templates_AppStart.OS_NOT_SUPPORTED.getCode();
 			}
 		}
 

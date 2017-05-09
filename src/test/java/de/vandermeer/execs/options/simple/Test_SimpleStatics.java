@@ -22,8 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.execs.DefaultCliParser;
 import de.vandermeer.execs.options.Option_SimpleC;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
 
 public class Test_SimpleStatics {
 
@@ -48,31 +48,31 @@ public class Test_SimpleStatics {
 	}
 
 	public static void test_Cli(Option_SimpleC ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
-		assertEquals(1, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
+		assertEquals(1, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
 	}
 
 	public static void test_CliShort(Option_SimpleC ao){
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
-		assertEquals(2, cli.getAddedOptions().size());
-		assertTrue(cli.getAddedOptions().contains(ao.getCliLong()));
-		assertTrue(cli.getAddedOptions().contains(ao.getCliShort().toString()));
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
+		assertEquals(2, cli.getOptions().getSetString().size());
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
+		assertTrue(cli.getOptions().getSetString().contains(ao.getCliShort().toString()));
 	}
 
 	public static void test_CliParse(Option_SimpleC ao) {
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--" + ao.getCliLong()});
 		assertTrue(ao.inCli());
 	}
 
 	public static void test_CliParseShort(Option_SimpleC ao) {
-		DefaultCliParser cli = new DefaultCliParser("test");
-		cli.addOption(ao);
+		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-" + ao.getCliShort()});
 		assertTrue(ao.inCli());

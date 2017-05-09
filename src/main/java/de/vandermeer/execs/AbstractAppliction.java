@@ -17,16 +17,16 @@ package de.vandermeer.execs;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.stringtemplate.v4.ST;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
 import de.vandermeer.execs.options.typed.AO_Columns;
+import de.vandermeer.skb.interfaces.MessageConsole;
+import de.vandermeer.skb.interfaces.application.ApoCliParser;
+import de.vandermeer.skb.interfaces.application.ApoEnvParser;
+import de.vandermeer.skb.interfaces.application.ApoPropParser;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 import de.vandermeer.skb.interfaces.application.Apo_TypedC;
-import de.vandermeer.skb.interfaces.application.App_CliParser;
-import de.vandermeer.skb.interfaces.application.App_EnvironmentParser;
-import de.vandermeer.skb.interfaces.application.App_PropertyParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 import de.vandermeer.skb.interfaces.messagesets.IsErrorSet_IsError;
 import de.vandermeer.skb.interfaces.messagesets.IsInfoSet_FT;
@@ -45,13 +45,13 @@ public abstract class AbstractAppliction implements IsApplication {
 	protected final transient String appName;
 
 	/** Application CLI parser. */
-	protected final transient App_CliParser cliParser;
+	protected final transient ApoCliParser cliParser;
 
 	/** Application Environment parser. */
-	protected final transient App_EnvironmentParser envParser;
+	protected final transient ApoEnvParser envParser;
 
 	/** Application Property parser. */
-	protected final transient App_PropertyParser propParser;
+	protected final transient ApoPropParser propParser;
 
 	/** A simple help object, null if not required. */
 	protected final transient Apo_SimpleC optionSimpleHelp;
@@ -80,31 +80,31 @@ public abstract class AbstractAppliction implements IsApplication {
 	/**
 	 * Creates a new abstract application.
 	 * @param appName the application name, must not be blank
+	 * @param cliParser the CLI parser, must not be null
 	 * @param simpleHelp an optional simple help, null of not required
 	 * @param typedHelp an optional typed help, null if not required, if used with simpleHelp only typedHelp will be added
 	 * @param version an optional version, null if not required
 	 */
-	protected AbstractAppliction(final String appName, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
-		this(appName, null, null, null, simpleHelp, typedHelp, version);
+	protected AbstractAppliction(final String appName, final ApoCliParser cliParser, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
+		this(appName, cliParser, null, null, simpleHelp, typedHelp, version);
 	}
 
 	/**
 	 * Creates a new abstract application.
 	 * @param appName the application name, must not be blank
-	 * @param cliParser the command line parser, null if default should be used
+	 * @param cliParser the CLI parser, must not be null
 	 * @param envParser the environment parser, null if default should be used
 	 * @param propParser the property parser, null if default should be used
 	 * @param simpleHelp an optional simple help, null of not required
 	 * @param typedHelp an optional typed help, null if not required, if used with simpleHelp only typedHelp will be added
 	 * @param version an optional version, null if not required
 	 */
-	protected AbstractAppliction(final String appName, final App_CliParser cliParser, final App_EnvironmentParser envParser, final App_PropertyParser propParser, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
-		Validate.notBlank(appName);
+	protected AbstractAppliction(final String appName, final ApoCliParser cliParser, final ApoEnvParser envParser, final ApoPropParser propParser, final AO_HelpSimple simpleHelp, final Apo_TypedC<String> typedHelp, final Apo_SimpleC version){
 		this.appName = appName;
 
-		this.cliParser = (cliParser==null)?new DefaultCliParser(appName):cliParser;
-		this.envParser = (envParser==null)?new DefaultEnvironmentParser(appName):envParser;
-		this.propParser = (propParser==null)?new DefaultPropertyParser(appName):propParser;
+		this.cliParser = cliParser;
+		this.envParser = (envParser==null)?ApoEnvParser.create(appName):envParser;
+		this.propParser = (propParser==null)?ApoPropParser.create(appName, true):propParser;
 
 		this.addOption(this.optionColumns);
 		this.optionSimpleHelp = (typedHelp!=null)?null:simpleHelp;
@@ -128,13 +128,23 @@ public abstract class AbstractAppliction implements IsApplication {
 	}
 
 	@Override
-	public App_CliParser getCliParser() {
+	public String getAppName() {
+		return this.appName;
+	}
+
+	@Override
+	public ApoCliParser getCliParser() {
 		return this.cliParser;
 	}
 
 	@Override
 	public int getConsoleWidth(){
 		return this.optionColumns.getValue();
+	}
+
+	@Override
+	public ApoEnvParser getEnvironmentParser() {
+		return this.envParser;
 	}
 
 	@Override
@@ -153,8 +163,18 @@ public abstract class AbstractAppliction implements IsApplication {
 	}
 
 	@Override
+	public ApoPropParser getPropertyParser() {
+		return this.propParser;
+	}
+
+	@Override
 	public IsWarningSet_FT getWarningSet() {
 		return this.warningSet;
+	}
+
+	@Override
+	public void setErrno(int errorNumber) {
+		this.errNo = errorNumber;
 	}
 
 	@Override
@@ -179,24 +199,12 @@ public abstract class AbstractAppliction implements IsApplication {
 		return ret;
 	}
 
-	@Override
-	public void setErrno(int errorNumber) {
-		this.errNo = errorNumber;
+	/**
+	 * Prints errors using the message console.
+	 */
+	protected void printErrors(){
+		if(this.errorSet.hasErrors()){
+			MessageConsole.conError(this.errorSet.render());
+		}
 	}
-
-	@Override
-	public App_EnvironmentParser getEnvironmentParser() {
-		return this.envParser;
-	}
-
-	@Override
-	public App_PropertyParser getPropertyParser() {
-		return this.propParser;
-	}
-
-	@Override
-	public String getAppName() {
-		return this.appName;
-	}
-
 }
