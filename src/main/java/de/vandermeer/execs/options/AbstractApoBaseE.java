@@ -50,6 +50,11 @@ public abstract class AbstractApoBaseE extends AbstractApoBase implements ApoBas
 	}
 
 	@Override
+	public boolean environmentIsRequired() {
+		return this.environmentIsRequired;
+	}
+
+	@Override
 	public String getEnvironmentKey() {
 		return this.environmentKey;
 	}
@@ -57,11 +62,6 @@ public abstract class AbstractApoBaseE extends AbstractApoBase implements ApoBas
 	@Override
 	public boolean inEnvironment() {
 		return this.isInEnv;
-	}
-
-	@Override
-	public boolean environmentIsRequired() {
-		return this.environmentIsRequired;
 	}
 
 	@Override

@@ -60,6 +60,11 @@ public abstract class Abstract_TypedCE<T> extends Abstract_TypedC<T> implements 
 	}
 
 	@Override
+	public boolean environmentIsRequired() {
+		return this.environmentIsRequired;
+	}
+
+	@Override
 	public String getEnvironmentKey() {
 		return this.environmentKey;
 	}
@@ -75,18 +80,13 @@ public abstract class Abstract_TypedCE<T> extends Abstract_TypedC<T> implements 
 	}
 
 	@Override
-	public void validate() throws IllegalStateException {
-		Apo_TypedCE.super.validate();
-	}
-
-	@Override
-	public boolean environmentIsRequired() {
-		return this.environmentIsRequired;
-	}
-
-	@Override
 	public void setInEnvironment(boolean inEnv){
 		this.isInEnv = inEnv;
+	}
+
+	@Override
+	public void validate() throws IllegalStateException {
+		Apo_TypedCE.super.validate();
 	}
 
 }

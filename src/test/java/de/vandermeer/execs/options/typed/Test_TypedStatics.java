@@ -30,7 +30,6 @@ public class Test_TypedStatics {
 	public static void test_Constructor(Abstract_TypedC<?> ao, String cliLong, boolean isRequired, String argName){
 		assertTrue(ao.getCliShort()==null);
 		assertTrue(ao.getCliLong().equals(cliLong));
-		assertEquals(cliLong, ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 		assertNull(ao.getLongDescription());
@@ -41,7 +40,6 @@ public class Test_TypedStatics {
 	public static void test_ConstructorShort(Abstract_TypedC<?> ao, Character cliShort, String cliLong, boolean isRequired, String argName){
 		assertTrue(ao.getCliShort().equals(cliShort));
 		assertTrue(ao.getCliLong().equals(cliLong));
-		assertEquals(cliShort.toString(), ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 		assertNull(ao.getLongDescription());

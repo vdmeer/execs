@@ -34,7 +34,6 @@ public class Test_AO_ClassmapFilename_CP {
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
 		assertTrue(ao.getCliShort()==null);
 		assertTrue(ao.getCliLong().equals("classmap-file"));
-		assertEquals("classmap-file", ao.getCliShortLong());
 		assertFalse(ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 		assertFalse(StringUtils.isBlank(ao.getLongDescription().toString()));
@@ -47,7 +46,6 @@ public class Test_AO_ClassmapFilename_CP {
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP('o');
 		assertTrue(ao.getCliShort().equals('o'));
 		assertTrue(ao.getCliLong().equals("classmap-file"));
-		assertEquals("o", ao.getCliShortLong());
 		assertFalse(ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 		assertFalse(StringUtils.isBlank(ao.getLongDescription().toString()));

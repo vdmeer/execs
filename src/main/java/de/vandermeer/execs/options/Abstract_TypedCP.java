@@ -74,11 +74,6 @@ public abstract class Abstract_TypedCP<T> extends Abstract_TypedC<T> implements 
 	}
 
 	@Override
-	public void validate() throws IllegalStateException {
-		Apo_TypedCP.super.validate();
-	}
-
-	@Override
 	public boolean propertyIsRequired() {
 		return this.propertyIsRequired;
 	}
@@ -86,6 +81,11 @@ public abstract class Abstract_TypedCP<T> extends Abstract_TypedC<T> implements 
 	@Override
 	public void setInProperties(boolean inProp){
 		this.isInProps = inProp;
+	}
+
+	@Override
+	public void validate() throws IllegalStateException {
+		Apo_TypedCP.super.validate();
 	}
 
 }

@@ -33,7 +33,6 @@ public class Test_SimpleStatics {
 
 		assertTrue(ao.getCliShort()==null);
 		assertTrue(ao.getCliLong().equals(cliLong));
-		assertEquals(cliLong, ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 	}
@@ -41,7 +40,6 @@ public class Test_SimpleStatics {
 	public static void test_ConstructorShort(Option_SimpleC ao, boolean isRequired, String cliLong, Character cliShort){
 		assertTrue(ao.getCliShort().equals(cliShort));
 		assertTrue(ao.getCliLong().equals(cliLong));
-		assertEquals(cliShort.toString(), ao.getCliShortLong());
 		assertEquals(isRequired, ao.cliIsRequired());
 		assertFalse(StringUtils.isBlank(ao.getDescription()));
 		assertNull(ao.getLongDescription());
