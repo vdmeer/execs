@@ -36,7 +36,7 @@ public class AO_ApplicationDir extends Option_TypedC_String {
 	 */
 	public AO_ApplicationDir(final Character cliShort, final boolean isRequired, final String argDescr, final String description, final Object longDescription) {
 		super(
-				"Applicatin Directory",
+				"Application Directory",
 				cliShort, "application-dir", isRequired,
 				"DIR", false, argDescr,
 				description,
