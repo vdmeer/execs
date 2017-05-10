@@ -31,8 +31,10 @@ import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.execs.options.typed.AO_LibDir;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename;
 import de.vandermeer.execs.options.typed.AO_TemplateDir;
+import de.vandermeer.skb.interfaces.MessageType;
 import de.vandermeer.skb.interfaces.application.ApoCliParser;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
+import de.vandermeer.skb.interfaces.console.MessageConsole;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_InputFile;
 
 /**
  * Application to generate a configuration shell script.
@@ -68,7 +70,7 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 	 * Returns a new configure shell script generator.
 	 */
 	public Gen_ConfigureSh(){
-		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
+		super(APP_NAME, ApoCliParser.defaultParser(), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
 
 		this.optionLibDir = new AO_LibDir(
 				null, false, "directory with jar files, must exist",
@@ -93,6 +95,9 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 
 		this.propRunClass = GenAop.RUN_CLASS();
 		this.addOption(this.propRunClass);
+
+		MessageConsole.activateAll();
+		MessageConsole.setApplicationName(this.appName);
 	}
 
 	@Override
@@ -134,7 +139,7 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 		}
 
 		if(url==null){
-			this.errorSet.addError(Templates_InputFile.URL_NULL.getError(this.getAppName(), "property", filename));
+			this.msgMgr.add(Templates_InputFile.URL_NULL.getError("property", filename));
 			this.errNo = Templates_InputFile.URL_NULL.getCode();
 		}
 		else{
@@ -144,7 +149,7 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 				return ret;
 			}
 			catch (IOException iox){
-				this.errorSet.addError(Templates_InputFile.IO_EXCEPTION_READING.getError(this.getAppName(), "property", filename, iox.getMessage()));
+				this.msgMgr.add(Templates_InputFile.IO_EXCEPTION_READING.getError("property", filename, iox.getMessage()));
 				this.errNo = Templates_InputFile.IO_EXCEPTION_READING.getCode();
 			}
 //			catch (Exception ex){
@@ -156,15 +161,9 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 
 	@Override
 	public void runApplication() {
-		if(this.errNo!=0){
-			this.printErrors();
-			return;
-		}
-
 		String propFile = this.optionPropFile.getValue();
 		Properties configuration = this.loadProperties(propFile);
 		if(configuration==null){
-			this.printErrors();
 			return;
 		}
 		else{
@@ -179,16 +178,16 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 				String line;
 				while((line=input.readLine())!=null){
 					if(StringUtils.startsWith(line, "LIB_HOME=") && this.optionLibDir.getValue()!=null){
-						System.out.println("LIB_HOME=" + this.optionLibDir.getValue());
+						this.msgMgr.add(MessageType.INFO, "LIB_HOME={}", this.optionLibDir.getValue());
 					}
 					else if(StringUtils.startsWith(line, "PROP_FILE=")){
-						System.out.println("PROP_FILE=" + propFile);
+						this.msgMgr.add(MessageType.INFO, "PROP_FILE={}", propFile);
 					}
 					else if(StringUtils.startsWith(line, "EXECS_CLASS=")){
-						System.out.println("EXECS_CLASS=" + this.propRunClass.getValue());
+						this.msgMgr.add(MessageType.INFO, "EXECS_CLASS={}", this.propRunClass.getValue());
 					}
 					else if(StringUtils.startsWith(line, "BIN_TEMPLATES=") && this.optionTemplateDir.getValue()!=null){
-						System.out.println("BIN_TEMPLATES=" + this.optionTemplateDir.getValue());
+						this.msgMgr.add(MessageType.INFO, "BIN_TEMPLATES={}", this.optionTemplateDir.getValue());
 					}
 					else{
 						System.out.println(line);
@@ -206,8 +205,6 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 				//TODO
 			}
 		}
-
-		this.printErrors();
 	}
 
 }

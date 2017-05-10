@@ -17,8 +17,8 @@ package de.vandermeer.execs.options;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_CliOptions;
+import de.vandermeer.skb.interfaces.messages.errors.IsError;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_CliOptions;
 
 /**
  * Abstract implementation of a CLI option of type string.

@@ -18,8 +18,8 @@ package de.vandermeer.execs.options;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_EnvironmentOptions;
+import de.vandermeer.skb.interfaces.messages.errors.IsError;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_EnvironmentOptions;
 
 /**
  * Abstract implementation of a environment option of type boolean.

@@ -33,8 +33,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 import de.vandermeer.execs.cf.CF;
+import de.vandermeer.skb.interfaces.MessageType;
 import de.vandermeer.skb.interfaces.application.IsApplication;
-import de.vandermeer.skb.interfaces.messagesets.IsErrorSet_FT;
+import de.vandermeer.skb.interfaces.console.MessageConsole;
+import de.vandermeer.skb.interfaces.messages.MessageManager;
 
 /**
  * The application executor.
@@ -94,8 +96,8 @@ public class ExecS {
 	/** Local ST Group for printouts. */
 	protected final transient STGroupFile stg = new STGroupFile("de/vandermeer/execs/execs.stg");
 
-	/** Local set of errors, collected during execution printed at the end. */
-	protected final transient IsErrorSet_FT errorSet = IsErrorSet_FT.create();
+	/** Message manager. */
+	protected final transient MessageManager msgMgr;
 
 	/** Error number, holds the number of the last error, 0 if none occurred. */
 	protected transient int errNo;
@@ -120,6 +122,10 @@ public class ExecS {
 		this.addApplication(Gen_RunScripts.APP_NAME, Gen_RunScripts.class);
 		this.addApplication(Gen_ConfigureSh.APP_NAME, Gen_ConfigureSh.class);
 		this.addApplication(Gen_ExecJarScripts.APP_NAME, Gen_ExecJarScripts.class);
+
+		MessageConsole.activateAll();
+		MessageConsole.setApplicationName(this.appName);
+		this.msgMgr = MessageManager.create();
 	}
 
 	/**
@@ -183,7 +189,7 @@ public class ExecS {
 					svc = this.classmap.get(arg).newInstance();
 				}
 				catch(IllegalAccessException | InstantiationException iex){
-					this.errorSet.addError("{}:  tried to execute <{}> by registered name -> exception: {}", this.appName, args[0], iex.getMessage());
+					this.msgMgr.add(MessageType.ERROR, "tried to execute <{}> by registered name -> exception: {}", args[0], iex.getMessage());
 //					iex.printStackTrace();
 					this.errNo = -1;
 				}
@@ -194,7 +200,7 @@ public class ExecS {
 					svc = c.newInstance();
 				}
 				catch(ClassNotFoundException | IllegalAccessException | InstantiationException ex){
-					this.errorSet.addError("{}:  tried to execute <{}> as class name -> exception: {}", this.appName, args[0], ex.getMessage());
+					this.msgMgr.add(MessageType.ERROR, "tried to execute <{}> as class name -> exception: {}", args[0], ex.getMessage());
 //					ex.printStackTrace();
 					this.errNo = -2;
 				}
@@ -204,10 +210,7 @@ public class ExecS {
 				this.executeApplication(svc, args, arg);
 			}
 			else{
-				System.err.println(this.errorSet.render());
-				System.err.println();
-				System.err.println(this.appName + ": no application could be started and nothing else could be done, try '-h' or '--help' for help");
-				System.err.println();
+				this.msgMgr.add(MessageType.ERROR, "no application could be started and nothing else could be done, try '-h' or '--help' for help");
 			}
 		}
 
@@ -236,15 +239,15 @@ public class ExecS {
 			this.errNo = ((IsApplication)svc).getErrNo();
 		}
 		else if(svc==null){
-			this.errorSet.addError("{}: could not create object for class or application name <{}>", this.appName, orig);
+			this.msgMgr.add(MessageType.ERROR, "could not create object for class or application name <{}>", orig);
 			this.errNo = -10;
 		}
 		else if(!(svc instanceof IsApplication)){
-			this.errorSet.addError("{}: given class or application name <{}> is not instance of <{}>", this.appName, orig, IsApplication.class.getName());
+			this.msgMgr.add(MessageType.ERROR, "given class or application name <{}> is not instance of <{}>", orig, IsApplication.class.getName());
 			this.errNo = -11;
 		}
 		else{
-			this.errorSet.addError("{}: unexpected error processing for class or application name <{}>", this.appName, orig);
+			this.msgMgr.add(MessageType.ERROR, "unexpected error processing for class or application name <{}>", orig);
 			this.errNo = -12;
 		}
 	}

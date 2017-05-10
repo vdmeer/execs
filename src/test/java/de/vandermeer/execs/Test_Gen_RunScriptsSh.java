@@ -75,7 +75,7 @@ public class Test_Gen_RunScriptsSh {
 		gen.executeApplication(new String[]{
 				"--application-dir", "appdir",
 				"--property-file", " ",
-				"--target", "sh"
+				"--target", "target/sh"
 		});
 	}
 }

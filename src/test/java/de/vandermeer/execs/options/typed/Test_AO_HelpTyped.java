@@ -52,7 +52,7 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_CliParse_Noarg() {
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_HelpTyped ao = new AO_HelpTyped(null, null);
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
@@ -69,7 +69,7 @@ public class Test_AO_HelpTyped {
 
 	@Test
 	public void test_CliParseS_NoArg() {
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_HelpTyped ao = new AO_HelpTyped('h', null);
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());

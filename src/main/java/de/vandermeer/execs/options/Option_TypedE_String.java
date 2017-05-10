@@ -15,8 +15,8 @@
 
 package de.vandermeer.execs.options;
 
-import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_EnvironmentOptions;
+import de.vandermeer.skb.interfaces.messages.errors.IsError;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_EnvironmentOptions;
 
 /**
  * Abstract implementation of an environment option of type string.

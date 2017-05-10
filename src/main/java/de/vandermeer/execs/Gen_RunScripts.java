@@ -39,15 +39,15 @@ import de.vandermeer.execs.options.typed.AO_ClassmapFilename_CP;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename;
 import de.vandermeer.execs.options.typed.AO_StgFilename;
 import de.vandermeer.execs.options.typed.AO_Target;
-import de.vandermeer.skb.interfaces.MessageConsole;
 import de.vandermeer.skb.interfaces.antlr.IsSTGroup;
 import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
-import de.vandermeer.skb.interfaces.messagesets.errors.IsError;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputDirectory;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_InputFile;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputDirectory;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_Target;
+import de.vandermeer.skb.interfaces.console.MessageConsole;
+import de.vandermeer.skb.interfaces.messages.errors.IsError;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_InputDirectory;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_InputFile;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_OutputDirectory;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_Target;
 
 /**
  * Application to generate run scripts for other applications, supporting windows, CygWin, and bash.
@@ -119,7 +119,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * Returns a new generator with parameterized CLI object.
 	 */
 	public Gen_RunScripts() {
-		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null) );
+		super(APP_NAME, ApoCliParser.defaultParser(), new AO_HelpSimple('h', null), null, new AO_Version('v', null) );
 
 		this.optionPropFile = new AO_PropertyFilename(
 				null, false,
@@ -169,6 +169,9 @@ public class Gen_RunScripts extends AbstractAppliction {
 		this.propAutogen = GenAop.AUTOGEN_REGISTERED();
 		this.propAutogen.setDefaultValue(false);
 		this.addOption(this.propAutogen);
+
+		MessageConsole.activateAll();
+		MessageConsole.setApplicationName(this.appName);
 	}
 
 	/**
@@ -214,7 +217,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 
 		this.applicationDir = this.optionAppHome.getValue();
 		if(this.applicationDir==null){
-			this.getErrorSet().addError(Templates_InputDirectory.DN_NULL.getError(this.getAppName(), "application"));
+			this.msgMgr.add(Templates_InputDirectory.DN_NULL.getError("application"));
 			this.errNo = Templates_InputDirectory.DN_NULL.getCode();
 		}
 	}
@@ -241,7 +244,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 
 		this.classMap = this.loadProperties(fileName);
 		if(classMap==null){
-			this.printErrors();
 			return;
 		}
 
@@ -266,7 +268,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 		String propFile = this.optionPropFile.getValue();
 		Properties configuration = this.loadProperties(propFile);
 		if(configuration==null){
-			this.printErrors();
 			return;
 		}
 		else{
@@ -327,12 +328,12 @@ public class Gen_RunScripts extends AbstractAppliction {
 
 		if(targetDir.exists()){
 			if(!targetDir.isDirectory()){
-				this.errorSet.addError(Templates_OutputDirectory.DIR_NOTDIR.getError(this.getAppName(), "target", target));
+				this.msgMgr.add(Templates_OutputDirectory.DIR_NOTDIR.getError("target", target));
 				this.errNo = Templates_OutputDirectory.DIR_NOTDIR.getCode();
 				return;
 			}
 			if(!targetDir.canWrite()){
-				this.errorSet.addError(Templates_OutputDirectory.DIR_CANT_WRITE.getError(this.getAppName(), "target", target));
+				this.msgMgr.add(Templates_OutputDirectory.DIR_CANT_WRITE.getError("target", target));
 				this.errNo = Templates_OutputDirectory.DIR_CANT_WRITE.getCode();
 				return;
 			}
@@ -340,18 +341,18 @@ public class Gen_RunScripts extends AbstractAppliction {
 		else{
 			//target dir does not exist, let's see if we can create it the way we need
 			if(!parentDir.isDirectory()){
-				this.errorSet.addError(Templates_OutputDirectory.PARENT_NOTDIR.getError(this.getAppName(), "target"));
+				this.msgMgr.add(Templates_OutputDirectory.PARENT_NOTDIR.getError("target"));
 				this.errNo = Templates_OutputDirectory.PARENT_NOTDIR.getCode();
 				return;
 			}
 			if(!parentDir.canWrite()){
-				this.errorSet.addError(Templates_OutputDirectory.PARENT_CANT_WRITE.getError(this.getAppName(), "target", parent));
+				this.msgMgr.add(Templates_OutputDirectory.PARENT_CANT_WRITE.getError("target", parent));
 				this.errNo = Templates_OutputDirectory.PARENT_CANT_WRITE.getCode();
 				return;
 			}
 
 			if(!targetDir.mkdir()){
-				this.errorSet.addError(Templates_OutputDirectory.DIR_CANT_CREATE.getError(this.getAppName(), "target", target));
+				this.msgMgr.add(Templates_OutputDirectory.DIR_CANT_CREATE.getError("target", target));
 				this.errNo = Templates_OutputDirectory.DIR_CANT_CREATE.getCode();
 				return;
 			}
@@ -382,10 +383,10 @@ public class Gen_RunScripts extends AbstractAppliction {
 		expectedChunks.put("fnExtension", new String[]{"target"});
 		expectedChunks.put("pathSeparator", new String[]{"target"});
 
-		IsSTGroup istg = IsSTGroup.fromFile(this.optionStgFile.getValue(), expectedChunks, APP_NAME);
+		IsSTGroup istg = IsSTGroup.fromFile(this.optionStgFile.getValue(), expectedChunks);
 		Set<IsError> err = istg.validate();
 		if(err.size()>0){
-			this.getErrorSet().addAllErrors(err);
+			this.msgMgr.addAll(err);
 			return;
 		}
 		this.stg = istg.getSTGroup();
@@ -393,12 +394,12 @@ public class Gen_RunScripts extends AbstractAppliction {
 		String[] availableTargets = null;
 		availableTargets = StringUtils.split(this.stg.getInstanceOf("supportedTargets").render(), " , ");
 		if(availableTargets.length==0){
-			this.errorSet.addError(Templates_Target.NO_TARGETS.getError(this.getAppName(), "expected targets in STG, template <supportedTargets>"));
+			this.msgMgr.add(Templates_Target.NO_TARGETS.getError("expected targets in STG, template <supportedTargets>"));
 			this.errNo = Templates_Target.NO_TARGETS.getCode();
 			return;
 		}
 		if(!ArrayUtils.contains(availableTargets, this.target)){
-			this.errorSet.addError(Templates_Target.NOT_SUPPORTED.getError(this.getAppName(), target, this.stg.getInstanceOf("supportedTargets").render()));
+			this.msgMgr.add(Templates_Target.NOT_SUPPORTED.getError(target, this.stg.getInstanceOf("supportedTargets").render()));
 			this.errNo = Templates_Target.NOT_SUPPORTED.getCode();
 			return;
 		}
@@ -431,7 +432,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 		}
 
 		if(url==null){
-			this.errorSet.addError(Templates_InputFile.URL_NULL.getError(this.getAppName(), "property", filename));
+			this.msgMgr.add(Templates_InputFile.URL_NULL.getError("property", filename));
 			this.errNo = Templates_InputFile.URL_NULL.getCode();
 		}
 		else{
@@ -441,7 +442,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 				return ret;
 			}
 			catch (IOException iox){
-				this.errorSet.addError(Templates_InputFile.IO_EXCEPTION_READING.getError(this.getAppName(), "property", filename, iox.getMessage()));
+				this.msgMgr.add(Templates_InputFile.IO_EXCEPTION_READING.getError("property", filename, iox.getMessage()));
 				this.errNo = Templates_InputFile.IO_EXCEPTION_READING.getCode();
 			}
 //			catch (Exception ex){
@@ -451,22 +452,8 @@ public class Gen_RunScripts extends AbstractAppliction {
 		return null;
 	}
 
-	/**
-	 * Prints errors using the message console.
-	 */
-	protected void printErrors(){
-		if(this.errorSet.hasErrors()){
-			MessageConsole.conError(this.errorSet.render());
-		}
-	}
-
 	@Override
 	public void runApplication() {
-		if(this.errNo!=0){
-			this.printErrors();
-			return;
-		}
-
 		// initialize if possible (errNo==0)
 		this.initConfiguration();
 		this.initApplicationDir();
@@ -538,10 +525,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 			headerST.add("target", targetMap);
 			headerST.add("applicationHome", this.applicationDir);
 			this.writeFile(this.outputDir + File.separator + "_header", headerST);
-		}
-
-		if(this.errorSet.hasErrors()){
-			System.err.println(this.errorSet.render());
 		}
 	}
 

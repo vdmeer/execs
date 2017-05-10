@@ -21,16 +21,13 @@ import org.stringtemplate.v4.ST;
 
 import de.vandermeer.execs.options.simple.AO_HelpSimple;
 import de.vandermeer.execs.options.typed.AO_Columns;
-import de.vandermeer.skb.interfaces.MessageConsole;
 import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.ApoEnvParser;
 import de.vandermeer.skb.interfaces.application.ApoPropParser;
 import de.vandermeer.skb.interfaces.application.Apo_SimpleC;
 import de.vandermeer.skb.interfaces.application.Apo_TypedC;
 import de.vandermeer.skb.interfaces.application.IsApplication;
-import de.vandermeer.skb.interfaces.messagesets.IsErrorSet_IsError;
-import de.vandermeer.skb.interfaces.messagesets.IsInfoSet_FT;
-import de.vandermeer.skb.interfaces.messagesets.IsWarningSet_FT;
+import de.vandermeer.skb.interfaces.messages.MessageManager;
 
 /**
  * Abstract implementation of an application.
@@ -43,6 +40,9 @@ public abstract class AbstractAppliction implements IsApplication {
 
 	/** Application name. */
 	protected final transient String appName;
+
+	/** Application message manager. */
+	protected final transient MessageManager msgMgr;
 
 	/** Application CLI parser. */
 	protected final transient ApoCliParser cliParser;
@@ -64,15 +64,6 @@ public abstract class AbstractAppliction implements IsApplication {
 
 	/** Option for getting column (console width). */
 	protected final transient AO_Columns optionColumns = new AO_Columns(null);
-
-	/** Local set of errors, collected during execution printed at the end. */
-	protected final transient IsErrorSet_IsError errorSet = IsErrorSet_IsError.create();
-
-	/** Local set of warnings, collected during execution printed at the end. */
-	protected final transient IsWarningSet_FT warningSet = IsWarningSet_FT.create();
-
-	/** Local set of information, collected during execution printed at the end. */
-	protected final transient IsInfoSet_FT informationSet = IsInfoSet_FT.create();
 
 	/** Error number, holds the number of the last error, 0 if none occurred. */
 	protected transient int errNo;
@@ -103,13 +94,15 @@ public abstract class AbstractAppliction implements IsApplication {
 		this.appName = appName;
 
 		this.cliParser = cliParser;
-		this.envParser = (envParser==null)?ApoEnvParser.create(appName):envParser;
-		this.propParser = (propParser==null)?ApoPropParser.create(appName, true):propParser;
+		this.envParser = (envParser==null)?ApoEnvParser.create():envParser;
+		this.propParser = (propParser==null)?ApoPropParser.create(true):propParser;
 
 		this.addOption(this.optionColumns);
 		this.optionSimpleHelp = (typedHelp!=null)?null:simpleHelp;
 		this.optionTypedHelp = typedHelp;
 		this.optionVersion = version;
+
+		this.msgMgr = MessageManager.create();
 	}
 
 	@Override
@@ -153,32 +146,8 @@ public abstract class AbstractAppliction implements IsApplication {
 	}
 
 	@Override
-	public IsErrorSet_IsError getErrorSet() {
-		return this.errorSet;
-	}
-
-	@Override
-	public IsInfoSet_FT getInfoSet() {
-		return this.informationSet;
-	}
-
-	@Override
 	public ApoPropParser getPropertyParser() {
 		return this.propParser;
-	}
-
-	@Override
-	public IsWarningSet_FT getWarningSet() {
-		return this.warningSet;
-	}
-
-	/**
-	 * Prints errors using the message console.
-	 */
-	protected void printErrors(){
-		if(this.errorSet.hasErrors()){
-			MessageConsole.conError(this.errorSet.render());
-		}
 	}
 
 	@Override
@@ -206,5 +175,10 @@ public abstract class AbstractAppliction implements IsApplication {
 			return null;
 		}
 		return ret;
+	}
+
+	@Override
+	public MessageManager getMsgManager() {
+		return this.msgMgr;
 	}
 }

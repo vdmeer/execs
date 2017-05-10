@@ -48,14 +48,14 @@ public class Test_TypedStatics {
 	}
 
 	public static void test_Cli(Abstract_TypedC<?> ao){
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		cli.getOptions().addOption(ao);
 		assertEquals(1, cli.getOptions().getSetString().size());
 		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
 	}
 
 	public static void test_CliShort(Abstract_TypedC<?> ao){
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		cli.getOptions().addOption(ao);
 		assertEquals(2, cli.getOptions().getSetString().size());
 		assertTrue(cli.getOptions().getSetString().contains(ao.getCliLong()));
@@ -63,7 +63,7 @@ public class Test_TypedStatics {
 	}
 
 	public static void test_CliParse(Abstract_TypedC<?> ao){
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"--" + ao.getCliLong(), "foo"});
@@ -73,7 +73,7 @@ public class Test_TypedStatics {
 	}
 
 	public static void test_CliParseShort(Abstract_TypedC<?> ao){
-		ApoCliParser cli = ApoCliParser.defaultParser("test");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
 		cli.parse(new String[]{"-" + ao.getCliShort(), "foo"});

@@ -53,7 +53,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_Cli(){
-		ApoCliParser cli = ApoCliParser.defaultParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
 		cli.getOptions().addOption(ao);
 		assertEquals(1, cli.getOptions().getSetString().size());
@@ -62,7 +62,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_CliS(){
-		ApoCliParser cli = ApoCliParser.defaultParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP('o');
 		cli.getOptions().addOption(ao);
 		assertEquals(2, cli.getOptions().getSetString().size());
@@ -72,7 +72,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_CliParse(){
-		ApoCliParser cli = ApoCliParser.defaultParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
@@ -84,7 +84,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_CliParseS(){
-		ApoCliParser cli = ApoCliParser.defaultParser("app");
+		ApoCliParser cli = ApoCliParser.defaultParser();
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP('o');
 		cli.getOptions().addOption(ao);
 		assertFalse(ao.inCli());
@@ -96,7 +96,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_Property(){
-		ApoPropParser prop = ApoPropParser.create("app", true);
+		ApoPropParser prop = ApoPropParser.create(true);
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
 		prop.getOptions().addOption(ao);
 		assertEquals(1, prop.getOptions().size());
@@ -105,7 +105,7 @@ public class Test_AO_ClassmapFilename_CP {
 
 	@Test
 	public void test_PropertyParse(){
-		ApoPropParser prop = ApoPropParser.create("app", true);
+		ApoPropParser prop = ApoPropParser.create(true);
 		AO_ClassmapFilename_CP ao = new AO_ClassmapFilename_CP(null);
 		prop.getOptions().addOption(ao);
 		Properties args = new Properties();

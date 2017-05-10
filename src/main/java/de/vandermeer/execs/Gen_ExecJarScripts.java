@@ -33,8 +33,9 @@ import de.vandermeer.execs.options.simple.AO_HelpSimple;
 import de.vandermeer.execs.options.simple.AO_Version;
 import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_AppStart;
-import de.vandermeer.skb.interfaces.messagesets.errors.Templates_OutputFile;
+import de.vandermeer.skb.interfaces.console.MessageConsole;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_AppStart;
+import de.vandermeer.skb.interfaces.messages.errors.Templates_OutputFile;
 
 /**
  * Application to generate starts scripts when running ExecS from an executable JAR.
@@ -61,7 +62,10 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 	 * Creates a new application.
 	 */
 	public Gen_ExecJarScripts(){
-		super(APP_NAME, ApoCliParser.defaultParser(APP_NAME), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
+		super(APP_NAME, ApoCliParser.defaultParser(), new AO_HelpSimple('h', null), null, new AO_Version('v', null));
+
+		MessageConsole.activateAll();
+		MessageConsole.setApplicationName(this.appName);
 	}
 
 	@Override
@@ -116,15 +120,10 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 
 	@Override
 	public void runApplication() {
-		if(this.errNo!=0){
-			this.printErrors();
-			return;
-		}
-
 		String jarFn = null;
 
 		if(!this.inExecJar()){
-			this.errorSet.addError(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError(this.getAppName()));
+			this.msgMgr.add(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError());
 			this.errNo = Templates_AppStart.MUST_BE_IN_EXEC_JAR.getCode();
 		}
 		else{
@@ -133,17 +132,17 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 				jarFn = file.toString();
 			}
 			catch (URISyntaxException ex) {
-				this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), ex.getMessage()));
+				this.msgMgr.add(Templates_AppStart.NO_JAR_PATH.getError(ex.getMessage()));
 				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
 			}
 
 			if(jarFn==null){
-				this.errorSet.addError(Templates_AppStart.NO_JAR_PATH.getError(this.getAppName(), "value was null"));
+				this.msgMgr.add(Templates_AppStart.NO_JAR_PATH.getError("value was null"));
 				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
 			}
 
 			if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
-				this.errorSet.addError(Templates_AppStart.OS_NOT_SUPPORTED.getError(this.getAppName(), "Unix nor Windows"));
+				this.msgMgr.add(Templates_AppStart.OS_NOT_SUPPORTED.getError("Unix nor Windows"));
 				this.errNo = Templates_AppStart.OS_NOT_SUPPORTED.getCode();
 			}
 		}
@@ -189,10 +188,6 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 				}
 			}
 		}
-
-		if(this.errorSet.hasErrors()){
-			System.err.println(this.errorSet.render());
-		}
 	}
 
 	/**
@@ -222,7 +217,7 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 			file.setExecutable(true);
 		}
 		catch (IOException ex) {
-			this.errorSet.addError(Templates_OutputFile.IO_EXCEPTION_WRITING.getError(this.getAppName(), "script", file.toString(), ex.getMessage()));
+			this.msgMgr.add(Templates_OutputFile.IO_EXCEPTION_WRITING.getError("script", file.toString(), ex.getMessage()));
 			this.errNo = Templates_OutputFile.IO_EXCEPTION_WRITING.getCode();
 		}
 	}
