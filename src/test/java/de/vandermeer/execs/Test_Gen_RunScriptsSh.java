@@ -69,13 +69,13 @@ public class Test_Gen_RunScriptsSh {
 		assertEquals(-216, run);
 	}
 
-	@Test
-	public void test_PropFile(){
-		Gen_RunScripts gen = new Gen_RunScripts();
-		gen.executeApplication(new String[]{
-				"--application-dir", "target",
-				"--property-file", " ",
-				"--target", "sh"
-		});
-	}
+//	@Test
+//	public void test_PropFile(){
+//		Gen_RunScripts gen = new Gen_RunScripts();
+//		gen.executeApplication(new String[]{
+//				"--application-dir", "target/tests",
+//				"--property-file", " ",
+//				"--target", "sh"
+//		});
+//	}
 }
