@@ -78,8 +78,9 @@ DoTemplates()
 CleanUp()
 {
 	rm $1/_header >& /dev/null
-	rm $1/gen-run-scripts.*  >& /dev/null
-	rm $1/gen-configure.*  >& /dev/null
+	rm $1/gen-run-scripts.* >& /dev/null
+	rm $1/gen-configure.* >& /dev/null
+	rm $1/gen-exec-jar-scripts.* >& /dev/null
 	chmod 755 $1/*
 }
 

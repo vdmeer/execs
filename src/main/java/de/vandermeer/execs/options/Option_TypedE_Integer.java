@@ -42,13 +42,13 @@ public class Option_TypedE_Integer extends Abstract_TypedE<Integer> {
 	@Override
 	public IsError setEnvironmentValue(String value) {
 		if(!this.environmentIsRequired() && value==null){
-			return Templates_EnvironmentOptions.VALUE_REQUIRED_BLANK.getError(this.displayName, this.environmentKey);
+			return Templates_EnvironmentOptions.VALUE_REQUIRED_BLANK.getError(this.getDisplayName(), this.getEnvironmentKey());
 		}
 		try{
 			this.environmentValue = Integer.valueOf(value);
 		}
 		catch(NumberFormatException nfex){
-			return Templates_EnvironmentOptions.ERROR_2_INT.getError(this.displayName, this.environmentKey, value);
+			return Templates_EnvironmentOptions.ERROR_2_INT.getError(this.getDisplayName(), this.getEnvironmentKey(), value);
 		}
 		return null;
 	}

@@ -101,17 +101,17 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 	}
 
 	@Override
-	public String getAppDescription() {
+	public String getDescription() {
 		return "Generates configuration shell script for an application.";
 	}
 
 	@Override
-	public String getAppDisplayName(){
+	public String getDisplayName(){
 		return APP_DISPLAY_NAME;
 	}
 
 	@Override
-	public String getAppVersion() {
+	public String getVersion() {
 		return APP_VERSION;
 	}
 
@@ -171,6 +171,8 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 		}
 
 		if(this.errNo==0){
+			MessageConsole.setApplicationName(null);
+			MessageConsole.setInfoPrefix(null);
 			String filename = "/de/vandermeer/execs/bin/configure.sh";
 			try {
 				InputStream inStream = getClass().getResourceAsStream(filename);

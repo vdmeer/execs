@@ -190,17 +190,17 @@ public class Gen_RunScripts extends AbstractAppliction {
 	}
 
 	@Override
-	public String getAppDescription() {
+	public String getDescription() {
 		return "Generates run scripts for executable applications.";
 	}
 
 	@Override
-	public String getAppDisplayName(){
+	public String getDisplayName(){
 		return APP_DISPLAY_NAME;
 	}
 
 	@Override
-	public String getAppVersion() {
+	public String getVersion() {
 		return APP_VERSION;
 	}
 
@@ -247,7 +247,8 @@ public class Gen_RunScripts extends AbstractAppliction {
 			return;
 		}
 
-		System.out.println(this.getAppName() + ": generating scripts for:");
+		//TODO
+		System.out.println(this.getName() + ": generating scripts for:");
 		for(Object key : this.classMap.keySet()){
 			System.out.println("  - " + key + " --> " + this.classMap.getProperty(key.toString()));
 		}
@@ -404,7 +405,8 @@ public class Gen_RunScripts extends AbstractAppliction {
 			return;
 		}
 
-		System.out.println(this.getAppName() + ": generating scripts for target: " + this.target);//TODO
+		//TODO
+		System.out.println(this.getName() + ": generating scripts for target: " + this.target);//TODO
 		System.out.println();//TODO
 	}
 

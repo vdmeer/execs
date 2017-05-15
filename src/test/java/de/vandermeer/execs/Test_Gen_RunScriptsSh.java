@@ -62,7 +62,7 @@ public class Test_Gen_RunScriptsSh {
 
 		run = execs.execute(new String[]{
 				Gen_RunScripts.class.getName(),
-				"--application-dir", "appdir",
+				"--application-dir", "target",
 				"--property-file", "prop",
 				"--target", "target"
 		});
@@ -73,9 +73,9 @@ public class Test_Gen_RunScriptsSh {
 	public void test_PropFile(){
 		Gen_RunScripts gen = new Gen_RunScripts();
 		gen.executeApplication(new String[]{
-				"--application-dir", "appdir",
+				"--application-dir", "target",
 				"--property-file", " ",
-				"--target", "target/sh"
+				"--target", "sh"
 		});
 	}
 }

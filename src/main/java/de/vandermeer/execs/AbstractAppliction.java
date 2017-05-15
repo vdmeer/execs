@@ -121,7 +121,7 @@ public abstract class AbstractAppliction implements IsApplication {
 	}
 
 	@Override
-	public String getAppName() {
+	public String getName() {
 		return this.appName;
 	}
 
