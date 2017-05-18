@@ -124,7 +124,6 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 
 		if(!this.inExecJar()){
 			this.msgMgr.add(Templates_AppStart.MUST_BE_IN_EXEC_JAR.getError());
-			this.errNo = Templates_AppStart.MUST_BE_IN_EXEC_JAR.getCode();
 		}
 		else{
 			try {
@@ -133,21 +132,18 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 			}
 			catch (URISyntaxException ex) {
 				this.msgMgr.add(Templates_AppStart.NO_JAR_PATH.getError(ex.getMessage()));
-				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
 			}
 
 			if(jarFn==null){
 				this.msgMgr.add(Templates_AppStart.NO_JAR_PATH.getError("value was null"));
-				this.errNo = Templates_AppStart.NO_JAR_PATH.getCode();
 			}
 
 			if(!SystemUtils.IS_OS_UNIX && !SystemUtils.IS_OS_WINDOWS){
 				this.msgMgr.add(Templates_AppStart.OS_NOT_SUPPORTED.getError("Unix nor Windows"));
-				this.errNo = Templates_AppStart.OS_NOT_SUPPORTED.getCode();
 			}
 		}
 
-		if(this.errNo==0){
+		if(this.getErrNo()==0){
 			ArrayList<String> cmds = new ArrayList<>();
 			if(this.execClassMap!=null){
 				for(String s : execClassMap.keySet()){
@@ -218,7 +214,6 @@ public class Gen_ExecJarScripts extends AbstractAppliction {
 		}
 		catch (IOException ex) {
 			this.msgMgr.add(Templates_OutputFile.IO_EXCEPTION_WRITING.getError("script", file.toString(), ex.getMessage()));
-			this.errNo = Templates_OutputFile.IO_EXCEPTION_WRITING.getCode();
 		}
 	}
 }

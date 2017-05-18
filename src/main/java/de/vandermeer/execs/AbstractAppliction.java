@@ -65,9 +65,6 @@ public abstract class AbstractAppliction implements IsApplication {
 	/** Option for getting column (console width). */
 	protected final transient AO_Columns optionColumns = new AO_Columns(null);
 
-	/** Error number, holds the number of the last error, 0 if none occurred. */
-	protected transient int errNo;
-
 	/**
 	 * Creates a new abstract application.
 	 * @param appName the application name, must not be blank
@@ -141,18 +138,8 @@ public abstract class AbstractAppliction implements IsApplication {
 	}
 
 	@Override
-	public int getErrNo() {
-		return this.errNo;
-	}
-
-	@Override
 	public ApoPropParser getPropertyParser() {
 		return this.propParser;
-	}
-
-	@Override
-	public void setErrno(int errorNumber) {
-		this.errNo = errorNumber;
 	}
 
 	@Override

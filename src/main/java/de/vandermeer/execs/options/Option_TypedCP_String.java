@@ -73,4 +73,8 @@ public class Option_TypedCP_String extends Abstract_TypedCP<String> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "String";
+	}
 }

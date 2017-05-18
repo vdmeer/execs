@@ -222,7 +222,6 @@ public class ExecS {
 	 * @param svc the application, must not be null
 	 * @param args original command line arguments
 	 * @param orig the original name or class for the application for error messages
-	 * @return 0 on success, other than zero on failure (including failure of the executed application)
 	 */
 	protected void executeApplication(Object svc, String[] args, String orig){
 		this.errNo = 0;

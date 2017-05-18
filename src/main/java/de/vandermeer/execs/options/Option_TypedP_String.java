@@ -50,4 +50,9 @@ public class Option_TypedP_String extends Abstract_TypedP<String> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "String";
+	}
+
 }

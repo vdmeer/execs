@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,11 +38,10 @@ import de.vandermeer.execs.options.typed.AO_ClassmapFilename_CP;
 import de.vandermeer.execs.options.typed.AO_PropertyFilename;
 import de.vandermeer.execs.options.typed.AO_StgFilename;
 import de.vandermeer.execs.options.typed.AO_Target;
-import de.vandermeer.skb.interfaces.antlr.IsSTGroup;
 import de.vandermeer.skb.interfaces.application.ApoCliParser;
 import de.vandermeer.skb.interfaces.application.IsApplication;
 import de.vandermeer.skb.interfaces.console.MessageConsole;
-import de.vandermeer.skb.interfaces.messages.errors.IsError;
+import de.vandermeer.skb.interfaces.fidibus.files.STG_FileLoader;
 import de.vandermeer.skb.interfaces.messages.errors.Templates_InputDirectory;
 import de.vandermeer.skb.interfaces.messages.errors.Templates_InputFile;
 import de.vandermeer.skb.interfaces.messages.errors.Templates_OutputDirectory;
@@ -211,14 +209,13 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * Otherwise this method will fail.
 	 */
 	protected final void initApplicationDir(){
-		if(this.errNo<0){
+		if(this.getErrNo()<0){
 			return;
 		}
 
 		this.applicationDir = this.optionAppHome.getValue();
 		if(this.applicationDir==null){
 			this.msgMgr.add(Templates_InputDirectory.DN_NULL.getError("application"));
-			this.errNo = Templates_InputDirectory.DN_NULL.getCode();
 		}
 	}
 
@@ -231,7 +228,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * The default and the property file name can be overwritten using the `--classmap-file` CLI option.
 	 */
 	protected final void initClassmap(){
-		if(this.errNo<0){
+		if(this.getErrNo()<0){
 			return;
 		}
 
@@ -262,7 +259,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * The method will also test for some configuration keys to exist and fail if they are not defined.
 	 */
 	protected final void initConfiguration(){
-		if(this.errNo<0){
+		if(this.getErrNo()<0){
 			return;
 		}
 
@@ -318,7 +315,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * The method fails if the output directory cannot be created or if it exists and is write protected.
 	 */
 	protected final void initOutputDir(){
-		if(this.errNo<0){
+		if(this.getErrNo()<0){
 			return;
 		}
 
@@ -330,12 +327,10 @@ public class Gen_RunScripts extends AbstractAppliction {
 		if(targetDir.exists()){
 			if(!targetDir.isDirectory()){
 				this.msgMgr.add(Templates_OutputDirectory.DIR_NOTDIR.getError("target", target));
-				this.errNo = Templates_OutputDirectory.DIR_NOTDIR.getCode();
 				return;
 			}
 			if(!targetDir.canWrite()){
 				this.msgMgr.add(Templates_OutputDirectory.DIR_CANT_WRITE.getError("target", target));
-				this.errNo = Templates_OutputDirectory.DIR_CANT_WRITE.getCode();
 				return;
 			}
 		}
@@ -343,18 +338,15 @@ public class Gen_RunScripts extends AbstractAppliction {
 			//target dir does not exist, let's see if we can create it the way we need
 			if(!parentDir.isDirectory()){
 				this.msgMgr.add(Templates_OutputDirectory.PARENT_NOTDIR.getError("target"));
-				this.errNo = Templates_OutputDirectory.PARENT_NOTDIR.getCode();
 				return;
 			}
 			if(!parentDir.canWrite()){
 				this.msgMgr.add(Templates_OutputDirectory.PARENT_CANT_WRITE.getError("target", parent));
-				this.errNo = Templates_OutputDirectory.PARENT_CANT_WRITE.getCode();
 				return;
 			}
 
 			if(!targetDir.mkdir()){
 				this.msgMgr.add(Templates_OutputDirectory.DIR_CANT_CREATE.getError("target", target));
-				this.errNo = Templates_OutputDirectory.DIR_CANT_CREATE.getCode();
 				return;
 			}
 		}
@@ -369,7 +361,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 	 * The set target (CLI option `--target`) must be supported by the template file, otherwise this method will fail.
 	 */
 	protected final void initTargetAndStg(){
-		if(this.errNo<0){
+		if(this.getErrNo()<0){
 			return;
 		}
 
@@ -384,24 +376,21 @@ public class Gen_RunScripts extends AbstractAppliction {
 		expectedChunks.put("fnExtension", new String[]{"target"});
 		expectedChunks.put("pathSeparator", new String[]{"target"});
 
-		IsSTGroup istg = IsSTGroup.fromFile(this.optionStgFile.getValue(), expectedChunks);
-		Set<IsError> err = istg.validate();
-		if(err.size()>0){
-			this.msgMgr.addAll(err);
+		STG_FileLoader stgLoader = STG_FileLoader.create(this.optionStgFile.getValue(), expectedChunks);
+		this.stg = stgLoader.read();
+		if(stgLoader.hasErrors()){
+			this.msgMgr.add(stgLoader);
 			return;
 		}
-		this.stg = istg.getSTGroup();
 
 		String[] availableTargets = null;
 		availableTargets = StringUtils.split(this.stg.getInstanceOf("supportedTargets").render(), " , ");
 		if(availableTargets.length==0){
 			this.msgMgr.add(Templates_Target.NO_TARGETS.getError("expected targets in STG, template <supportedTargets>"));
-			this.errNo = Templates_Target.NO_TARGETS.getCode();
 			return;
 		}
 		if(!ArrayUtils.contains(availableTargets, this.target)){
 			this.msgMgr.add(Templates_Target.NOT_SUPPORTED.getError(target, this.stg.getInstanceOf("supportedTargets").render()));
-			this.errNo = Templates_Target.NOT_SUPPORTED.getCode();
 			return;
 		}
 
@@ -435,7 +424,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 
 		if(url==null){
 			this.msgMgr.add(Templates_InputFile.URL_NULL.getError("property", filename));
-			this.errNo = Templates_InputFile.URL_NULL.getCode();
 		}
 		else{
 			try{
@@ -445,7 +433,6 @@ public class Gen_RunScripts extends AbstractAppliction {
 			}
 			catch (IOException iox){
 				this.msgMgr.add(Templates_InputFile.IO_EXCEPTION_READING.getError("property", filename, iox.getMessage()));
-				this.errNo = Templates_InputFile.IO_EXCEPTION_READING.getCode();
 			}
 //			catch (Exception ex){
 //				this.errorSet.addError(Templates_PropertiesGeneral.LOADING_FROM_FILE.getError(this.getAppName(), filename, ex));
@@ -463,7 +450,7 @@ public class Gen_RunScripts extends AbstractAppliction {
 		this.initClassmap();
 		this.initOutputDir();
 
-		if(this.errNo==0){
+		if(this.getErrNo()==0){
 			HashMap<String, Boolean> targetMap = new HashMap<>();
 			targetMap.put(target, true);
 			String fnExtension = this.stg.getInstanceOf("fnExtension").add("target", targetMap).render();

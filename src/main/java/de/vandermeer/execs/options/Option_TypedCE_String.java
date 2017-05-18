@@ -71,4 +71,8 @@ public class Option_TypedCE_String extends Abstract_TypedCE<String> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "String";
+	}
 }

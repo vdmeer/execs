@@ -51,4 +51,8 @@ public class Option_TypedP_Boolean extends Abstract_TypedP<Boolean> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "Boolean";
+	}
 }

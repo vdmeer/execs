@@ -29,7 +29,7 @@ public class AO_HelpSimple extends Option_SimpleC {
 	/**
 	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
-	 * ]@param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
+	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
 	public AO_HelpSimple(final Character cliShort, final Object longDescription) {
 		super(

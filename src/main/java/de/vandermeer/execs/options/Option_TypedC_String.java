@@ -59,4 +59,8 @@ public class Option_TypedC_String extends Abstract_TypedC<String> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "String";
+	}
 }

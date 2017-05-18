@@ -51,4 +51,8 @@ public class Option_TypedE_Boolean extends Abstract_TypedE<Boolean> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "Boolean";
+	}
 }

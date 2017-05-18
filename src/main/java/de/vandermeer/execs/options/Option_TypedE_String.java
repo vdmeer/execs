@@ -48,4 +48,8 @@ public class Option_TypedE_String extends Abstract_TypedE<String> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "String";
+	}
 }

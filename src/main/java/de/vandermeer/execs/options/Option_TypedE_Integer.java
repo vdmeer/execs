@@ -53,4 +53,8 @@ public class Option_TypedE_Integer extends Abstract_TypedE<Integer> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "Integer";
+	}
 }

@@ -29,9 +29,6 @@ public class AO_HelpTyped extends Option_TypedC_String {
 	/**
 	 * Creates a new option.
 	 * @param cliShort the short CLI command, null if not required
-	 * @param isRequired flag for option being a required option
-	 * @param argDescr a short argument description
-	 * @param description as short option description
 	 * @param longDescription a long description for the option, null or objects resulting in a blank string will be ignored
 	 */
 	public AO_HelpTyped(final Character cliShort, final Object longDescription) {

@@ -53,4 +53,8 @@ public class Option_TypedP_Integer extends Abstract_TypedP<Integer> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "Integer";
+	}
 }

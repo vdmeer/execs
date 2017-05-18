@@ -60,4 +60,8 @@ public class Option_TypedC_Character extends Abstract_TypedC<Character> {
 		return null;
 	}
 
+	@Override
+	public String valueType() {
+		return "Character";
+	}
 }

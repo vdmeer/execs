@@ -140,7 +140,6 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 
 		if(url==null){
 			this.msgMgr.add(Templates_InputFile.URL_NULL.getError("property", filename));
-			this.errNo = Templates_InputFile.URL_NULL.getCode();
 		}
 		else{
 			try{
@@ -150,7 +149,6 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 			}
 			catch (IOException iox){
 				this.msgMgr.add(Templates_InputFile.IO_EXCEPTION_READING.getError("property", filename, iox.getMessage()));
-				this.errNo = Templates_InputFile.IO_EXCEPTION_READING.getCode();
 			}
 //			catch (Exception ex){
 //				this.errorSet.addError(Templates_PropertiesGeneral.LOADING_FROM_FILE.getError(this.getAppName(), filename, ex));
@@ -170,7 +168,7 @@ public class Gen_ConfigureSh extends AbstractAppliction {
 			this.getPropertyParser().parse(configuration);
 		}
 
-		if(this.errNo==0){
+		if(this.getErrNo()==0){
 			MessageConsole.setApplicationName(null);
 			MessageConsole.setInfoPrefix(null);
 			String filename = "/de/vandermeer/execs/bin/configure.sh";
